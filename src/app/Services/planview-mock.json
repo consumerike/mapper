@@ -1,0 +1,27 @@
+{
+	"planviewProjects": [{
+		"ppl_code": "The Joker",
+		"altPM": "Jack Napier"
+	}, {
+		"ppl_code": "Venom",
+		"altPM": "Eddie Brock"
+	}, {
+		"ppl_code": "Magneto",
+		"altPM": "Max Eisenhardt"
+	}, {
+		"ppl_code": "Red Skull",
+		"altPM": "Johann Schmidt"
+	}, {
+		"ppl_code": "Green Goblin",
+		"altPM": "Norman Osborn"
+	}, {
+		"ppl_code": "The Lizard",
+		"altPM": "Curt Connors"
+	}, {
+		"ppl_code": "Dr. Octopus",
+		"altPM": "Otto Gunther Octavius"
+	}, {
+		"ppl_code": "Rhino",
+		"altPM": "Aleksei Sytsevich"
+	}]
+}

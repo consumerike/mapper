@@ -1,0 +1,27 @@
+{
+	"mappedProjects": [{
+		"uid": "Batman",
+		"ppl_code": "The Joker"
+	}, {
+		"uid": "Spiderman",
+		"ppl_code": "Venom"
+	}, {
+		"uid": "X-Men",
+		"ppl_code": "Magneto"
+	}, {
+		"uid": "Captain America",
+		"ppl_code": "Red Skull"
+	}, {
+		"uid": "Spiderman",
+		"ppl_code": "Green Goblin"
+	}, {
+		"uid": "Spiderman",
+		"ppl_code": "The Lizard"
+	}, {
+		"uid": "Spiderman",
+		"ppl_code": "Dr. Octopus"
+	}, {
+		"uid": "Spiderman",
+		"ppl_code": "Rhino"
+	}]
+}
