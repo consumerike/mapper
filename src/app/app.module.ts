@@ -9,13 +9,15 @@ import { HttpClient } from 'selenium-webdriver/http';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthorizedPerviewProjectsComponent } from './components/authorized-perview-projects/authorized-perview-projects.component';
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
+import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListOfMappedProjectRelationshipsComponent,
     AuthorizedPerviewProjectsComponent,
-    AuthorizedPlanviewProjectsComponent
+    AuthorizedPlanviewProjectsComponent,
+    MappedProjectRelationshipComponent
   ],
   imports: [
     BrowserModule,

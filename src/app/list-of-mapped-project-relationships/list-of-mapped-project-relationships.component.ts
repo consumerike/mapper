@@ -50,17 +50,18 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit {
     return  [{projUid:'Rhino'}]
   }
 
-  deletePlanviewAssociation(UID: any): string {
+  deletePlanviewAssociation(mappedRelationship): any {
     this.confirmDeletionOfPlanviewAssociation();
-   return UID;
+    this._mapperService.deletePlanviewAssociation(mappedRelationship);
   }
 
   confirmDeletionOfPlanviewAssociation() {
     return 'yes';
   }
 
-  deletePerviewProject() {
+  deletePerviewProject(mappedRelationship): any {
     this.confirmDeletionOfPerviewProject();
+    this._mapperService.deletePerviewAssociations(mappedRelationship);
     return 'yes';
     
   }

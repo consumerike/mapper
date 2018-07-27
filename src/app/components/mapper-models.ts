@@ -16,6 +16,11 @@
     ) { }
   }
 
+export interface MappedProject {
+  uid: string;
+  ppl_code: string;
+}
+
     
 export class Config {
   projectServerUrl: string;
@@ -23,6 +28,14 @@ export class Config {
   adapterUrl: string;
   projectPickerViewGuid: string;
   resourcePickerViewGuid: string;
+}
+
+
+export class Result {
+  project: IProject;
+  projects?: IProject[]
+  success: boolean;
+  error: string;
 }
   
   
