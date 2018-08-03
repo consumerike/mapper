@@ -17,38 +17,39 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit {
     private mapperService: MapperService
   ) { }
 
-  private AuthorizedProjects: any[];
+  private authorizedProjects: any[];
   private selectedProjects: any[];
   private myProjects: any[];
 
   @Input() perviewProject: IProject;
 
   ngOnInit() {
-    this.AuthorizedProjects = this.getPlanviewProjects();
-    this.myProjects = this.myprojectService.myProjects;
+    this.getPlanviewProjects();
+    
+    // this.myProjects = this.myprojectService.myProjects;
   }
 
   settings = {
     columns: {
-      id: {
+      ppl_code: {
         title: "Project Name"
       },
-      name: {
-        title: "Project Manager"
-      },
-      username: {
-        title: "Project Status"
-      },
-      email: {
-        title: "Business Owner"
+      altPM: {
+        title: "Alternate PM"
       }
     }
   };
   
-
-  getPlanviewProjects(): IProject[] {
-    this.AuthorizedProjects = this.planviewService.getAuthorizedPlanviewProjects();
-    return this.AuthorizedProjects;
+ yes(){
+  console.log("within component", this.authorizedProjects );
+ } 
+  
+  getPlanviewProjects(): void {
+    this.planviewService.getAuthorizedPlanviewProjects()
+    .map((data) => {this.authorizedProjects = data;})
+    
+    .subscribe();
+    console.log(this.authorizedProjects, "in compo")
   }
 
   addSelectedProjects(): void {
@@ -95,5 +96,3 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit {
 
 }
 
-
-}

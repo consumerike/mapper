@@ -22,10 +22,10 @@ export class PlanviewService {
   config:Config;
   authorizedPlanviewProjects: any;
 
-  getAuthorizedPlanviewProjects(): any {
-     this.http.get("./planview-mock.json")
-     .subscribe((data) => {
-      console.log("this is the planViewProjects data:", data); 
+  getAuthorizedPlanviewProjects():Observable<any> {
+    return this.http.get("assets/planview-mock.json")
+     .map((data) => {
+      console.log("this is the planViewProjects data in Service:", data); 
       this.authorizedPlanviewProjects = data;
       });
   }

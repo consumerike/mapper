@@ -16,12 +16,12 @@ export class AuthorizedPerviewProjectsComponent implements OnInit {
     private _myprojectService: MyProjectService
   ) { }
 
-  private AuthorizedProjects: any[];
+  private authorizedProjects: any[];
   private selectedProjects: any[];
   private myProjects: any[];
 
   ngOnInit() {
-    this.AuthorizedProjects = this.getPerviewProjects();
+    this.authorizedProjects = this.getPerviewProjects();
     this.myProjects = this._myprojectService.myProjects;
   }
 
@@ -43,8 +43,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit {
   };
 
   getPerviewProjects(): IProject[] {
-    this.AuthorizedProjects = this._perviewService.getAuthorizedPerviewProjects();
-    return this.AuthorizedProjects;
+    this.authorizedProjects = this._perviewService.getAuthorizedPerviewProjects();
+    return this.authorizedProjects;
   }
 
   addSelectedProjects(): void {

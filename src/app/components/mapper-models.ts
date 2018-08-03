@@ -3,6 +3,7 @@
     projUid?: string;
     projName?: string;
     owner?: string,
+    planviewProjects?: any[];
   }
 
   export class Project implements IProject {

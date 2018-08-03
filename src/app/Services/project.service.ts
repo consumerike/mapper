@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -11,26 +12,30 @@ import { Observable } from 'rxjs';
 export class MyProjectService {
 
   constructor(private http: HttpClient) { }
-  userHasSavedProjects: boolean;
-  projectsSavedByUser: any;
+  userHasSavedProjects: boolean = true;
+  public projectsSavedByUser: any[];
   selections: any;
-  public myProjects: any [];
+  
 
   CheckForSavedProjects() {
     return this.userHasSavedProjects;
   }
 
-  getSavedPerviewProjects(): any {
+  getSavedPerviewProjects(): Observable<any> {
     if (this.CheckForSavedProjects()) {
-      return this.http.get('./sharepoint-users-projects.json')
-      .subscribe( (data) => {console.log(data);this.myProjects = data["perviewProjects"]});
-    
+      return  this.http.get('assets/sharepoint-users-projects.json')
+      .map((mockData) => {
+        this.projectsSavedByUser = mockData.savedProjects;
+        return this.projectsSavedByUser;
+        // return arrayOfProjects;
+       });
+      //  return this.projectsSavedByUser;
     }
-    console.log('no projects');
+    
   }
 
   addPerviewSelectedProjects(selections: any[]): void {
-    this.myProjects.push(selections);
+    this.projectsSavedByUser.push(selections);
   }
 
 }

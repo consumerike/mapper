@@ -1,3 +1,20 @@
-<p>
-  list-of-mapped-project-relationships works!
-</p>
+<app-mapper-header></app-mapper-header>
+<div>
+  <!-- <section *ngFor="let project of listOfSavedPerviewProjects "> -->
+    <section *ngFor="let project of listOfSavedPerviewProjects" >
+    <input type="checkbox">
+    <span>{{project.name}}</span>
+    <span>
+      <!-- <li *ngFor="let project of getPlanviewAssociations(listOfSavedPerviewProjects)">
+        <span><button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button></span>
+      </li> -->
+      <ul *ngFor="let project of project.planviewProjects">
+        <span>{{project.ppl_code}}</span>
+        <button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button>
+      </ul>
+    </span>
+  </section>
+  <app-mapper-footer></app-mapper-footer>
+</div>
+
+<!-- getPlanviewAssociations(listOfSavedPerviewProjects)" -->

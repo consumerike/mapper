@@ -18,7 +18,8 @@ export class ConfigService {
   
   readConfig(){
     return new Promise((resolve, reject) => {
-      return this.http.get("../../../main-config.json").subscribe(t=>{
+      return this.http.get("../assets/main-config.json").subscribe(t=>{
+      // return this.http.get("../../../main-config.json").subscribe(t=>{
        console.log("configuration map= " + JSON.stringify(t.json()))
          this.config = t.json() as Config
          resolve(true);
