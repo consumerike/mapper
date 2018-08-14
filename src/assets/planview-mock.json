@@ -21,7 +21,55 @@
 		"ppl_code": "Dr. Octopus",
 		"altPM": "Otto Gunther Octavius"
 	}, {
-		"ppl_code": "Rhino",
-		"altPM": "Aleksei Sytsevich"
-	}]
+		"ppl_code": "Gamora",
+		"altPM": "DC Comics"
+	},
+	{
+		"ppl_code": "Hawkgirl",
+		"altPM": "DC Comics"
+	},
+	{
+		"ppl_code": "Hit Girl",
+		"altPM": "Kick-Ass"
+	},
+	{
+		"ppl_code": "Huntara",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Moonstone",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Valkyrie",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Dr Doom",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Valkyrie",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Harley Quinn",
+		"altPM": "Dr. Harleen Quinzel"
+	},
+	{
+		"ppl_code": "Deadshot",
+		"altPM": "Floyd Lawton"
+	},
+	{
+		"ppl_code": "Lady Deathstrike",
+		"altPM": "Marvel Comics"
+	},
+	{
+		"ppl_code": "Leper Queen",
+		"altPM": "Marvel Comics"
+	}
+
+
+
+]
 }

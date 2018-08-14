@@ -9,6 +9,7 @@ import 'rxjs/add/operator/filter'
 import { IProject, Project } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -78,16 +79,13 @@ export class PerviewService {
     return setupObject; 
   }
 
-  getAuthorizedPerviewProjects(): any {
-    let arrayOfProjects =  this.http.get('assets/mock-authorized-projects.json')
-    .subscribe((mockData) => {
-      let arrayOfProjects = mockData.authorizedProjects;
-      console.log("array of authorized Projects:", arrayOfProjects);
-      this.authorizedPerviewProjects = arrayOfProjects
-      return arrayOfProjects;
-     });
-     return this.authorizedPerviewProjects;
+  getAuthorizedPerviewProjects(): Observable<any> {
+    return this.http.get('assets/mock-authorized-projects.json')
+    .pipe(map( (data) => { 
+      this.authorizedPerviewProjects = data;
+      return this.authorizedPerviewProjects;
+      }));
   }
   
-
 }
+

@@ -42,7 +42,7 @@ describe('ListOfMappedProjectRelationshipsComponent', () => {
     myprojectServiceStub = {
       userHasSavedProjects: true,
       userWithNoSavedProjects: false,
-      projectsSavedByUser: [
+      projectsSavedByUser$: [
         'Spiderman'
         ,'X-Men'
         ,'Captain America'

@@ -23,5 +23,28 @@
 	}, {
 		"uid": "Spiderman",
 		"ppl_code": "Rhino"
-	}]
+	},
+	{
+    "uid": "The Invisible Woman",
+    "ppl_code": "Doctor Doom"
+  }
+  , {
+    "uid": "Black Panther",
+    "ppl_code": "Erik Killmonger"
+  }
+  , {
+    "uid": "Wonder Woman",
+    "ppl_code": "Ares"
+  }
+  , {
+    "uid": "Wonder Woman",
+    "ppl_code": "Doctor Poison"
+  }
+  , {
+    "uid": "Wonder Woman",
+    "ppl_code": "Doctor Psycho"
+  }
+
+ ]
+
 }

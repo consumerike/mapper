@@ -1,23 +1,43 @@
 
 {
-"authorizedProjects": [ "X-Men", "Spiderman", "Wolverine"
-        ,"Captain America"
-        ,"Hulk"
-        ,"Thor"
-        ,"Iron Man"
-        ,"Batman" 
-        ,"Green Arrow"
-        ,"Black Panther"
-        ,"Ant Man"
-        ,"Wonder Woman"
-        ,"Black Widow"
-        ,"Cat Woman"
-        ,"Mr. Marvel"
-        ,"The Flash"
-        ,"Impulse"
-        ,"Dare-Devil"
-        ,"Mega-man"
-        ,"Cable"
-        ,"Silver Surfer"
+        
+"authorizedProjects": [
+         {"name": "Captain Marvel", "projectManager": "Carol Susan Jane Danvers"}
+        ,{"name":"Mystique","projectManager":"Raven Darkholme"}
+        ,{"name":"Batgirl","projectManager":"Barbara Gordon"}
+        ,{"name":"Rogue","projectManager":"Anna Marie"}
+        ,{"name":"The Bionic Woman","projectManager":"Jaime Sommers"}
+        ,{"name":"The Phoenix","projectManager":"Dr. Jean Grey"}
+        ,{"name":"Scarlet Witch","projectManager":"Wanda Marya Maximoff"}
+        ,{"name":"Supergirl","projectManager":"Linda Lee"}
+        ,{"name":"The Invisible Woman","projectManager":"Susan Storm-Richards"}
+        ,{"name":"She Hulk","projectManager":"Jennifer Walters"}
+        ,{"name":"Jubilee","projectManager":"Jubiliation Lee"}
+        ,{"name":"Poison Ivy","projectManager":"Pamela Lillian Isley"}
+        ,{"name": "Spiderman"}
+        ,{"name": "Wolverine"}
+        ,{"name": "Captain America"}
+        ,{"name":"Hulk"}
+        ,{"name":"Thor"}
+        ,{"name": "Iron Man"}
+        ,{"name": "Batman"} 
+        ,{"name":"Green Arrow"}
+        ,{"name":"Black Panther"}
+        ,{"name":"Ant Man"}
+        ,{"name":"Wonder Woman", "projectManager":"Diana Prince"}
+        ,{"name":"Black Widow","projectManager":"Natalia Alianovna Romanova"}
+        ,{"name":"Cat Woman","projectManager":"Selina Kyle"}
+        ,{"name":"Mr. Marvel"}
+        ,{"name":"The Flash"}
+        ,{"name":"Impulse"}
+        ,{"name":"Dare-Devil"}
+        ,{"name":"Mega-man"}
+        ,{"name":"Cable"}
+        ,{"name":"Silver Surfer"}
+        ,{"name":"Storm","projectManager":"Susan Storm"}
+        ,{"name":"Elektra","projectManager":"Elektra Natchios"}
+        ,{"name":"Kitty","projectManager":"Katherine Anne Pryde"}
+        
 ] 
+
 }

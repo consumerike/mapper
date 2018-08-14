@@ -5,9 +5,9 @@ import { AuthorizedPerviewProjectsComponent } from './components/authorized-perv
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
 import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 
- export let routes =  [
+export let routes = [
     { path: "", component: ListOfMappedProjectRelationshipsComponent, pathMatch: "full" },
     { path: "authorizedPerviewProjects" ,component:AuthorizedPerviewProjectsComponent },
-    { path: "authorizedPlanviewProjects", component: AuthorizedPlanviewProjectsComponent }
+    { path: 'authorizedPlanviewProjects/:project.uid', component:AuthorizedPlanviewProjectsComponent}
     // { path: '/ConfirmDeletion', component: ConfirmationDialogueComponent }
- ];
+];

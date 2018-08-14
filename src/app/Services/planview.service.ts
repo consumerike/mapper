@@ -9,6 +9,7 @@ import 'rxjs/add/operator/filter'
 import { IProject, Project } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +24,12 @@ export class PlanviewService {
   authorizedPlanviewProjects: any;
 
   getAuthorizedPlanviewProjects():Observable<any> {
-    return this.http.get("assets/planview-mock.json")
-     .map((data) => {
-      console.log("this is the planViewProjects data in Service:", data); 
+     return this.http.get("assets/planview-mock.json")
+      .pipe(map( (data) => { 
       this.authorizedPlanviewProjects = data;
-      });
+      return this.authorizedPlanviewProjects;
+      }));
+      
   }
 
   xgetAuthorizedPlanviewProjects(): any {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IProject, Project } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, from } from 'rxjs';
 import { map } from "rxjs/operators";
 
 @Injectable({
@@ -12,30 +12,43 @@ import { map } from "rxjs/operators";
 export class MyProjectService {
 
   constructor(private http: HttpClient) { }
-  userHasSavedProjects: boolean = true;
-  public projectsSavedByUser: any[];
+  public userHasSavedProjects: boolean = true;
+  public projectsSavedByUser: any[] = [];
   selections: any;
+  projectsSavedByUser$: Observable<any>
   
 
   CheckForSavedProjects() {
     return this.userHasSavedProjects;
   }
 
-  getSavedPerviewProjects(): Observable<any> {
+  getSavedPerviewProjects(): Observable<any[]> {
     if (this.CheckForSavedProjects()) {
       return  this.http.get('assets/sharepoint-users-projects.json')
       .map((mockData) => {
         this.projectsSavedByUser = mockData.savedProjects;
+        this.userHasSavedProjects = false;
         return this.projectsSavedByUser;
         // return arrayOfProjects;
        });
-      //  return this.projectsSavedByUser;
+       
     }
+    console.log(this.CheckForSavedProjects());
+    
+    console.log("projects saved by user before from array",this.projectsSavedByUser);
+    
+    return from([this.projectsSavedByUser]);
     
   }
 
   addPerviewSelectedProjects(selections: any[]): void {
-    this.projectsSavedByUser.push(selections);
+    this.projectsSavedByUser.next(selections);
+  }
+
+  deletePerviewProject(perviewProject: any, index: any) {
+    console.log("this is the index: ", index);
+    this.projectsSavedByUser.splice(index,1);
+    console.log("does this remove an item from list?",this.projectsSavedByUser,);   
   }
 
 }

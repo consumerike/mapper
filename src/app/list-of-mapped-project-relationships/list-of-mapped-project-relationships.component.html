@@ -1,19 +1,27 @@
 <app-mapper-header></app-mapper-header>
 <div>
   <!-- <section *ngFor="let project of listOfSavedPerviewProjects "> -->
-    <section *ngFor="let project of listOfSavedPerviewProjects" >
+    <section *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
     <input type="checkbox">
     <span>{{project.name}}</span>
     <span>
       <!-- <li *ngFor="let project of getPlanviewAssociations(listOfSavedPerviewProjects)">
         <span><button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button></span>
       </li> -->
-      <ul *ngFor="let project of project.planviewProjects">
+      <span><button (click)="deletePerviewProject(project, i)">del</button></span>
+      <ul *ngFor="let project of project.planviewProjects; let i = index">
         <span>{{project.ppl_code}}</span>
-        <button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button>
+        <button [routerLink]="['/authorizedPlanviewProjects', project.uid]" >Add planViewProject</button>
+        <button (click)="deletePlanviewAssociation(project, project.planviewProjects)">X</button>
       </ul>
     </span>
   </section>
+
+  <!-- <div>
+     <ul "let project of projectSavedByUser$|async">
+      <li>{{project}}</li>
+    
+  </div> -->
   <app-mapper-footer></app-mapper-footer>
 </div>
 
