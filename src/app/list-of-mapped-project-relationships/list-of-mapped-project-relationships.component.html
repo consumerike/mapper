@@ -9,10 +9,10 @@
         <span><button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button></span>
       </li> -->
       <span><button (click)="deletePerviewProject(project, i)">del</button></span>
-      <ul *ngFor="let project of project.planviewProjects; let i = index">
+      <ul *ngFor="let project of project.planviewProjects; let i = index" [attr.data-index]="i">
         <span>{{project.ppl_code}}</span>
         <button [routerLink]="['/authorizedPlanviewProjects', project.uid]" >Add planViewProject</button>
-        <button (click)="deletePlanviewAssociation(project, project.planviewProjects)">X</button>
+        <button (click)="deletePlanviewAssociation(project)">X</button>
       </ul>
     </span>
   </section>

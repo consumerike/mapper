@@ -13,7 +13,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
-  currentID: any = 'Stan Lee';
+  public currentID: any = 'Stan Lee';
   public currentUser: string;
 
   getCurrentUserID(): Observable<any> {

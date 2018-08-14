@@ -126,27 +126,45 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   deletePlanviewAssociation(mappedRelationship): any {
-    this.confirmDeletionOfPlanviewAssociation();
-    console.log("passed in project:", mappedRelationship);
-    this.mapperService.deletePlanviewAssociation(mappedRelationship);
-    console.log("reflect delete", this.listOfSavedPerviewProjects);
-    this.getSavedProjects()
+    if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship)) {
+      console.log("passed in project:", mappedRelationship);
+      this.mapperService.deletePlanviewAssociation(mappedRelationship);
+      console.log("reflect delete", this.listOfSavedPerviewProjects);
+      this.getSavedProjects()
+      console.log("said ok");
+    }
+    else console.log('canceled operation');
   }
 
-  confirmDeletionOfPlanviewAssociation() {
-    return 'yes';
+  confirmDeletionOfPlanviewAssociation(perviewProject) {
+    let decision = confirm(`Warning! This will delete the association
+      created by ${this.userService.currentID} between
+      ${perviewProject.uid} and ${perviewProject.ppl_code}
+      Are you sure?`);
+    if (decision == true) {return true}
   }
 
   deletePerviewProject(perviewProject, index): any {
-    this.confirmDeletionOfPerviewProject();
-    this.mapperService.deletePerviewAssociations(perviewProject);
-    this.myProjectService.deletePerviewProject(perviewProject, index);
-    this.getSavedProjects();
-    return 'yes';
+    if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {;
+      this.mapperService.deletePerviewAssociations(perviewProject);
+      this.myProjectService.deletePerviewProject(perviewProject, index);
+      this.getSavedProjects();
+      console.log('said ok');
+    }
+    else {console.log('canceled operation');
+    }
+    
   }
 
-  confirmDeletionOfPerviewProject() {
-    return 'yes';
+  confirmDeletionOfPerviewProject(perviewProject, index) {
+    let listOfDeletedPlanviewProjects = perviewProject.planviewProjects.map(pair => pair.ppl_code)
+    console.log("what we need",listOfDeletedPlanviewProjects);
+    
+    let decision = confirm(`Warning! This will delete the association
+      created by ${this.userService.currentID} between
+      ${perviewProject.name} and ${listOfDeletedPlanviewProjects.join()}
+      Are you sure?`);
+    if (decision == true) {return true}
   }
 
   onSelect(selectedPerviewProject: any): void {
