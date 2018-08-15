@@ -1,6 +1,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {MaterializeModule} from 'angular2-materialize';
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { HttpModule } from '@angular/http';
@@ -23,7 +24,6 @@ import { AuthorizedPerviewProjectsComponent } from './components/authorized-perv
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
 import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 import { routes } from "./routes";
-
 
 
 @NgModule({
