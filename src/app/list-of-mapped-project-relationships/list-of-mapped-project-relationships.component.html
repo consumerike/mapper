@@ -1,28 +1,20 @@
 <app-mapper-header></app-mapper-header>
-<div>
-  <!-- <section *ngFor="let project of listOfSavedPerviewProjects "> -->
-    <section *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
-    <input type="checkbox">
-    <span>{{project.name}}</span>
-    <span>
-      <!-- <li *ngFor="let project of getPlanviewAssociations(listOfSavedPerviewProjects)">
-        <span><button routerLink="/authorizedPlanviewProjects" >Add planViewProject</button></span>
-      </li> -->
-      <span><button (click)="deletePerviewProject(project, i)">del</button></span>
-      <ul *ngFor="let project of project.planviewProjects; let i = index" [attr.data-index]="i">
-        <span>{{project.ppl_code}}</span>
-        <button [routerLink]="['/authorizedPlanviewProjects', project.uid]" >Add planViewProject</button>
-        <button (click)="deletePlanviewAssociation(project)">X</button>
+<table class="container striped responsive">
+
+    <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
+    <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
+    <td class="col m4">{{project.name}}<a (click)="deletePerviewProject(project, i)" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a></td>
+    <td class="col m4"> 
+        
+      <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
+        {{project.ppl_code}}
+        <!-- <button (click)="deletePlanviewAssociation(project)">X</button> -->
+        <a (click)="deletePlanviewAssociation(project)"class=" offset-m1 btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a>
       </ul>
-    </span>
-  </section>
+    </td>
+    <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.name]" >Add Planview Project</a></td>
+  </tr>
 
-  <!-- <div>
-     <ul "let project of projectSavedByUser$|async">
-      <li>{{project}}</li>
-    
-  </div> -->
   <app-mapper-footer></app-mapper-footer>
-</div>
+</table>
 
-<!-- getPlanviewAssociations(listOfSavedPerviewProjects)" -->

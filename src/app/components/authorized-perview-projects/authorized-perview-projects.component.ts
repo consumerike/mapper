@@ -20,15 +20,13 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   private authorizedProjects: any[];
   private selectedProjects: any[] = [];
   private myProjects$ = new Subject();
-  private listOfSavedProjects: any;
+  private listOfSavedProjects: any = [];
 
   ngOnInit() {
     this.getPerviewProjects();
     this.getListOfSavedProjects();
     this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
     this.myProjects$.subscribe();
-    this.listOfSavedProjects$ = this.myprojectService.getSavedPerviewProjects();
-   
   }
 
   unSub = new Subject();
@@ -40,12 +38,20 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   settings = {
     columns: {
       name: {
-        title: "Project"
+        title: "Project",
+        editable: false
+        
       },
       projectManager: {
         title: "Project Manager"
       }
       
+    },
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+
     }
   };
 
@@ -76,13 +82,14 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     let prepSelections: any = this.selectedProjects.map((selectedProject) => {
       return {"name": selectedProject};
     })
-
+    console.log(this.listOfSavedProjects, "is this a list or not?");
+    
     
     let updatedListOfSavedProjects: any[] = [...this.listOfSavedProjects, ...prepSelections];
 
     this.myprojectService.projectsSavedByUser = updatedListOfSavedProjects;
-    let newStream = from(updatedListOfSavedProjects);
-    this.myprojectService.projectsSavedByUser$ = newStream;
+    // let newStream = from(updatedListOfSavedProjects);
+    // this.myprojectService.projectsSavedByUser$ = newStream;
     // this.listOfSavedProjects = []
     
     // let added = this.myProjects$.next(prepSelections);
@@ -91,6 +98,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     // this.listOfSavedProjects$ = newStream
     // let newStream: Observable<any> = this.myProjects$.next(prepSelections);
     this.myprojectService.userHasSavedProjects = false;
+    this.getListOfSavedProjects();
     this.clearSelections();
     console.log("updatedListofSavedProjects:",this.myprojectService.projectsSavedByUser);
     

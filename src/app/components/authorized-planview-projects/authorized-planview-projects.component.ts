@@ -47,6 +47,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   settings = {
+    
     columns: {
       ppl_code: {
         title: "Project Name"
@@ -54,7 +55,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       altPM: {
         title: "Alternate PM"
       }
-    }
+    },
+    actions: {
+      add: false,
+      edit: false,
+      delete: false,
+     
+    },
+    
   };  
 
 

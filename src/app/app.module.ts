@@ -1,6 +1,9 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+// import * as M from  'materialize-css'
+import 'materialize-css';
+import 'materialize-css/dist/css/materialize.min.css'
 import {MaterializeModule} from 'angular2-materialize';
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -14,7 +17,6 @@ import { MyProjectService } from './Services/project.service';
 import { PlanviewService } from './Services/planview.service';
 import { PerviewService } from './Services/perview.service';
 import { MapperService } from './Services/mapper.service';
-
 
 import { AppComponent } from './app.component';
 import { MapperHeaderComponent } from './components/mapper-header/mapper-header.component';
@@ -40,6 +42,7 @@ import { routes } from "./routes";
 
   imports: [
     BrowserModule,
+    MaterializeModule,
     HttpModule,
     HttpClientModule,
     FormsModule,
