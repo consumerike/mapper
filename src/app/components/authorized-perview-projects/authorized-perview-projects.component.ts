@@ -4,8 +4,13 @@ import { MyProjectService } from '../../Services/project.service';
 import { IProject } from '../mapper-models';
 import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
+import { M } from "materialize-css";
+import { Router } from '@angular/router';
 
+declare const $: any
+declare const window: Window;
 
+   
 @Component({
   selector: 'app-authorized-perview-projects',
   templateUrl: './authorized-perview-projects.component.html',
@@ -14,7 +19,8 @@ import { takeUntil, map } from 'rxjs/operators';
 export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   constructor(private perviewService: PerviewService,
-    private myprojectService: MyProjectService
+    private myprojectService: MyProjectService,
+    private router: Router
   ) { }
 
   private authorizedProjects: any[];
@@ -25,8 +31,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPerviewProjects();
     this.getListOfSavedProjects();
-    this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
-    this.myProjects$.subscribe();
+    // this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
+    // this.myProjects$.subscribe();
   }
 
   unSub = new Subject();
@@ -101,7 +107,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     this.getListOfSavedProjects();
     this.clearSelections();
     console.log("updatedListofSavedProjects:",this.myprojectService.projectsSavedByUser);
+   
     
+   
     // this.myprojectService.getSavedPerviewProjects().subscribe((data)=> console.log('did this work??',data)
     // );
     // console.log(this.listOfSavedProjects$.map(data => console.log(data)).subscribe());
@@ -138,5 +146,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     this.selectedProjects = [];
   }
   
+
+  navigateHome(){
+    this.router.navigate(['/']);
+ }
 
 }

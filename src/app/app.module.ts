@@ -1,7 +1,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-// import * as M from  'materialize-css'
+import * as M from  'materialize-css'
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.min.css'
 import {MaterializeModule} from 'angular2-materialize';

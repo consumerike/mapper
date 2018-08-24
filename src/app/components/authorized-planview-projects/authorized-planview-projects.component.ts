@@ -30,15 +30,16 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   private perviewProject: any;
   private listOfMappedProjects: any;
 
-  // @Input() perviewProject: IProject;
-
   ngOnInit() {
     this.getPlanviewProjects();
     this.getListofMappedProjects();
     this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
+    // this.handleModalClick(this.projectUID);
+    
   }
   
-    
+  // @Input()
+  // projectUID: any;  
   unSub = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -88,10 +89,19 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     .subscribe((data) => data);
   }
 
+  handleModalClick(perviewProj): void {
+    console.log("Do i have all i need?", perviewProj);
+    
+    this.projectUID = perviewProj;
+  }
+
   addSelectedProjects(): void {
     // let prepSelections: any = this.selectedProjects.map((selectedProject) => {
     //   return {"uid": this.perviewProject, "ppl_code": selectedProject};
     // })
+    console.log("getting input", this.projectUID);
+    
+    
     let prepSelections: any[] = this.prepareForMapping();
     let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
     console.log("this is the updatedlist:",updatedListofMappedProjects);
@@ -139,6 +149,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
   clearSelections(){
     this.selectedProjects = [];
+  }
+
+  navigateHome(){
+     this.router.navigate(['/']);
   }
   
 

@@ -8,13 +8,34 @@
         
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.ppl_code}}
-        <!-- <button (click)="deletePlanviewAssociation(project)">X</button> -->
         <a (click)="deletePlanviewAssociation(project)"class=" offset-m1 btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a>
       </ul>
     </td>
     <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.name]" >Add Planview Project</a></td>
   </tr>
-
   <app-mapper-footer></app-mapper-footer>
 </table>
 
+<!-- BREAK BREAK BREAK BREAK BREAK BREAK  -->
+<!-- 
+<app-mapper-header></app-mapper-header>
+<table class="container striped responsive">
+
+    <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
+    <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
+    <td class="col m4">{{project.name}}<a (click)="deletePerviewProject(project, i)" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a></td>
+    <td class="col m4"> 
+        
+      <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
+        {{project.ppl_code}} -->
+        <!-- <button (click)="deletePlanviewAssociation(project)">X</button> -->
+        <!-- <a (click)="deletePlanviewAssociation(project)"class=" offset-m1 btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a>
+      </ul>   
+    </td>
+    <td class="col m4"><a (click)="handleModalClick(project.name)" data-target="authorizedPlanviewModal" class="waves-effect waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
+    <app-authorized-planview-projects [projectUID]="project.name" id="authorizedPlanviewModal" class="modal"></app-authorized-planview-projects>
+  </tr>
+
+  <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"></app-authorized-perview-projects>
+  <app-mapper-footer><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
+</table> -->

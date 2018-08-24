@@ -5,7 +5,11 @@ import {MyProjectService} from '../Services/project.service'
 import { MapperService } from '../Services/mapper.service';
 import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { takeUntil, map, tap, take } from 'rxjs/operators';
+import { M } from "materialize-css";
 
+
+declare const $: any
+declare const window: Window;
 
 @Component({
   selector: 'list-of-mapped-projects',
@@ -82,6 +86,18 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     this.getSavedProjects();
     this.getMappedProjects();
     // this.getPlanviewAssociations(this.listOfSavedPerviewProjects); 
+    // document.addEventListener('DOMContentLoaded', function() {
+    //   var elems = document.querySelectorAll('.modal');
+    //   var instances = M.Modal.init(elems, onCloseEnd());
+    // });
+    // $(document).ready(function(){
+    //   $('.perview').modal({
+    //     dismissible: true,
+    //     onCloseEnd: function(){console.log('what is the scope', this);
+    //     },
+    //     complete: function() {console.log('running as intended'), this.getSavedProjects(); } 
+    //   });
+    // });
     this.currentID = 'Stan Lee';
   }
 
@@ -177,5 +193,11 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   hidePerviewProjects() {
    return false;
   }
+
+  handleModalClick(perviewProj): void {
+    console.log("Do i have what I need?", perviewProj);
+
+  }
+
 
 }
