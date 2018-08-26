@@ -23,7 +23,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     private router: Router
   ) { }
 
-  private authorizedProjects: any[];
+  authorizedProjects: any[];
   private selectedProjects: any[] = [];
   private selectedProjects$: Observable<any>
   private myProjects: any[];
@@ -92,14 +92,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   handleModalClick(perviewProj): void {
     console.log("Do i have all i need?", perviewProj);
     
-    this.projectUID = perviewProj;
+    // this.projectUID = perviewProj;
   }
 
   addSelectedProjects(): void {
     // let prepSelections: any = this.selectedProjects.map((selectedProject) => {
     //   return {"uid": this.perviewProject, "ppl_code": selectedProject};
     // })
-    console.log("getting input", this.projectUID);
+    // console.log("getting input", this.projectUID);
     
     
     let prepSelections: any[] = this.prepareForMapping();
@@ -128,12 +128,12 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     console.log(event, "this is the row click.....", "these are selected:", this.selectedProjects);
   }
 
-  selectProject(event: Event) {
-    if (this.projectIsSelected(event.data.ppl_code)) {
-       this.unselectProject(event.data.ppl_code);
+  selectProject(event: object) {
+    if (this.projectIsSelected(event["data"].ppl_code)) {
+       this.unselectProject(event["data"].ppl_code);
     }
     else {
-      this.selectedProjects.push(event.data.ppl_code);
+      this.selectedProjects.push(event["data"].ppl_code);
     }
   }
 

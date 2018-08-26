@@ -17,16 +17,18 @@ export class MyProjectService {
   selections: any;
   projectsSavedByUser$: Observable<any>
   
-
+  
   CheckForSavedProjects() {
     return this.userHasSavedProjects;
   }
 
   getSavedPerviewProjects(): Observable<any[]> {
+  
     if (this.CheckForSavedProjects()) {
-      return  this.http.get('assets/sharepoint-users-projects.json')
-      .map((mockData) => {
-        this.projectsSavedByUser = mockData.savedProjects;
+      return  this.http.get('/assets/sharepoint-users-projects.json')
+      .map((mockData) => {     
+   
+        this.projectsSavedByUser = mockData["savedProjects"];
         this.userHasSavedProjects = false;
         return this.projectsSavedByUser;
         // return arrayOfProjects;
@@ -41,9 +43,9 @@ export class MyProjectService {
     
   }
 
-  addPerviewSelectedProjects(selections: any[]): void {
-    this.projectsSavedByUser.next(selections);
-  }
+  // addPerviewSelectedProjects(selections: any[]): void {
+  //   this.projectsSavedByUser.next(selections);
+  // }
 
   deletePerviewProject(perviewProject: any, index: any) {
     console.log("this is the index: ", index);

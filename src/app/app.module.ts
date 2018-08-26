@@ -47,7 +47,7 @@ import { routes } from "./routes";
     HttpClientModule,
     FormsModule,
     Ng2SmartTableModule,
-    RouterModule.forRoot(routes/*{enableTracing: true}*/),
+    RouterModule.forRoot(routes),//,{enableTracing: true}
   ],
 
   providers: [

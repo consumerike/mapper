@@ -61,8 +61,6 @@ export class MapperService {
     "ppl_code": "Doctor Psycho"
   }
 
-  
-
 ];
 
 
@@ -72,9 +70,11 @@ export class MapperService {
   "boomshakalaka below this line...returning from assets instead of updated mapperService."
   getMappedProjects(): Observable<any> {
     if(this.dataSourceFlag === true) {  
-      return this._http.get('assets/mapper-projects.json')
+      return this._http.get('/assets/mapper-projects.json')
       .map( (data) => {
-        this.mappedProjects = data.mappedProjects;
+        console.log(data);
+        
+        this.mappedProjects = data["mappedProjects"]
         error => console.log(error);
         this.dataSourceFlag = false;
         console.log("is this running??--it shouldn't be....");

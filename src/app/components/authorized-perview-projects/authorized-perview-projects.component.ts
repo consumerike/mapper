@@ -23,7 +23,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     private router: Router
   ) { }
 
-  private authorizedProjects: any[];
+  authorizedProjects: any[];
   private selectedProjects: any[] = [];
   private myProjects$ = new Subject();
   private listOfSavedProjects: any = [];
@@ -31,15 +31,15 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPerviewProjects();
     this.getListOfSavedProjects();
-    // this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
-    // this.myProjects$.subscribe();
+    this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
+    this.myProjects$.subscribe();
   }
 
   unSub = new Subject();
   ngOnDestroy(): void {
     this.unSub.next();
     this.unSub.complete();
-  }
+  } 
 
   settings = {
     columns: {
@@ -60,7 +60,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
     }
   };
-
   
 
   getPerviewProjects(): void {
@@ -123,12 +122,12 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     console.log("these are selected:", this.selectedProjects);
   }
 
-  selectProject(event: Event) {
-    if (this.projectIsSelected(event.data.name)) {
+  selectProject(event: object) {
+    if (this.projectIsSelected(event["data"].name)) {
        this.unselectProject(name)
     }
     else {
-      this.selectedProjects.push(event.data.name);
+      this.selectedProjects.push(event["data"].name);
     }
   }
 

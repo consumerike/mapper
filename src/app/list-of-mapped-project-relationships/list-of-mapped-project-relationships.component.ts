@@ -110,6 +110,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   getSavedProjects(): void {
+    
     this.myProjectService.getSavedPerviewProjects()
     .pipe(
       takeUntil(this.unSub),
