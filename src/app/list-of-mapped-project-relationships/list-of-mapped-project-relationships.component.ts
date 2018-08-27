@@ -106,7 +106,14 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
   
   getCurrentUserID(){
-    this.userService.getCurrentUserID();
+    this.userService.getCurrentUserID()
+    .pipe(
+      takeUntil(this.unSub),
+      map( (data) => {
+        console.log('currentID:', data);
+        this.currentID = data;
+      })
+    )
   }
 
   getSavedProjects(): void {

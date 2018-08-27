@@ -80,7 +80,7 @@ export class PerviewService {
   }
 
   getAuthorizedPerviewProjects(): Observable<any> {
-    return this.http.get('assets/mock-authorized-projects.json')
+    return this.http.get('./assets/mock-authorized-projects.txt', {responseType: 'json'})
     .pipe(map( (data) => { 
       this.authorizedPerviewProjects = data;
       return this.authorizedPerviewProjects;

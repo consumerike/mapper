@@ -24,7 +24,7 @@ export class PlanviewService {
   authorizedPlanviewProjects: any;
 
   getAuthorizedPlanviewProjects():Observable<any> {
-     return this.http.get("assets/planview-mock.json")
+     return this.http.get("./assets/planview-mock.txt", {responseType: 'json'})
       .pipe(map( (data) => { 
       this.authorizedPlanviewProjects = data;
       return this.authorizedPlanviewProjects;

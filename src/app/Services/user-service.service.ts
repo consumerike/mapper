@@ -24,24 +24,9 @@ export class UserService {
       headers,
       withCredentials: true,
     };
-    // return this.http.get(url, options).subscribe( res => console.log(res.text()))
-    return this.http.get(url, options)
-     .pipe(map(AccountName => AccountName.toString() ));
-      
 
-    //   .flatMap((spData: Response) => {
-        
-    //     var accountName = spData["d"].AccountName
-    //     url = `${this.apiRoot}/_api/ProjectData/Resources`
-    //     let filter = "?$filter=ResourceNTAccount eq '" + encodeURIComponent('i:0#.w|' + accountName) + "'"
-    //     return this.http.get(url + filter, options)
-    //         .map((data: Response) => {
-    //             return data["d"].results[0].ResourceId.toUpperCase();
-    //         })
-    //   })
-    // }
-    
-    
+    return this.http.get(url, options)
+     .pipe(map(AccountName => AccountName.toString() ));    
 
   }
   
@@ -49,4 +34,3 @@ export class UserService {
 
 
 }
-"https://perviewqa.app.parallon.com/PWA"

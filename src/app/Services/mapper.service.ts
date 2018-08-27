@@ -70,17 +70,28 @@ export class MapperService {
   "boomshakalaka below this line...returning from assets instead of updated mapperService."
   getMappedProjects(): Observable<any> {
     if(this.dataSourceFlag === true) {  
-      return this._http.get('/assets/mapper-projects.json')
-      .map( (data) => {
-        console.log(data);
-        
-        this.mappedProjects = data["mappedProjects"]
-        error => console.log(error);
-        this.dataSourceFlag = false;
-        console.log("is this running??--it shouldn't be....");
-        
-        return this.mappedProjects;
-      });
+      return this._http.get('./assets/mapper-projects.txt', {responseType: 'json'})
+      .pipe (
+        map( (data) => {
+          console.log(data);
+          try {
+          
+           this.mappedProjects = data["mappedProjects"]
+           this.dataSourceFlag = false;
+           return this.mappedProjects;
+          }
+         // this.mappedProjects = data["mappedProjects"]
+         catch{
+          console.log("is this running??--it shouldn't be....");
+         } error => console.log(error);
+         
+         
+          
+         
+        })
+
+      )
+    
     }
     console.log(this.dataSourceFlag);    
     console.log("Given false flag", this.mappedProjects);

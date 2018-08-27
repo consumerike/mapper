@@ -25,14 +25,30 @@ export class MyProjectService {
   getSavedPerviewProjects(): Observable<any[]> {
   
     if (this.CheckForSavedProjects()) {
-      return  this.http.get('/assets/sharepoint-users-projects.json')
-      .map((mockData) => {     
-   
-        this.projectsSavedByUser = mockData["savedProjects"];
-        this.userHasSavedProjects = false;
-        return this.projectsSavedByUser;
-        // return arrayOfProjects;
-       });
+      return  this.http.get('./assets/sharepoint-users-projects.txt', {responseType: 'json'})
+      .pipe(
+        map((mockData) => {    
+          try{
+            console.log("is this coming through", mockData);
+           
+            this.projectsSavedByUser = mockData["savedProjects"];
+            console.log("is this coming through parsed", mockData);
+            this.userHasSavedProjects = false;
+            return this.projectsSavedByUser;
+          } 
+          catch {
+            console.log("didn't work, here's text:", mockData);
+            
+          }
+          
+          // this.projectsSavedByUser = mockData["savedProjects"];
+          // this.userHasSavedProjects = false;
+          // return this.projectsSavedByUser;
+          // return arrayOfProjects;
+         })
+
+      )
+      
        
     }
     console.log(this.CheckForSavedProjects());
