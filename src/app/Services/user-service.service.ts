@@ -6,31 +6,49 @@ import{map, mergeMap, catchError, filter} from 'rxjs/operators'
 import  { Observable } from 'rxjs';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  static currentUser: any;
   constructor(private http: HttpClient) { }
 
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentID: any = 'Stan Lee';
   public currentUser: string;
 
-  getCurrentUserID(): Observable<any> {
+  getCurrentUserID(): Observable<string> {
     let url = `${this.apiRoot}/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
     let headers = new HttpHeaders();
-    headers =  headers = headers.set('accept', 'application/json;odata=verbose');
+    headers = headers.set('accept', 'application/json;odata=verbose');
     let options = {
       headers,
       withCredentials: true,
     };
 
     return this.http.get(url, options)
-     .pipe(map(AccountName => AccountName.toString() ));    
-
+     .pipe(
+       map(data => {         
+        this.currentUser = data["d"].AccountName.toUpperCase();
+        return this.currentUser
+        // return data["d"].AccountName.toUpperCase();
+        }) 
+      );    
   }
   
-
-
-
+  getChangePermissionToken(): Observable<string> {
+    let url = `${this.apiRoot}/_api/contextinfo`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose');
+    let options = {
+      headers,
+     }  
+     return this.http.post(url, {},options)
+       .pipe(
+         map( data => {
+          return data["d"].GetContextWebInformation.FormDigestValue;
+         })
+       );
+  }
 }

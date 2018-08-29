@@ -32,7 +32,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getPlanviewProjects();
-    this.getListofMappedProjects();
+    // this.getListofMappedProjects();
     this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
     
@@ -50,11 +50,11 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   settings = {
     
     columns: {
-      ppl_code: {
+      name: {
         title: "Project Name"
       },
-      altPM: {
-        title: "Alternate PM"
+      ppl_Code: {
+        title: "ID"
       }
     },
     actions: {
@@ -71,23 +71,24 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     this.planviewService.getAuthorizedPlanviewProjects()
     .pipe( 
        takeUntil(this.unSub),
-       map(((data) => {this.authorizedProjects = data.planviewProjects;}))
+       map(((data) => {  this.authorizedProjects = data;}))
      )
      .subscribe((data) => data)
   }
 
-  getListofMappedProjects(): void {
-    this.mapperService.getMappedProjects().pipe(
-      takeUntil(this.unSub),
-      map( (data) => {
-        console.log("do I have the mappedProjects?", data);
+  //NO LONGER IN USE:
+  // getListofMappedProjects(): void {
+  //   this.mapperService.getMappedProjects().pipe(
+  //     takeUntil(this.unSub),
+  //     map( (data) => {
+  //       console.log("do I have the mappedProjects?", data);
 
-        this.listOfMappedProjects = data;
+  //       this.listOfMappedProjects = data;
   
-      })
-    )
-    .subscribe((data) => data);
-  }
+  //     })
+  //   )
+  //   .subscribe((data) => data);
+  // }
 
   handleModalClick(perviewProj): void {
     console.log("Do i have all i need?", perviewProj);

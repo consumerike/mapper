@@ -9,7 +9,7 @@ import 'rxjs/add/operator/filter'
 import { IProject, Project } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +24,18 @@ export class PlanviewService {
   authorizedPlanviewProjects: any;
 
   getAuthorizedPlanviewProjects():Observable<any> {
-     return this.http.get("./assets/planview-mock.txt", {responseType: 'json'})
-      .pipe(map( (data) => { 
+    let url = `http://xrdcwpdbsmsp03:5000/api/projects/admin/AuthorizedPlanViewProjects`
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+    let options = {
+      headers
+    };
+
+     return this.http.get(url,options)
+      .pipe(tap( (data) => {        
       this.authorizedPlanviewProjects = data;
+      console.log('captured data',this.authorizedPlanviewProjects);
       return this.authorizedPlanviewProjects;
       }));
       

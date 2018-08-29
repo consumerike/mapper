@@ -6,6 +6,7 @@ import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
+import { UserService } from '../../Services/user-service.service';
 
 declare const $: any
 declare const window: Window;
@@ -20,6 +21,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   constructor(private perviewService: PerviewService,
     private myprojectService: MyProjectService,
+    private userService: UserService,
     private router: Router
   ) { }
 
@@ -31,7 +33,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPerviewProjects();
     this.getListOfSavedProjects();
-    this.myProjects$.next(this.myprojectService.getSavedPerviewProjects());
+    this.myProjects$.next(this.myprojectService.getSavedPerviewProjects(this.userService.currentUser));
     this.myProjects$.subscribe();
   }
 
@@ -42,14 +44,17 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   } 
 
   settings = {
+    selectMode: 'multi',
     columns: {
-      name: {
+      projName: {
         title: "Project",
         editable: false
         
       },
-      projectManager: {
-        title: "Project Manager"
+  
+      owner: {
+        title: "Business Owner",
+        editable: false
       }
       
     },
@@ -61,18 +66,18 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     }
   };
   
-
   getPerviewProjects(): void {
     this.perviewService.getAuthorizedPerviewProjects()
     .pipe( 
        takeUntil(this.unSub),
-       map(((data) => {this.authorizedProjects = data.authorizedProjects;}))
+       map(((data) => {console.log(data);
+        this.authorizedProjects = data;}))
      )
      .subscribe((data) => data)
   }
 
   getListOfSavedProjects(): void {
-    this.myprojectService.getSavedPerviewProjects().pipe(
+    this.myprojectService.getSavedPerviewProjects(this.currentID).pipe(
       takeUntil(this.unSub),
       map( (data) => {
         console.log("do I have the savedProjects?", data);
@@ -106,17 +111,13 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     this.getListOfSavedProjects();
     this.clearSelections();
     console.log("updatedListofSavedProjects:",this.myprojectService.projectsSavedByUser);
-   
-    
-   
+  
     // this.myprojectService.getSavedPerviewProjects().subscribe((data)=> console.log('did this work??',data)
     // );
     // console.log(this.listOfSavedProjects$.map(data => console.log(data)).subscribe());
   }
   
-
   rowClick(event){
-   
     
     this.selectProject(event);
     console.log("these are selected:", this.selectedProjects);

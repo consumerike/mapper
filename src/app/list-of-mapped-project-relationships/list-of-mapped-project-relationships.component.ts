@@ -25,12 +25,14 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    //for testing purposes: 
   projects$ = new Subject();
   danSavedProjects$: Observable<any[]>
+  currentUserID$: Observable<string>
+  realSavedProjects$: Observable<any>
   danMappedProjects$: Observable<any[]>
   danMappedProjects: any[]
   testSub = new Subject();
   testbehaveSub = new BehaviorSubject(null);
 
-  currentID = 'Stan Lee';
+  currentID;
   savedProjects: boolean
   userHasSavedProjects: boolean
   userWithNoSavedProjects: boolean
@@ -67,6 +69,20 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     // this.testSub.next([4,5,6])
 
     // this.danSavedProjects$ = this.myProjectService.getSavedPerviewProjects();
+    this.currentUserID$ = this.userService.getCurrentUserID();
+    this.realSavedProjects$ = this.currentUserID$
+    .pipe(
+      map((data) =>  {
+        console.log('current ID is data right?',data);
+        this.currentID = data;
+        this.getSavedProjects(this.currentID);
+        }
+      )
+    )
+    this.realSavedProjects$.pipe().subscribe();
+    console.log('at this point',this.listOfSavedPerviewProjects);
+    
+       
 
     // this.danMappedProjects$ = this.danSavedProjects$.pipe(
     //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
@@ -80,11 +96,15 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     // this.listOfSavedPerviewProjectsSub = this.myProjectService.getSavedPerviewProjects().subscribe( (data) => this.listOfSavedPerviewProjects = data)
     // this.listOfMappedProjectsSub =  this.mapperService.perviewMappedPlanviewAssociations(this.project)
     // .subscribe((data)=>{console.log(`What's the data?`)})
-    console.log('on init is running....');
     
-    this.getCurrentUserID();
-    this.getSavedProjects();
-    this.getMappedProjects();
+    // wow block
+    // this.getCurrentUserID();
+    // this.getSavedProjects(this.currentID);
+
+    // end wow block
+    // this.getMappedProjects();
+    
+    
     // this.getPlanviewAssociations(this.listOfSavedPerviewProjects); 
     // document.addEventListener('DOMContentLoaded', function() {
     //   var elems = document.querySelectorAll('.modal');
@@ -98,27 +118,33 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     //     complete: function() {console.log('running as intended'), this.getSavedProjects(); } 
     //   });
     // });
-    this.currentID = 'Stan Lee';
+
   }
 
   updateChanges(): any {
     this.mapperService.updateData();
   }
   
-  getCurrentUserID(){
+  getCurrentUserID(): void {
     this.userService.getCurrentUserID()
     .pipe(
       takeUntil(this.unSub),
       map( (data) => {
         console.log('currentID:', data);
         this.currentID = data;
+         
       })
     )
-  }
-
-  getSavedProjects(): void {
+    .subscribe((data) => data);
     
-    this.myProjectService.getSavedPerviewProjects()
+  } 
+  getSavedProjects(currentUserID: string): void {
+   console.log('does this run?');
+   console.log('ok',currentUserID);
+   
+   
+    
+    this.myProjectService.getSavedPerviewProjects(this.userService.currentUser)
     .pipe(
       takeUntil(this.unSub),
       map( (data) => {
@@ -142,19 +168,19 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   
   remove(uid){console.log(uid)}
 
-  getMappedProjects() {
-    this.mapperService.getMappedProjects()
-    .subscribe((data) => {  
-      this.mappedProjects = data;
-    })
-  }
+  // getMappedProjects() {
+  //   this.mapperService.getMappedProjects()
+  //   .subscribe((data) => {  
+  //     this.mappedProjects = data;
+  //   })
+  // }
 
   deletePlanviewAssociation(mappedRelationship): any {
     if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship)) {
       console.log("passed in project:", mappedRelationship);
       this.mapperService.deletePlanviewAssociation(mappedRelationship);
       console.log("reflect delete", this.listOfSavedPerviewProjects);
-      this.getSavedProjects()
+      this.getSavedProjects(this.currentID)
       console.log("said ok");
     }
     else console.log('canceled operation');
@@ -172,7 +198,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {;
       this.mapperService.deletePerviewAssociations(perviewProject);
       this.myProjectService.deletePerviewProject(perviewProject, index);
-      this.getSavedProjects();
+      this.getSavedProjects(this.currentID);
       console.log('said ok');
     }
     else {console.log('canceled operation');

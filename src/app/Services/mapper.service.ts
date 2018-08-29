@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IProject, Project, Result, MappedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap, filter } from 'rxjs/operators';
 import { Observable, Subscribable, Subscription, from } from 'rxjs';
 import { MyProjectService } from './project.service';
 
@@ -12,113 +12,147 @@ import { MyProjectService } from './project.service';
 
 export class MapperService {
 
-  constructor(private _http: HttpClient, private myProjectService: MyProjectService) {
+  constructor(private http: HttpClient, private myProjectService: MyProjectService) {
     
    }
-  
-  public mappedProjects: any[] = [{
-		"uid": "Batman",
-		"ppl_code": "The Joker"
-	}, {
-		"uid": "Spiderman",
-		"ppl_code": "Venom"
-	}, {
-		"uid": "X-Men",
-		"ppl_code": "Magneto"
-	}, {
-		"uid": "Captain America",
-		"ppl_code": "Red Skull"
-	}, {
-		"uid": "Spiderman",
-		"ppl_code": "Green Goblin"
-	}, {
-		"uid": "Spiderman",
-		"ppl_code": "The Lizard"
-	}, {
-		"uid": "Spiderman",
-		"ppl_code": "Dr. Octopus"
-	}, {
-		"uid": "Spiderman",
-		"ppl_code": "Rhino"
-  }, {
-    "uid": "The Invisible Woman",
-    "ppl_code": "Doctor Doom"
-  }
-  , {
-    "uid": "Black Panther",
-    "ppl_code": "Erik Killmonger"
-  }
-  , {
-    "uid": "Wonder Woman",
-    "ppl_code": "Ares"
-  }
-  , {
-    "uid": "Wonder Woman",
-    "ppl_code": "Doctor Poison"
-  }
-  , {
-    "uid": "Wonder Woman",
-    "ppl_code": "Doctor Psycho"
-  }
+   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
 
-];
+  
+//   public mappedProjects: any[] = [{
+// 		"uid": "Batman",
+// 		"ppl_code": "The Joker"
+// 	}, {
+// 		"uid": "Spiderman",
+// 		"ppl_code": "Venom"
+// 	}, {
+// 		"uid": "X-Men",
+// 		"ppl_code": "Magneto"
+// 	}, {
+// 		"uid": "Captain America",
+// 		"ppl_code": "Red Skull"
+// 	}, {
+// 		"uid": "Spiderman",
+// 		"ppl_code": "Green Goblin"
+// 	}, {
+// 		"uid": "Spiderman",
+// 		"ppl_code": "The Lizard"
+// 	}, {
+// 		"uid": "Spiderman",
+// 		"ppl_code": "Dr. Octopus"
+// 	}, {
+// 		"uid": "Spiderman",
+// 		"ppl_code": "Rhino"
+//   }, {
+//     "uid": "The Invisible Woman",
+//     "ppl_code": "Doctor Doom"
+//   }
+//   , {
+//     "uid": "Black Panther",
+//     "ppl_code": "Erik Killmonger"
+//   }
+//   , {
+//     "uid": "Wonder Woman",
+//     "ppl_code": "Ares"
+//   }
+//   , {
+//     "uid": "Wonder Woman",
+//     "ppl_code": "Doctor Poison"
+//   }
+//   , {
+//     "uid": "Wonder Woman",
+//     "ppl_code": "Doctor Psycho"
+//   }
+
+// ];
 
 
   public planviewMappedProjects: any[];
-  private dataSourceFlag:boolean = true;
+  // private dataSourceFlag:boolean = true;
 
-  "boomshakalaka below this line...returning from assets instead of updated mapperService."
-  getMappedProjects(): Observable<any> {
-    if(this.dataSourceFlag === true) {  
-      return this._http.get('./assets/mapper-projects.txt', {responseType: 'json'})
-      .pipe (
-        map( (data) => {
-          console.log(data);
-          try {
+  // getMappedProjects(): Observable<any> {
+  //   if(this.dataSourceFlag === true) {  
+  //     return this.http.get('./assets/mapper-projects.txt', {responseType: 'json'})
+  //     .pipe (
+  //       map( (data) => {
+  //         console.log(data);
+  //         try {
           
-           this.mappedProjects = data["mappedProjects"]
-           this.dataSourceFlag = false;
-           return this.mappedProjects;
-          }
-         // this.mappedProjects = data["mappedProjects"]
-         catch{
-          console.log("is this running??--it shouldn't be....");
-         } error => console.log(error);
-         
-         
-          
-         
-        })
+  //          this.mappedProjects = data["mappedProjects"]
+  //          this.dataSourceFlag = false;
+  //          return this.mappedProjects;
+  //         }
+  //        // this.mappedProjects = data["mappedProjects"]
+  //        catch{
+  //         console.log("is this running??--it shouldn't be....");
+  //        } error => console.log(error);
+                 
+  //       })
 
-      )
+  //     )
     
-    }
-    console.log(this.dataSourceFlag);    
-    console.log("Given false flag", this.mappedProjects);
-    return from([this.mappedProjects]);
-  }
+  //   }
+  //   console.log(this.dataSourceFlag);    
+  //   console.log("Given false flag", this.mappedProjects);
+  //   return from([this.mappedProjects]);
+  // }
   
   getMappedPlanviewAssociations(savedPerviewProjects:any[]): any[] {
    
     console.log("why are you saying it cannot be read: getMappedPlanviewAssociationsb", savedPerviewProjects);
     
     return savedPerviewProjects.map((perProj) => {
-      return this.perviewMappedPlanviewAssociations(perProj)
+      return this.perviewMappedPlanviewAssociations(perProj).subscribe()
     })
 
   }
 
   //chance this runs too quickly before data is ready...
-  perviewMappedPlanviewAssociations(project): Observable<any> {
-   
+  perviewMappedPlanviewAssociations(project: any): Observable<any> {
 
+    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${project.projUID}/planViewProjects`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+              .set('Access-Control-Allow-Origin','http://localhost:4200')
+              .set('Access-Control-Expose-Headers', 'accept')
+    
+    ;
+    let options = {
+      headers,
+    }  
+
+    console.log("need to be passing in a projectUIDman",project.projUID);
+    try {
+      console.log('are you stopping?');
+      
+      return this.http.get(url,options)
+    .pipe(
+      tap(data => {        
+       console.log("this is the array essentially",data)
+        this.planviewMappedProjects = data;
+        project.planviewProjects = this.planviewMappedProjects
+        console.log("project.planviewProjects",this.planviewMappedProjects,);
+        
+        return project.planviewProjects;
+       }),
+      ); 
+    }
+    catch{
+      console.log("that didn't work in perviewMappedPlanviewAssociations function...");
+
+    }
+    
   
-   let planViewMappedProjects =  this.mappedProjects.filter((mappedProj) => {    
-     if(mappedProj.uid == project.name) return true;
-  });
-  this.planviewMappedProjects = planViewMappedProjects;
-  project.planviewProjects = planViewMappedProjects;
-  return project.planviewProjects;
+       
+     
+
+    
+    
+  //  let planViewMappedProjects =  this.mappedProjects.filter((mappedProj) => {    
+  //    if(mappedProj.uid == project.name) return true;
+  // });
+  // this.planviewMappedProjects = planViewMappedProjects;
+  // project.planviewProjects = planViewMappedProjects;
+  // return project.planviewProjects;
   }
 
   deletePerviewAssociations(perviewProject: any): any {
