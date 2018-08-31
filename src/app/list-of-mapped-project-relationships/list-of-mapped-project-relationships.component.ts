@@ -65,7 +65,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     // this.testSub.subscribe( () => {
     //   // you will never see 1,2,3 
     // })
-
+    
     // this.testSub.next([4,5,6])
 
     // this.danSavedProjects$ = this.myProjectService.getSavedPerviewProjects();
@@ -78,10 +78,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.getSavedProjects(this.currentID);
         }
       )
-    )
+    );
     this.realSavedProjects$.pipe().subscribe();
-    console.log('at this point',this.listOfSavedPerviewProjects);
-    
        
 
     // this.danMappedProjects$ = this.danSavedProjects$.pipe(
@@ -139,11 +137,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     
   } 
   getSavedProjects(currentUserID: string): void {
-   console.log('does this run?');
-   console.log('ok',currentUserID);
-   
-   
-    
+  
+   console.log('ok',currentUserID); 
     this.myProjectService.getSavedPerviewProjects(this.userService.currentUser)
     .pipe(
       takeUntil(this.unSub),
@@ -176,9 +171,12 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   // }
 
   deletePlanviewAssociation(mappedRelationship): any {
+    console.log(mappedRelationship);
+    
     if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship)) {
       console.log("passed in project:", mappedRelationship);
-      this.mapperService.deletePlanviewAssociation(mappedRelationship);
+      this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
+      
       console.log("reflect delete", this.listOfSavedPerviewProjects);
       this.getSavedProjects(this.currentID)
       console.log("said ok");
@@ -186,10 +184,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     else console.log('canceled operation');
   }
 
-  confirmDeletionOfPlanviewAssociation(perviewProject) {
+  confirmDeletionOfPlanviewAssociation(mappedRelationship: any) {
     let decision = confirm(`Warning! This will delete the association
-      created by ${this.userService.currentID} between
-      ${perviewProject.uid} and ${perviewProject.ppl_code}
+      created by ${this.userService.currentUser} between
+      ${mappedRelationship.projectName} and ${mappedRelationship.projectGuid}
       Are you sure?`);
     if (decision == true) {return true}
   }

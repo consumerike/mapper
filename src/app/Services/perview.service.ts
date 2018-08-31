@@ -29,7 +29,7 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
 
   let adapterPath = "https://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"
-  // let body = new URLSearchParams();
+  
 
   const body = `method=PwaGetProjectsForEditCommand&viewguid=ca9a8094-5522-e811-8109-0050568f78ef `
   let options = {

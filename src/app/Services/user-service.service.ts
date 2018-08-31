@@ -15,7 +15,6 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
-  public currentID: any = 'Stan Lee';
   public currentUser: string;
 
   getCurrentUserID(): Observable<string> {
@@ -38,17 +37,29 @@ export class UserService {
   }
   
   getChangePermissionToken(): Observable<string> {
-    let url = `${this.apiRoot}/_api/contextinfo`
+    console.log('made it to changetoken function in service');
+    try {
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/contextinfo`
     let headers = new HttpHeaders();
-    headers = headers.set('accept', 'application/json;odata=verbose');
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+     
     let options = {
       headers,
      }  
-     return this.http.post(url, {},options)
-       .pipe(
-         map( data => {
-          return data["d"].GetContextWebInformation.FormDigestValue;
-         })
-       );
+    
+      return this.http.post(url, {}, options)
+      .pipe(
+        map( data => {
+          console.log('is this running here:', data["d"].GetContextWebInformation.FormDigestValue);
+          
+         return data["d"].GetContextWebInformation.FormDigestValue;
+        })
+      );
+     }
+    catch {
+      console.log('not working...');
+      
+    }
   }
 }

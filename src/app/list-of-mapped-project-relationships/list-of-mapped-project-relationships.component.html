@@ -5,13 +5,12 @@
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
     <td class="col m4">{{project.projUID}}<a (click)="deletePerviewProject(project, i)" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a></td>
     <td class="col m4"> 
-        
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.projectName}}
         <a (click)="deletePlanviewAssociation(project)"class=" offset-m1 btn-floating btn-small waves-effect waves-light blue"><i class="material-icons"> delete</i></a>
       </ul>
     </td>
-    <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.name]" >Add Planview Project</a></td>
+    <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.projUID]" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer></app-mapper-footer>
 </table>

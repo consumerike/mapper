@@ -101,23 +101,37 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     //   return {"uid": this.perviewProject, "ppl_code": selectedProject};
     // })
     // console.log("getting input", this.projectUID);
-    
+    //working on this :::::::::
+      // return savedPerviewProjects.map((perProj) => {
+      //   return this.perviewMappedPlanviewAssociations(perProj).subscribe()
+      // })
+
+
+
+    //end working on this:::::::
     
     let prepSelections: any[] = this.prepareForMapping();
-    let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
-    console.log("this is the updatedlist:",updatedListofMappedProjects);
-    this.mapperService.mappedProjects = updatedListofMappedProjects
-    console.log("is harley quinn in the mapped projects?", this.mapperService.mappedProjects);
+    // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
+    prepSelections.map((mappedProject) => {
+      this.mapperService.addSingleMappedPlanviewProject(this.perviewProject,mappedProject).subscribe()
+    })
+    // console.log("this is the updatedlist:",updatedListofMappedProjects);
+    // this.mapperService.mappedProjects = updatedListofMappedProjects
+    // console.log("is harley quinn in the mapped projects?", this.mapperService.mappedProjects);
     
-    this.mapperService.updateData();
+    //NEED TO UPDATE DATA AT SOME POINT
     this.clearSelections();
   }
+ 
 
   prepareForMapping(): any[] {
     let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-      return {"uid": this.perviewProject, "ppl_code": selectedProject};
+      let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code },{})
+      console.log("correct format check for mappedPlanViewProj:", formattedSelectedProject);
+      return formattedSelectedProject;
     })
-    console.log("preppedselects:",prepSelections);
+    console.log('prepSchool:', prepSelections);
+    
     
     return prepSelections;
   }
@@ -130,22 +144,32 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   selectProject(event: object) {
-    if (this.projectIsSelected(event["data"].ppl_code)) {
-       this.unselectProject(event["data"].ppl_code);
+    console.log('what it is yo:', event["data"]);
+    
+    if (this.projectIsSelected(event["data"].ppl_Code)) {
+       this.unselectProject(event["data"].ppl_Code);
     }
     else {
-      this.selectedProjects.push(event["data"].ppl_code);
+      this.selectedProjects.push(event["data"]);
     }
   }
 
-  projectIsSelected(ppl_code: string): boolean {
-    if (this.selectedProjects.map(t=>t).indexOf(ppl_code) > -1) {
+  projectIsSelected(ppl_Code: string): boolean {
+    console.log('running man');
+    console.log('selction::', this.selectedProjects);
+    
+    console.log('next',this.selectedProjects.map(t=>t["ppl_Code"]).indexOf(ppl_Code));
+    console.log('yo',this.selectedProjects.map(t=>t["ppl_Code"]));
+
+    if (this.selectedProjects.map(t=>t["ppl_Code"]).indexOf(ppl_Code) > -1) {
       return true;
     }
   }
 
-  unselectProject(ppl_code: string) {
-    this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems).indexOf(ppl_code),1)
+  unselectProject(ppl_Code: string) {
+    console.log('unselect func');
+    
+    this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems.ppl_Code).indexOf(ppl_Code),1)
   }
 
   clearSelections(){

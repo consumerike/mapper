@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { UserService } from './user-service.service';
 
 @Injectable({
@@ -16,8 +16,8 @@ export class MyProjectService {
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public userHasSavedProjects: boolean = true;
   public projectsSavedByUser: any[] = [];
-  selections: any;
-  projectsSavedByUser$: Observable<any>
+  // selections: any;
+ 
   
   
   // CheckForSavedProjects() :boolean {
@@ -33,7 +33,7 @@ export class MyProjectService {
      headers,
      withCredentials: true,
    };
-
+   
       return this.http.get(url,options)
       .pipe(
         map((Data) => {    
@@ -72,6 +72,40 @@ export class MyProjectService {
   // addPerviewSelectedProjects(selections: any[]): void {
   //   this.projectsSavedByUser.next(selections);
   // }
+  
+  addPerviewSelectedProjectstoWorkspace(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
+   
+    console.log('running addPerviewSelectedProjecst to WorksPACE MANYNE');
+    
+    let url = `https://perview.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type','application/json;odata=verbose')
+      .set('IF-MATCH','*')
+      .set('X-RequestDigest',changeTokenHash)
+    let options = {
+      headers,
+     }
+    let body = `{
+      "__metadata": {
+        "type": "SP.Data.MapperUserStateListItem"
+      },
+      "AccountID": ${currentUser},
+      "ProjectUIDs":'${JSON.stringify(selections)}'
+    }
+    `   
+
+    console.log('bigBody:', body);
+    
+  return this.http.post(url, body, options)
+    .pipe(
+      tap( data => {
+        console.log('is this a great success:', data);
+        
+      return data;
+      })
+    );
+  }
 
   deletePerviewProject(perviewProject: any, index: any) {
     console.log("this is the index: ", index);
