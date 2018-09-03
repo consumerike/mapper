@@ -11,7 +11,8 @@ import { MyProjectService } from './project.service';
 })
 
 export class MapperService {
-
+ 
+  
   constructor(private http: HttpClient, private myProjectService: MyProjectService) {
     
    }
@@ -64,8 +65,6 @@ export class MapperService {
 //   }
 
 // ];
-
-
   public planviewMappedProjects: any[];
   // private dataSourceFlag:boolean = true;
 
@@ -99,6 +98,8 @@ export class MapperService {
   getMappedPlanviewAssociations(savedPerviewProjects:any[]): any[] {
     console.log("why are you saying it cannot be read: getMappedPlanviewAssociationsb", savedPerviewProjects);
     return savedPerviewProjects.map((perProj) => {
+      console.log("trying to get the mappedProjects after addition:", perProj);
+      
       return this.perviewMappedPlanviewAssociations(perProj).subscribe()
     })
 
@@ -106,7 +107,9 @@ export class MapperService {
 
   //chance this runs too quickly before data is ready...
   perviewMappedPlanviewAssociations(project: any): Observable<any> {
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${project.projUID}/planViewProjects`
+    console.log('what is the project here in perviewMappedPlanviewAssociations::', project);
+    
+    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${project.projUid}/planViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
               .set('Access-Control-Allow-Origin','http://localhost:4200')
@@ -115,7 +118,7 @@ export class MapperService {
       headers,
     }  
 
-    console.log("need to be passing in a projectUIDman",project.projUID);
+    console.log("need to be passing in a projectUIDman",project.projUid);
     try {
       console.log('are you stopping?');
       
@@ -132,11 +135,36 @@ export class MapperService {
       ); 
     }
     catch{
-      console.log("that didn't work in perviewMappedPlanviewAssociations function...");
-
+      console.log("that didn't work in perviewMappedPlanviewAssociations function...adding perview project for mapping now....");
+      this.addPerviewProjectForMapping(project).subscribe()
     }
     
-  }     
+  }  
+  
+  addPerviewProjectForMapping(project: any): Observable<any> {
+   
+    let url = `http://xrdcwpdbsmsp03:5000/api/projects`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/json');
+    let options = {
+      headers,
+    }
+    let body = {"projectGUID": project.projUID, "projectName":project.projName}
+    let prepBody = `${JSON.stringify(body)}`
+  
+   console.log('body is on point:', body);
+   
+   try {
+    return this.http.post(url,prepBody,options)
+    .pipe((data) => { console.log('worked in addSingleMappedPlanviewProject:',data); return data}
+    )
+   }
+   catch {
+     console.log('nope, could not add perViewProjectforMapping');
+     
+   }
+  }
 
   addSingleMappedPlanviewProject(projectUID: any, selection: any): Observable<any> {
     console.log('is this correct for url:', projectUID);
@@ -192,6 +220,13 @@ export class MapperService {
     
   }
 
+  deletePerviewAssociations(perviewProject: any): any {
+    console.log("all the projects:",perviewProject.planviewProjects);
+    perviewProject.planviewProjects.map((mappedRelationship) => {
+      this.deletePlanviewAssociation(mappedRelationship).subscribe();
+    })
+  }
+
 }//END OF FILE
     
     
@@ -202,7 +237,7 @@ export class MapperService {
   // project.planviewProjects = planViewMappedProjects;
   // return project.planviewProjects;
   
-
+  
   // deletePerviewAssociations(perviewProject: any): any {
   //   console.log("this should be Spiderman as the perviewProject", perviewProject);
   //   // let newMappedProjects: any[] = this.mappedProjects.filter((mappedProject)=> {

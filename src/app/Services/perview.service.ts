@@ -31,9 +31,10 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
   let adapterPath = "https://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"
   
 
-  const body = `method=PwaGetProjectsForEditCommand&viewguid=ca9a8094-5522-e811-8109-0050568f78ef `
+  const body = `method=PwaGetProjectsForEditCommand&viewguid=8c57b14c-6c13-e811-8116-0050568f3b8a`
   let options = {
-      headers
+      headers,
+      withCredentials: true
   };
   console.log("====================================Hitting Adapter get projects = ")
   return this.http.post(
@@ -50,14 +51,12 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
               .find(p => p.Name == "Project Chargeback Category").Value
           newProject.departments = project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Project Departments") && project[i]["CustomFields"] && project[i]["CustomFields"]
               .find(p => p.Name == "Project Departments").Value
-          newProject.startDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Start") && project[i]["CustomFields"] && project[i]["CustomFields"]
-              .find(p => p.Name == "Start").Value).toDateString();
-          newProject.finishDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Finish") && project[i]["CustomFields"] && project[i]["CustomFields"]
-              .find(p => p.Name == "Finish").Value).toDateString();
-              //lets check for null first
-          newProject.projActiveStatus = project[i]["CustomFields"].find(p => p.Name == "Project Active Status").Value
-
-      
+        //   newProject.startDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Start") && project[i]["CustomFields"] && project[i]["CustomFields"]
+        //       .find(p => p.Name == "Start").Value).toDateString();
+        //   newProject.finishDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Finish") && project[i]["CustomFields"] && project[i]["CustomFields"]
+        //       .find(p => p.Name == "Finish").Value).toDateString();
+        //       //lets check for null first
+        //   newProject.projActiveStatus = project[i]["CustomFields"].find(p => p.Name == "Project Active Status").Value
           projects.push(newProject);
       }
 
@@ -84,7 +83,7 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
 
   // setupForGetPerviewProjects(): any {
   //   let headers = new HttpHeaders();
-  //   let adapterPath = "https://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"//`${this.config.adapterUrl} `
+  //   let adapterPath = "http://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"//`${this.config.adapterUrl} `
   //   const BODY = `method=PwaGetProjectsForEditCommand&viewguid=ca9a8094-5522-e811-8109-0050568f78ef`//${this.config.projectPickerViewGuid}` 
   //   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
   //   let setupObject = {

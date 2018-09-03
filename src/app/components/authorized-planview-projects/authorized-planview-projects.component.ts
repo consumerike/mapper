@@ -113,6 +113,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     let prepSelections: any[] = this.prepareForMapping();
     // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
     prepSelections.map((mappedProject) => {
+      console.log('making audibles::', mappedProject, mappedProject.Uid, mappedProject.UID);
+      
       this.mapperService.addSingleMappedPlanviewProject(this.perviewProject,mappedProject).subscribe()
     })
     // console.log("this is the updatedlist:",updatedListofMappedProjects);

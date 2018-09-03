@@ -4,6 +4,9 @@ import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/c
 import { Observable, Subscription, from } from 'rxjs';
 import { map, tap } from "rxjs/operators";
 import { UserService } from './user-service.service';
+import { UtilityService } from "./utility.service";
+import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +15,7 @@ import { UserService } from './user-service.service';
 //purpose: manage user's saved projects/workspace
 export class MyProjectService {
 
-  constructor(private http: HttpClient, userService: UserService) { }
+  constructor(private http: HttpClient, userService: UserService, private utilityService: UtilityService) { }
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public userHasSavedProjects: boolean = true;
   public projectsSavedByUser: any[] = [];
@@ -60,8 +63,7 @@ export class MyProjectService {
          })
 
       )
-      
-       
+         
     }
     // console.log(this.CheckForSavedProjects());
     
@@ -73,11 +75,12 @@ export class MyProjectService {
   //   this.projectsSavedByUser.next(selections);
   // }
   
-  addPerviewSelectedProjectstoWorkspace(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
-   
-    console.log('running addPerviewSelectedProjecst to WorksPACE MANYNE');
+  WrongDescriptionaddPerviewSelectedProjectstoWorkspace(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
     
-    let url = `https://perview.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
+    console.log('running addPerviewSelectedProjecst to WorksPACE MANYNE');
+    console.log(changeTokenHash, "did we get the hashb?");
+    
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type','application/json;odata=verbose')
@@ -90,27 +93,117 @@ export class MyProjectService {
       "__metadata": {
         "type": "SP.Data.MapperUserStateListItem"
       },
-      "AccountID": ${currentUser},
-      "ProjectUIDs":'${JSON.stringify(selections)}'
+      "AccountID": "${currentUser}",
+      "ProjectUIDs":"${JSON.stringify(selections)}"
     }
     `   
 
     console.log('bigBody:', body);
+    try {
+      return this.http.post(url, body, options)
+      .pipe(
+        tap( data => {
+          console.log('is this a great success:', data);
+          
+        return data;
+        })
+      );
+    }
+    catch {
+      console.log('that is not working in addPerviewSelectedProjectstoWorkspace in project.service');
+    }
+  
+  }
+
+  addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections) {
+    let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
+    modUser = modUser.toLowerCase();
+    console.log('currentUser in addPerview Project in @projectService::', currentUser);
+    console.log('hash in addPervierwProject in @projectService::', changeTokenHash);
+    console.log('id / item number in addPervierwProject in @projectService::',id);
+    console.log('selections in addPerviewProject in @projectService::', selections);
+    console.log('am i going to be adding things to the saved list?::', this.projectsSavedByUser);
     
-  return this.http.post(url, body, options)
-    .pipe(
-      tap( data => {
-        console.log('is this a great success:', data);
-        
-      return data;
-      })
-    );
+    console.log('selections in addPervierwProject in @projectService::', selections);
+ 
+    console.log("here we have the modUser should be lc:::",modUser);
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('X-HTTP-Method','MERGE')
+      .set('Content-Type','application/json;odata=verbose')
+      .set('IF-MATCH','*')
+      .set('X-RequestDigest',changeTokenHash)
+    let options = {
+      headers,
+      // withCredentials: true
+     }
+    let body = `{
+      "__metadata": {
+        "type": "SP.Data.MapperUserStateListItem"
+      },
+      "AccountID": "${modUser}",
+      "ProjectUIDs":'${JSON.stringify(selections)}'
+    }
+    `   
+
+    console.log('big body:', body);
+    try {
+      return this.http.post(url, body, options)
+      .pipe(
+        tap( data => {
+          console.log('is this a great success:', data);
+          
+        return data;
+        })
+      );
+    }
+    catch {
+      console.log('that is not working in addPerviewProject in project.service');
+    }
+
   }
 
-  deletePerviewProject(perviewProject: any, index: any) {
-    console.log("this is the index: ", index);
-    this.projectsSavedByUser.splice(index,1);
-    console.log("does this remove an item from list?",this.projectsSavedByUser,);   
-  }
+  deletePerviewProject(currentUser:any,changeTokenHash:any, id: any, selections) {
+    console.log('selections in deletePervierwProject in @projectService:', selections);
+    console.log('hash in deletePervierwProject in @projectService:', changeTokenHash);
+    console.log('id in deletePervierwProject in @projectService:', changeTokenHash);
+    console.log('selections in deletePervierwProject in @projectService:', changeTokenHash);
+    
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('X-HTTP-Method','MERGE')
+      .set('Content-Type','application/json;odata=verbose')
+      .set('IF-MATCH','*')
+      .set('X-RequestDigest',changeTokenHash)
+    let options = {
+      headers,
+     }
+    let body = `{
+      "__metadata": {
+        "type": "SP.Data.MapperUserStateListItem"
+      },
+      "AccountID": "${currentUser}",
+      "ProjectUIDs":"${JSON.stringify(selections)}"
+    }
+    `   
 
+    console.log('soft body:', body);
+    try {
+      return this.http.post(url, body, options)
+      .pipe(
+        tap( data => {
+          console.log('is this a great success:', data);
+          
+        return data;
+        })
+      );
+    }
+    catch {
+      console.log('that is not working in deletePerviewProject in project.service');
+    }
+  
+  }
+  
 }

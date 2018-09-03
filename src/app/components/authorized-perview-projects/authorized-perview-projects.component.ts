@@ -7,7 +7,7 @@ import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
 import { UserService } from '../../Services/user-service.service';
-import { currentId } from 'async_hooks';
+
 
 declare const $: any
 declare const window: Window;
@@ -99,7 +99,44 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     .subscribe( (data) => data);
   }
 
-  addSelectedProjects(changeToken: any): void {  
+  addSelectedProjects(): void {
+    let prepSelections: any = this.selectedProjects.map((selectedProject) => {
+      let formatedSelectedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
+        ,{})
+        console.log("is this correct format?",formatedSelectedProject);
+        
+      return formatedSelectedProject
+    })
+    console.log('preppy', prepSelections);
+
+    //does that code chain work?
+    let id;
+    console.log('it gets to this point at least::::');
+    
+    this.userService.getItemByUserId()
+    .pipe(
+      // takeUntil(this.unSub),
+     switchMap((data) => {
+        console.log("data is id:",data);
+        
+        id = data;
+        console.log("data is a id:", data);
+        return this.userService.getChangePermissionToken()
+      })
+      ,switchMap((data) => {
+        console.log('want this to be changeToke:', data);
+        let changeToken = data;
+        return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,prepSelections)
+      })
+    ).subscribe(
+      (val) => console.log("what the heck mayne",val)
+      );
+    this.getListOfSavedProjects();
+    
+        
+  }
+
+  WrongFunctionaddSelectedProjects(): void {  
     let prepSelections: any = this.selectedProjects.map((selectedProject) => {
       let formatedSelectedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
         ,{})
@@ -112,7 +149,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     .pipe(
       switchMap((data) => { console.log("data is a changeToken:", data)
         let changeToken = data;
-        return this.myprojectService.addPerviewSelectedProjectstoWorkspace(changeToken,this.userService.currentUser,prepSelections)
+        return [] //this.myprojectService.addPerviewSelectedProjectstoWorkspace(changeToken,this.userService.currentUser,prepSelections)
       })
     )
     .subscribe(() => console.log('did it happen or what')
@@ -177,7 +214,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  unselectProject(name: string) {
+  unselectProject(name: any) {
     console.log('unselcetfunction running');
     
     this.selectedProjects.splice(this.selectedProjects.map(selectedItems => {console.log(selectedItems);selectedItems.projName}).indexOf(name),1)

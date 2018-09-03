@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
 
-import{map, mergeMap, catchError, filter} from 'rxjs/operators'
+import{map, mergeMap, catchError, filter, tap} from 'rxjs/operators'
 
 import  { Observable } from 'rxjs';
 
@@ -62,4 +62,37 @@ export class UserService {
       
     }
   }
+
+  getItemByUserId(): Observable<any> {
+    console.log('made it to getItemByUserId function in service and user is:', this.currentUser);
+    try {
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+     
+    let options = {
+      headers,
+     }  
+    
+      return this.http.get(url,options)
+      .pipe(
+        map( data => {
+          console.log('just return something:', data);
+          
+          console.log('data is what;', data["d"]);
+          
+          console.log('is this running here:', data["d"].results[0]);
+          console.log('is this running here: as metadata:', data["d"].results[0].__metadata.id);
+          
+         return data["d"].results[0].__metadata.id;
+        })
+      );
+     }
+    catch {
+      console.log('not working...');
+      
+    }
+  }
+  
 }

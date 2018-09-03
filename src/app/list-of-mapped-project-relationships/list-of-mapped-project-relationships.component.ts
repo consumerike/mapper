@@ -4,7 +4,7 @@ import { UserService } from "../Services/user-service.service";
 import {MyProjectService} from '../Services/project.service'
 import { MapperService } from '../Services/mapper.service';
 import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { takeUntil, map, tap, take } from 'rxjs/operators';
+import { takeUntil, map, tap, take, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
 
 
@@ -120,7 +120,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   updateChanges(): any {
-    this.mapperService.updateData();
+    // this.mapperService.updateData();
+    throw new Error("Method not implemented.");
   }
   
   getCurrentUserID(): void {
@@ -153,7 +154,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   getPlanviewAssociations(projects: any[])  {
-    this.mapperService.getMappedPlanviewAssociations(projects)
+      this.mapperService.getMappedPlanviewAssociations(projects)
   }
 
   getListOfPlanviewMappedProjects() {
@@ -193,14 +194,42 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   deletePerviewProject(perviewProject, index): any {
-    if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {;
-      this.mapperService.deletePerviewAssociations(perviewProject);
-      this.myProjectService.deletePerviewProject(perviewProject, index);
+    if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
+      //deletes all planviewassociations
+      try {
+        perviewProject.planviewProjects.map((mappedRelationship) => {
+          this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
+        })
+  
+      let id;
+      console.log('it gets to this point at least::::');
+      
+      this.userService.getItemByUserId()
+      .pipe(
+        // takeUntil(this.unSub),
+        switchMap((data) => {
+          id = data;
+          console.log("data is a id:", data);
+          return this.userService.getChangePermissionToken()
+        })
+        ,switchMap((data) => {
+          console.log('want this to be changeToke:', data);
+          let changeToken = data;
+          return this.myProjectService.deletePerviewProject(this.userService.currentUser,changeToken,id,{})
+        })
+      ).subscribe();
       this.getSavedProjects(this.currentID);
-      console.log('said ok');
+        
+      }
+      catch {
+        console.log('whelp try did NOT work in delete perview project');
+        
+      }
     }
+    
     else {console.log('canceled operation');
     }
+    
     
   }
 
@@ -209,7 +238,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("what we need",listOfDeletedPlanviewProjects);
     
     let decision = confirm(`Warning! This will delete the association
-      created by ${this.userService.currentID} between
+      created by ${this.userService.currentUser} between
       ${perviewProject.name} and ${listOfDeletedPlanviewProjects.join()}
       Are you sure?`);
     if (decision == true) {return true}
