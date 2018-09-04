@@ -8,7 +8,7 @@ import { MapperService } from '../../Services/mapper.service';
 
 import { takeUntil, map, tap, take } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
-
+import { Directive, Renderer2, ElementRef } from '@angular/core';
 @Component({
   selector: 'app-authorized-planview-projects',
   templateUrl: './authorized-planview-projects.component.html',

@@ -198,25 +198,41 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("this is the larger stucture though ::::::",this.listOfSavedPerviewProjects);
     if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
       
-      try {
         console.log("this is the structure mayne::::::",perviewProject);
-        
+      if (perviewProject.planviewProjects  && typeof perviewProject.planviewProjects != 'undefined') {
         perviewProject.planviewProjects.map((mappedRelationship) => {
           this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
         })
+      } 
+    
         //filter method stuff here:
+                      // let newMappedProjects :any[] = this.mappedProjects.filter((mappedProject) =>{
+                      //   console.log("what is mapped project within filter?",mappedProject);
+                      // if ( mappedProject.uid !== mappedRelationship.uid 
+                      //   || mappedProject.ppl_code !== mappedRelationship.ppl_code) {return true}
+                      // });
+      try {
+        let filteredListOfProjects = this.listOfSavedPerviewProjects.filter((savedProject) => {
+          console.log('what is savedProject within the filter??',savedProject, savedProject.projUid, perviewProject.projUid);
+          console.log('what is perviewProject within the filter??', perviewProject);
+          if (savedProject["projUid"] == perviewProject["Uid"]) {
+            console.log('this is actually going to be filtered out...');
+          }
+          
+          if (savedProject.projUid !== perviewProject.Uid) {return true}
+          
+        });
+        console.log("Cmon seth meyers::::::::",filteredListOfProjects);
         
-
-
         //end filter methods stuff
         let id;
         console.log('it gets to this point at least::::this is the perviewProject::::::', perviewProject);
         console.log('making sure i have a good list here:::', this.listOfSavedPerviewProjects);
         
-        let updatedListOfSavedProjects: any[] = [...this.listOfSavedPerviewProjects];
+        let updatedListOfSavedProjects: any[] = filteredListOfProjects;
         this.userService.getItemByUserId()
         .pipe(
-          // takeUntil(this.unSub),
+          takeUntil(this.unSub),
          switchMap((data) => {
             console.log("data is id:",data);
             id = data;
