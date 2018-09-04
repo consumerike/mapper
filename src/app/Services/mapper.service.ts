@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project, Result, MappedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { map, tap, filter } from 'rxjs/operators';
-import { Observable, Subscribable, Subscription, from } from 'rxjs';
+import { Observable, Subscribable, Subscription, from, throwError } from 'rxjs';
 import { MyProjectService } from './project.service';
 
 
@@ -65,7 +65,7 @@ export class MapperService {
 //   }
 
 // ];
-  public planviewMappedProjects: any[];
+  public planviewMappedProjects: any;
   // private dataSourceFlag:boolean = true;
 
   // getMappedProjects(): Observable<any> {
@@ -121,20 +121,33 @@ export class MapperService {
     console.log("need to be passing in a projectUIDman",project.projUid);
     try {
       console.log('are you stopping?');
-      
-      return this.http.get(url,options)
+    
+    return this.http.get(url,options)
     .pipe(
-      tap(data => {        
-       console.log("this is the array essentially",data)
+      map(data => {        
+      console.log(onerror);
+      console.log("this is the array essentially",data)
         this.planviewMappedProjects = data;
         project.planviewProjects = this.planviewMappedProjects
         console.log("project.planviewProjects",this.planviewMappedProjects,);
-        
-        return project.planviewProjects;
-       }),
+        console.log('IE: it did not stop:::::::::::::::::::::::::::::::::::::');
+        // return project.planviewProjects        
+        if (project.planviewProjects.length < 1) {
+          console.log('yes it is less than 1');
+          
+          throw 404;
+        //   console.log('in if loop for no projects in the array........', project);
+        } 
+          // this.addPerviewProjectForMapping(project).subscribe();
+        // }
+        // return project.planviewProjects;
+       })
       ); 
     }
-    catch{
+   
+    catch(error) {
+      console.log('what IS MY ERROR SHOULD BE 404::::::',onerror,error,Error);
+      
       console.log("that didn't work in perviewMappedPlanviewAssociations function...adding perview project for mapping now....");
       this.addPerviewProjectForMapping(project).subscribe()
     }
@@ -142,7 +155,10 @@ export class MapperService {
   }  
   
   addPerviewProjectForMapping(project: any): Observable<any> {
-   
+    console.log("this is the inputted project in addPerviewProjectForMapping @MapperService::::", project);
+    console.log("this is the inputted project uid in addPerviewProjectForMapping @MapperService::::", project.projUid);
+    console.log("this is the inputted project name in addPerviewProjectForMapping @MapperService::::", project.projName);
+    
     let url = `http://xrdcwpdbsmsp03:5000/api/projects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
@@ -150,20 +166,22 @@ export class MapperService {
     let options = {
       headers,
     }
-    let body = {"projectGUID": project.projUID, "projectName":project.projName}
+    let body = {"projectGUID": project.projUid, "ProjectName":project.projName}
     let prepBody = `${JSON.stringify(body)}`
   
-   console.log('body is on point:', body);
+   console.log('body is on point:', prepBody);
    
    try {
     return this.http.post(url,prepBody,options)
-    .pipe((data) => { console.log('worked in addSingleMappedPlanviewProject:',data); return data}
+    .pipe(
+      map((data) => { console.log('worked in addPerviewProjectForMapping:',data); return data})
     )
    }
    catch {
      console.log('nope, could not add perViewProjectforMapping');
      
    }
+
   }
 
   addSingleMappedPlanviewProject(projectUID: any, selection: any): Observable<any> {

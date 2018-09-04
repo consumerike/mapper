@@ -147,7 +147,7 @@ export class MyProjectService {
     }
     `   
 
-    console.log('big body:', body);
+    console.log('big body add:', body);
     try {
       return this.http.post(url, body, options)
       .pipe(
@@ -165,11 +165,17 @@ export class MyProjectService {
   }
 
   deletePerviewProject(currentUser:any,changeTokenHash:any, id: any, selections) {
-    console.log('selections in deletePervierwProject in @projectService:', selections);
-    console.log('hash in deletePervierwProject in @projectService:', changeTokenHash);
-    console.log('id in deletePervierwProject in @projectService:', changeTokenHash);
-    console.log('selections in deletePervierwProject in @projectService:', changeTokenHash);
+    let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
+    modUser = modUser.toLowerCase();
+    console.log('currentUser in addPerview Project in @projectService::', currentUser);
+    console.log('hash in addPervierwProject in @projectService::', changeTokenHash);
+    console.log('id / item number in addPervierwProject in @projectService::',id);
+    console.log('selections in addPerviewProject in @projectService::', selections);
+    console.log('am i going to be adding things to the saved list?::', this.projectsSavedByUser);
     
+    console.log('selections in addPervierwProject in @projectService::', selections);
+ 
+    console.log("here we have the modUser should be lc:::",modUser);
     let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
@@ -179,17 +185,18 @@ export class MyProjectService {
       .set('X-RequestDigest',changeTokenHash)
     let options = {
       headers,
+      // withCredentials: true
      }
     let body = `{
       "__metadata": {
         "type": "SP.Data.MapperUserStateListItem"
       },
-      "AccountID": "${currentUser}",
-      "ProjectUIDs":"${JSON.stringify(selections)}"
+      "AccountID": "${modUser}",
+      "ProjectUIDs":'${JSON.stringify(selections)}'
     }
     `   
 
-    console.log('soft body:', body);
+    console.log('big body delete:', body);
     try {
       return this.http.post(url, body, options)
       .pipe(
@@ -201,9 +208,54 @@ export class MyProjectService {
       );
     }
     catch {
-      console.log('that is not working in deletePerviewProject in project.service');
+      console.log('that is not working in addPerviewProject in project.service');
     }
-  
+
   }
+
+
+
+
+  //JUST IN CASE KEEPING :::::::::::
+  //   console.log('selections in deletePervierwProject in @projectService:', selections);
+  //   console.log('hash in deletePervierwProject in @projectService:', changeTokenHash);
+  //   console.log('id in deletePervierwProject in @projectService:', changeTokenHash);
+  //   console.log('selections in deletePervierwProject in @projectService:', changeTokenHash);
+    
+  //   let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
+  //   let headers = new HttpHeaders();
+  //   headers = headers.set('accept', 'application/json;odata=verbose')
+  //     .set('X-HTTP-Method','MERGE')
+  //     .set('Content-Type','application/json;odata=verbose')
+  //     .set('IF-MATCH','*')
+  //     .set('X-RequestDigest',changeTokenHash)
+  //   let options = {
+  //     headers,
+  //    }
+  //   let body = `{
+  //     "__metadata": {
+  //       "type": "SP.Data.MapperUserStateListItem"
+  //     },
+  //     "AccountID": "${currentUser}",
+  //     "ProjectUIDs":"${JSON.stringify(selections)}"
+  //   }
+  //   `   
+
+  //   console.log('soft body:', body);
+  //   try {
+  //     return this.http.post(url, body, options)
+  //     .pipe(
+  //       tap( data => {
+  //         console.log('is this a great success:', data);
+          
+  //       return data;
+  //       })
+  //     );
+  //   }
+  //   catch {
+  //     console.log('that is not working in deletePerviewProject in project.service');
+  //   }
   
-}
+  // }
+  
+}//end of file

@@ -109,10 +109,11 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     })
     console.log('preppy', prepSelections);
 
-    //does that code chain work?
     let id;
     console.log('it gets to this point at least::::');
+    console.log('making sure i have a good list here:::', this.listOfSavedProjects);
     
+    let updatedListOfSavedProjects: any[] = [...this.listOfSavedProjects, ...prepSelections];
     this.userService.getItemByUserId()
     .pipe(
       // takeUntil(this.unSub),
@@ -126,7 +127,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       ,switchMap((data) => {
         console.log('want this to be changeToke:', data);
         let changeToken = data;
-        return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,prepSelections)
+        return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
       })
     ).subscribe(
       (val) => console.log("what the heck mayne",val)

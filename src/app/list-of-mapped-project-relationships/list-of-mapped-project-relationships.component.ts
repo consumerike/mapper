@@ -192,8 +192,58 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       Are you sure?`);
     if (decision == true) {return true}
   }
-
+  
   deletePerviewProject(perviewProject, index): any {
+    console.log("this is the structure mayne::::::",perviewProject);
+    console.log("this is the larger stucture though ::::::",this.listOfSavedPerviewProjects);
+    if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
+      
+      try {
+        console.log("this is the structure mayne::::::",perviewProject);
+        
+        perviewProject.planviewProjects.map((mappedRelationship) => {
+          this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
+        })
+        //filter method stuff here:
+        
+
+
+        //end filter methods stuff
+        let id;
+        console.log('it gets to this point at least::::this is the perviewProject::::::', perviewProject);
+        console.log('making sure i have a good list here:::', this.listOfSavedPerviewProjects);
+        
+        let updatedListOfSavedProjects: any[] = [...this.listOfSavedPerviewProjects];
+        this.userService.getItemByUserId()
+        .pipe(
+          // takeUntil(this.unSub),
+         switchMap((data) => {
+            console.log("data is id:",data);
+            id = data;
+            console.log("data is a id:", data);
+            return this.userService.getChangePermissionToken()
+          })
+          ,switchMap((data) => {
+            console.log('want this to be changeToke:', data);
+            let changeToken = data;
+            return this.myProjectService.deletePerviewProject(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
+          })
+        ).subscribe(
+          (val) => console.log("what the heck mayne",val)
+          );
+        this.getSavedProjects(this.currentID);
+        
+      }
+      catch {
+        console.log('whelp try did NOT work in delete perview project');
+        
+      }
+    }
+    else {console.log('canceled operation');
+    }
+  }
+
+  OlddeletePerviewProject(perviewProject, index): any {
     if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
       //deletes all planviewassociations
       try {
@@ -203,7 +253,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   
       let id;
       console.log('it gets to this point at least::::');
-      
       this.userService.getItemByUserId()
       .pipe(
         // takeUntil(this.unSub),
@@ -234,14 +283,27 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   confirmDeletionOfPerviewProject(perviewProject, index) {
-    let listOfDeletedPlanviewProjects = perviewProject.planviewProjects.map(pair => pair.ppl_code)
-    console.log("what we need",listOfDeletedPlanviewProjects);
-    
-    let decision = confirm(`Warning! This will delete the association
-      created by ${this.userService.currentUser} between
-      ${perviewProject.name} and ${listOfDeletedPlanviewProjects.join()}
-      Are you sure?`);
-    if (decision == true) {return true}
+    console.log('cmon man:::::what is perviewProject, index and why??', perviewProject, index);
+    console.log('cmon man:::::what is perviewProject.planviewProjects and why--looking for a ppl_Code or something??', perviewProject.planviewProjects);
+    try {
+      let listOfDeletedPlanviewProjects = perviewProject.planviewProjects.map((pair) => {console.log("this is a pair", pair);
+      return pair.ppl_code})
+     console.log("what we need",listOfDeletedPlanviewProjects);
+     let decision = confirm(`Warning! This will delete the association
+     created by ${this.userService.currentUser} between
+     ${perviewProject.projName} and ${listOfDeletedPlanviewProjects.join()}
+     Are you sure?`);
+   if (decision == true) {return true}
+     
+    }
+    catch {
+      let decision = confirm(`Warning! This will delete any associations
+      with ${perviewProject.projName} Are you sure?`);
+   if (decision == true) {return true}
+     
+
+    }
+   
   }
 
   onSelect(selectedPerviewProject: any): void {

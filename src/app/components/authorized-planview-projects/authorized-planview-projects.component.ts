@@ -35,7 +35,6 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     // this.getListofMappedProjects();
     this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
-    
   }
   
   // @Input()
@@ -114,6 +113,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
     prepSelections.map((mappedProject) => {
       console.log('making audibles::', mappedProject, mappedProject.Uid, mappedProject.UID);
+      console.log("is this the projectUID?",this.perviewProject);
+      console.log("is this the selection?",mappedProject);
       
       this.mapperService.addSingleMappedPlanviewProject(this.perviewProject,mappedProject).subscribe()
     })
