@@ -2,4 +2,4 @@
     <ng2-smart-table [settings]="settings" [source]="authorizedProjects" (rowSelect)=rowClick($event)></ng2-smart-table>
 </div>
 <button (click)="addSelectedProjects()">Submit Selections</button>
-<button (click)="navigateHome()">Back to List</button>
+<a class="modal-close waves-effect waves-green btn-flat" (click)="signalModalClose()">Back to List</a>
