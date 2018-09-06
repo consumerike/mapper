@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter } from '@angular/core';
 import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
 import { IProject } from '../mapper-models';
@@ -50,6 +50,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     //   })
     // )
   }
+  @Output()
+  onModalClose = new EventEmitter();
 
   unSub = new Subject();
   ngOnDestroy(): void {
@@ -244,5 +246,11 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   navigateHome(){
     this.router.navigate(['/']);
  }
+
+
+  signalModalClose() {
+  this.onModalClose.emit('string');
+  console.log('signalModalClose has ran');
+  }
 
 }
