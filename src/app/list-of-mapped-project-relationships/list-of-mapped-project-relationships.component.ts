@@ -213,23 +213,25 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
                       // });
       try {
         let filteredListOfProjects = this.listOfSavedPerviewProjects.filter((savedProject) => {
-          console.log('what is savedProject within the filter??',savedProject, savedProject.projUid, perviewProject.projUid);
-          console.log('what is perviewProject within the filter??', perviewProject);
-          if (savedProject["projUid"] == perviewProject["Uid"]) {
-            console.log('this is actually going to be filtered out...');
-          }
-          
-          if (savedProject.projUid !== perviewProject.Uid) {return true}
-          
+          console.log('COUPLING??',savedProject["projUid"],'vs:::', perviewProject["projUid"]);
+          console.log('COUPLING??',typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
+          let a = savedProject["projUid"]
+          let b = perviewProject["projUid"]
+          if (a !== b) {
+            return true;
+          }         
+          // if (savedProject.projUid !== perviewProject.Uid) {return true}
+
         });
-        console.log("Cmon seth meyers::::::::",filteredListOfProjects);
-        
+        console.log("Cmon seth meyers:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",filteredListOfProjects);
         //end filter methods stuff
         let id;
         console.log('it gets to this point at least::::this is the perviewProject::::::', perviewProject);
         console.log('making sure i have a good list here:::', this.listOfSavedPerviewProjects);
         
         let updatedListOfSavedProjects: any[] = filteredListOfProjects;
+        console.log('seth meyers weekend update:', updatedListOfSavedProjects);
+        
         this.userService.getItemByUserId()
         .pipe(
           takeUntil(this.unSub),
@@ -245,9 +247,15 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             return this.myProjectService.deletePerviewProject(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
           })
         ).subscribe(
-          (val) => console.log("what the heck mayne",val)
+         
+          
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::');this.getSavedProjects(this.currentID)}
+         
+          // (val) => console.log("what the heck mayne",val)
           );
-        this.getSavedProjects(this.currentID);
+          console.log('this is right after the subscribe and getting ready to getSaved Projects....');
+          
+        // this.getSavedProjects(this.currentID);
         
       }
       catch {

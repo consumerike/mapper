@@ -1,0 +1,15 @@
+
+:host /deep/ {
+  ng2-smart-table {
+   tbody{
+    tr{
+      td{
+        input[type="checkbox"] {
+          opacity: 1;
+        }
+      }
+    }
+   }
+    
+  }
+}

@@ -12,7 +12,7 @@ import { Directive, Renderer2, ElementRef } from '@angular/core';
 @Component({
   selector: 'app-authorized-planview-projects',
   templateUrl: './authorized-planview-projects.component.html',
-  styleUrls: ['./authorized-planview-projects.component.css']
+  styleUrls: ['./authorized-planview-projects.component.scss']
 })
 export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
@@ -47,11 +47,24 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   settings = {
-    
+    selectMode: 'multi',
     columns: {
       name: {
         title: "Project Name"
       },
+     /* We need these fields: Project Name (above); Project Manager, and Business Owner
+     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      // name: {
+      //   title: "Project Manager"
+      // },
+      // name: {
+      //   title: "Business Owner"
+      // },
+      :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      */
+     
       ppl_Code: {
         title: "ID"
       }

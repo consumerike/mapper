@@ -3,6 +3,7 @@
     projUid?: string;
     projName?: string;
     owner?: string,
+    businessOwner?: string,
     planviewProjects?: any[];
   }
 
@@ -11,6 +12,7 @@
     constructor(public projUid = '', 
       public projName = '',
       public owner = '',
+      public businessOwner = '',
       public projectChargeBackCategory = '',
       public departments = '',
 

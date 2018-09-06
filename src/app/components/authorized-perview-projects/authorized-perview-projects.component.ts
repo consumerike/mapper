@@ -16,7 +16,7 @@ declare const window: Window;
 @Component({
   selector: 'app-authorized-perview-projects',
   templateUrl: './authorized-perview-projects.component.html',
-  styleUrls: ['./authorized-perview-projects.component.css']
+  styleUrls: ['./authorized-perview-projects.component.scss']
 })
 export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
@@ -58,26 +58,34 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   } 
 
   settings = {
-   
+    selectMode: 'multi',
+    actions: {
+      add: false,
+      edit: false,
+      delete: false
+
+    },
+    
     columns: {
+
       projName: {
         title: "Project",
-        editable: false
+        editable: false,
+    
         
       },
   
       owner: {
+        title: "Project Manager",
+        editable: false
+      },
+      businessOwner: {
         title: "Business Owner",
         editable: false
       }
       
     },
-    actions: {
-      add: false,
-      edit: false,
-      delete: false,
-
-    }
+  
   };
   
   getPerviewProjects(): void {
@@ -195,24 +203,20 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     
     console.log("these are selected:", this.selectedProjects);
     console.log('selected item for styling', this.selected);
-    this.selectProject(event, this.selected);
+    this.selectProject(event)
    
   }
 
-  selectProject(event: any, classString: any) {
+  selectProject(event: any) {
     console.log(event["data"]);
-    console.log("event  right here:::::::",event);
-    console.log("classList right here:::::", event.target.classList);
-    
-    
-   
+       
     if (this.projectIsSelected(event["data"].projName)) {
        this.unselectProject(event["data"].projName)
-       this.renderer.removeClass(event.target, this.selected)
+      //  this.renderer.removeClass(event.target, this.selected)
     }
     else {
       this.selectedProjects.push(event["data"]);
-      this.renderer.addClass(event.target, this.selected)
+      // this.renderer.addClass(event.target, this.selected)
     }
   }
 

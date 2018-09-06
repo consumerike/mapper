@@ -1,6 +1,5 @@
 <div style="margin: auto; width: auto;">
-    <ng2-smart-table [settings]="settings" [source]="authorizedProjects" (userRowSelect)=rowClick($event)></ng2-smart-table>
+    <ng2-smart-table [settings]="settings" [source]="authorizedProjects" (rowSelect)=rowClick($event)></ng2-smart-table>
 </div>
 <button (click)="addSelectedProjects()">Submit Selections</button>
 <button (click)="navigateHome()">Back to List</button>
-

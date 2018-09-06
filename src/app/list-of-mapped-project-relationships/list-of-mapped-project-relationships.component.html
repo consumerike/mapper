@@ -1,13 +1,13 @@
 <app-mapper-header></app-mapper-header>
-<table class="container striped responsive">
+<table class="container striped blue-grey lighten-5  responsive">
 
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
-    <td class="col m4">{{project.projUid}}<a (click)="deletePerviewProject(project, i)" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons sm-10"> close</i></a></td>
+    <td class="col m4">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a></td>
     <td class="col m4"> 
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.projectName}}
-        <a (click)="deletePlanviewAssociation(project)"class=" offset-m1 btn-floating btn-small waves-effect waves-light red"><i class="material-icons md-12" style="font-size: 12px"> close</i></a>
+        <a (click)="deletePlanviewAssociation(project)"><i class="tiny material-icons waves-light red"> close</i></a>
       </ul>
     </td>
     <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.projUid]" >Add Planview Project</a></td>

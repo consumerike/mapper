@@ -56,7 +56,7 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
         //   newProject.finishDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Finish") && project[i]["CustomFields"] && project[i]["CustomFields"]
         //       .find(p => p.Name == "Finish").Value).toDateString();
         //       //lets check for null first
-        //   newProject.projActiveStatus = project[i]["CustomFields"].find(p => p.Name == "Project Active Status").Value
+          newProject.businessOwner = project[i]["CustomFields"].find(p => p.Name == "Business Owner").Value
           projects.push(newProject);
       }
 
