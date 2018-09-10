@@ -13,8 +13,8 @@
     <td class="col m4"><a (click)="handleModalClick(project)"   class="waves-effect waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer ><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
-  <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
-  <app-authorized-planview-projects [selectedProjectUID]="perviewProject" id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
+  <app-authorized-perview-projects [listOfSavedPerviewProjects]="listOfSavedPerviewProjects" id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
+  <app-authorized-planview-projects  id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
 </table>
 
 <!-- BREAK BREAK BREAK BREAK BREAK BREAK  -->

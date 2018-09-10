@@ -48,8 +48,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   // projectUID: any;  
   unSub = new Subject<void>();
   
-  @Input()
-  selectedProjectUID: any;
+
   @Output()
   onPlanviewModalClose = new EventEmitter<string>()
 

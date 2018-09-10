@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input } from '@angular/core';
 import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
 import { IProject } from '../mapper-models';
@@ -30,7 +30,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   authorizedProjects: any[];
   private selectedProjects: any[] = [];
   private myProjects$ = new Subject();
-  private listOfSavedProjects: any = [];
+  private listOfSavedProjects: any;
   changeDigestToken$: Observable<string>;
   projectsSavedByUser$: Observable<any>
   addProjects$: Observable<any>;
@@ -50,6 +50,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     //   })
     // )
   }
+  @Input()
+  listOfSavedPerviewProjects: any[];
   @Output()
   onModalClose = new EventEmitter();
 
@@ -103,8 +105,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   getListOfSavedProjects(): void {
     this.myprojectService.getSavedPerviewProjects(this.userService.currentUser).pipe(
       takeUntil(this.unSub),
-      map( (data) => {
-        console.log("do I have the savedProjects?", data);
+      map((data) => {
+        console.log("do I have the savedProjects or not??", data);
         this.listOfSavedProjects = data;
       })
     )
@@ -124,10 +126,14 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     console.log('preppy', prepSelections);
 
     let id;
-    console.log('it gets to this point at least::::');
-    console.log('making sure i have a good list here:::', this.listOfSavedProjects);
+    console.log('it gets to this point at least::::good list from listOfSavedProjects:', this.listOfSavedProjects);
+    console.log('making sure i have a good list here from input():::', this.listOfSavedPerviewProjects);
+    console.log("i'm trying to add this list, correct??",prepSelections);
     
-    let updatedListOfSavedProjects: any[] = [...this.listOfSavedProjects, ...prepSelections];
+    let updatedListOfSavedProjects: any[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
+
+    console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
+    
     this.userService.getItemByUserId()
     .pipe(
       // takeUntil(this.unSub),
