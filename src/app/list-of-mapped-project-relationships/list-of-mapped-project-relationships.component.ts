@@ -358,7 +358,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     
   }
 
-  refreshPerviewList(event): void {
+  refreshProjectList(event): void {
     console.log('this is running the refresh of list');
     console.log(event, "is there ane vent");
     

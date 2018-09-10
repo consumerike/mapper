@@ -10,10 +10,11 @@
         <a (click)="deletePlanviewAssociation(project)"><i class="tiny material-icons waves-light red"> close</i></a>
       </ul>
     </td>
-    <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.projUid]" >Add Planview Project</a></td>
+    <td class="col m4"><a (click)="handleModalClick(project.name)"   class="waves-effect waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer ><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
-  <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"(onModalClose)="refreshPerviewList($event)" ></app-authorized-perview-projects>
+  <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
+  <app-authorized-planview-projects [selectedProjectUID]="perviewProject" id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshPlanviewList($event)></app-authorized-planview-projects>
 </table>
 
 <!-- BREAK BREAK BREAK BREAK BREAK BREAK  -->
