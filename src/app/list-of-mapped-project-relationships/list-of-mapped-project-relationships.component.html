@@ -4,17 +4,17 @@
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
     <td class="col m4">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a></td>
-    <td class="col m4"> 
+    <td class="col m4">   
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.projectName}}
         <a (click)="deletePlanviewAssociation(project)"><i class="tiny material-icons waves-light red"> close</i></a>
       </ul>
     </td>
-    <td class="col m4"><a (click)="handleModalClick(project.name)"   class="waves-effect waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
+    <td class="col m4"><a (click)="handleModalClick(project)"   class="waves-effect waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer ><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
   <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
-  <app-authorized-planview-projects [selectedProjectUID]="perviewProject" id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshPlanviewList($event)></app-authorized-planview-projects>
+  <app-authorized-planview-projects [selectedProjectUID]="perviewProject" id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
 </table>
 
 <!-- BREAK BREAK BREAK BREAK BREAK BREAK  -->

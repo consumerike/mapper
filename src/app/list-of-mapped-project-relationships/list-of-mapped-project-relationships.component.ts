@@ -6,6 +6,7 @@ import { MapperService } from '../Services/mapper.service';
 import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { takeUntil, map, tap, take, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
+import { ModalService } from '../Services/modal.service';
 
 
 declare const $: any
@@ -20,7 +21,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
  
   constructor(private userService: UserService, private myProjectService: MyProjectService
-    ,private mapperService: MapperService
+    ,private mapperService: MapperService, private modalService: ModalService
   ) {}
    //for testing purposes: 
   projects$ = new Subject();
@@ -354,6 +355,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   handleModalClick(perviewProj): void {
     console.log("Do i have what I need?", perviewProj);
     this.selectedProjectUID = perviewProj;
+    this.modalService.selection = perviewProj.projUid;
     console.log("so this will be set?",this.selectedProjectUID);
     
   }

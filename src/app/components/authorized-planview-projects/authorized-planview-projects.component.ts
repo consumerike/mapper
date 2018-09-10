@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { PlanviewService } from '../../Services/planview.service';
+import { ModalService } from '../../Services/modal.service';
 import { MyProjectService } from '../../Services/project.service';
 import { IProject } from '../mapper-models';
 import { Observable } from 'rxjs';
@@ -9,6 +10,7 @@ import { MapperService } from '../../Services/mapper.service';
 import { takeUntil, map, tap, take } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Directive, Renderer2, ElementRef } from '@angular/core';
+
 @Component({
   selector: 'app-authorized-planview-projects',
   templateUrl: './authorized-planview-projects.component.html',
@@ -20,7 +22,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     private myprojectService: MyProjectService,
     private mapperService: MapperService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: ModalService
   ) { }
 
   authorizedProjects: any[];
@@ -33,13 +36,22 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPlanviewProjects();
     // this.getListofMappedProjects();
-    this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
+    this.perviewProject = this.modalService.selection;
+    console.log("did the input() work this time??",this.perviewProject);
+    console.log('after selection:', this.perviewProject);
+    
+    // this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
   }
   
   // @Input()
   // projectUID: any;  
   unSub = new Subject<void>();
+  
+  @Input()
+  selectedProjectUID: any;
+  @Output()
+  onPlanviewModalClose = new EventEmitter<string>()
 
   ngOnDestroy(): void {
     this.unSub.next();
@@ -118,8 +130,9 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       //   return this.perviewMappedPlanviewAssociations(perProj).subscribe()
       // })
 
-
-
+    console.log('ike has handles', this.modalService.selection);
+    
+    
     //end working on this:::::::
     
     let prepSelections: any[] = this.prepareForMapping();
@@ -129,7 +142,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       console.log("is this the projectUID?",this.perviewProject);
       console.log("is this the selection?",mappedProject);
       
-      this.mapperService.addSingleMappedPlanviewProject(this.perviewProject,mappedProject).subscribe()
+      this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe()
     })
     // console.log("this is the updatedlist:",updatedListofMappedProjects);
     // this.mapperService.mappedProjects = updatedListofMappedProjects
@@ -188,12 +201,21 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems.ppl_Code).indexOf(ppl_Code),1)
   }
 
-  clearSelections(){
+  clearSelections() {
     this.selectedProjects = [];
+    console.log('selections cleared.');
+    
   }
 
   navigateHome(){
      this.router.navigate(['/']);
+  }
+
+  
+  signalModalClose() {   
+    this.onPlanviewModalClose.emit('string');
+    this.clearSelections();
+    console.log('signalModalClose-planview has ran');
   }
   
 
