@@ -112,6 +112,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   addSelectedProjects(): void {
+    console.log('modals are a fancy way of saying....');
+    
     let prepSelections: any = this.selectedProjects.map((selectedProject) => {
       let formatedSelectedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
         ,{})
@@ -246,7 +248,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   navigateHome(){
     this.router.navigate(['/']);
  }
-
 
   signalModalClose() {
   this.onModalClose.emit('string');

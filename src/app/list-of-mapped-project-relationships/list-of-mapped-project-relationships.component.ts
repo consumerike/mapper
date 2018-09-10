@@ -45,6 +45,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   mappedProjects: any[];
   project;
   uid: any;
+  selectedProjectUID: any;
   unSub = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -116,6 +117,15 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     //     complete: function() {console.log('running as intended'), this.getSavedProjects(); } 
     //   });
     // });
+    $(document).ready(function(){
+      $('.modal').modal({
+        dismissible: false,
+        onCloseEnd: function(){console.log('what is the scope', this);
+        },
+     
+      });
+    });
+
 
   }
 
@@ -343,7 +353,16 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   handleModalClick(perviewProj): void {
     console.log("Do i have what I need?", perviewProj);
+    this.selectedProjectUID = perviewProj;
+    console.log("so this will be set?",this.selectedProjectUID);
+    
+  }
 
+  refreshPerviewList(event): void {
+    console.log('this is running the refresh of list');
+    console.log(event, "is there ane vent");
+    
+    this.getSavedProjects(this.currentID);
   }
 
 

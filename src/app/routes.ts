@@ -7,7 +7,7 @@ import { MappedProjectRelationshipComponent } from './components/mapped-project-
 
 export let routes = [
     { path: "", component: ListOfMappedProjectRelationshipsComponent, pathMatch: "full" },
-    { path: "authorizedPerviewProjects" ,component:AuthorizedPerviewProjectsComponent },
+    // { path: "authorizedPerviewProjects" ,component:AuthorizedPerviewProjectsComponent },
     { path: 'authorizedPlanviewProjects/:project.uid', component:AuthorizedPlanviewProjectsComponent}
     // { path: '/ConfirmDeletion', component: ConfirmationDialogueComponent }
 ];

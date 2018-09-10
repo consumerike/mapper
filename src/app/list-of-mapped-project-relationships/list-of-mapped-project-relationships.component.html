@@ -12,7 +12,8 @@
     </td>
     <td class="col m4"><a class="waves-effect waves-light btn" [routerLink]="['/authorizedPlanviewProjects', project.projUid]" >Add Planview Project</a></td>
   </tr>
-  <app-mapper-footer></app-mapper-footer>
+  <app-mapper-footer ><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
+  <app-authorized-perview-projects id="authorizedPerviewModal" class="modal"(onModalClose)="refreshPerviewList($event)" ></app-authorized-perview-projects>
 </table>
 
 <!-- BREAK BREAK BREAK BREAK BREAK BREAK  -->
