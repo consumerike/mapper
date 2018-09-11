@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IProject, Project, Result, MappedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
-import { map, tap, filter } from 'rxjs/operators';
+import { map, tap, filter, catchError } from 'rxjs/operators';
 import { Observable, Subscribable, Subscription, from, throwError } from 'rxjs';
 import { MyProjectService } from './project.service';
 
@@ -119,9 +119,7 @@ export class MapperService {
     }  
 
     console.log("need to be passing in a projectUIDman",project.projUid);
-    try {
-      console.log('are you stopping?');
-    
+    try {    
     return this.http.get(url,options)
     .pipe(
       map(data => {        
@@ -135,7 +133,7 @@ export class MapperService {
         if (project.planviewProjects.length < 1) {
           console.log('yes it is less than 1');
           
-          throw 404;
+          this.addPerviewProjectForMapping(project).subscribe()
         //   console.log('in if loop for no projects in the array........', project);
         } 
           // this.addPerviewProjectForMapping(project).subscribe();
@@ -152,7 +150,32 @@ export class MapperService {
       this.addPerviewProjectForMapping(project).subscribe()
     }
     
-  }  
+  }
+  
+  checkPerviewProjectMapStatus(project:any): Observable<any> {
+    let url = `http://xrdcwpdbsmsp03:5000/api/projects`
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/json');
+    let options = {
+      headers,
+    }
+    console.log('checking perviewproject map status....');
+    
+    return this.http.get(url,options)
+    .pipe(
+      tap((data) => {
+        console.log(data, "if there's any data, let's take a look");
+        
+      }),
+      catchError(err => {
+        console.log('this project needs to be mapped, clearly');
+        
+        return this.addPerviewProjectForMapping(project);
+      })  
+    )
+   
+  }
   
   addPerviewProjectForMapping(project: any): Observable<any> {
     console.log("this is the inputted project in addPerviewProjectForMapping @MapperService::::", project);

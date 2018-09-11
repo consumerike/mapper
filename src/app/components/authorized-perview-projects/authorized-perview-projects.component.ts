@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input } from '@angular/core';
 import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
+import { UserService } from '../../Services/user-service.service';
+import { MapperService } from '../../Services/mapper.service';
 import { IProject } from '../mapper-models';
 import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
-import { UserService } from '../../Services/user-service.service';
+
 
 
 declare const $: any
@@ -23,6 +25,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   constructor(private perviewService: PerviewService,
     private myprojectService: MyProjectService,
     private userService: UserService,
+    private mapperService: MapperService,
     private router: Router,
     private renderer: Renderer2
   ) { }
@@ -129,7 +132,15 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     console.log('it gets to this point at least::::good list from listOfSavedProjects:', this.listOfSavedProjects);
     console.log('making sure i have a good list here from input():::', this.listOfSavedPerviewProjects);
     console.log("i'm trying to add this list, correct??",prepSelections);
-    
+
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK OUT INTO OWN FUNCTION PROBABLY....
+    prepSelections.map((selectedProject) => {
+      //GET project successfully or receive 404 error.
+      //If 404 error then map the project here
+      //otherwise continue....
+      this.mapperService.checkPerviewProjectMapStatus(selectedProject).subscribe();
+    })
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK INTO OWN FUNCTION PROBABLY.....
     let updatedListOfSavedProjects: any[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
 
     console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
@@ -152,9 +163,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     ).subscribe(
       (val) => console.log("what the heck mayne",val)
       );
+  //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     this.getListOfSavedProjects();
-    
-        
+
   }
 
   WrongFunctionaddSelectedProjects(): void {  

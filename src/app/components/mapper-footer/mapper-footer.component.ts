@@ -7,13 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MapperFooterComponent implements OnInit {
 
-  getListOfSavedProjects(): any {
-    throw new Error("Method not implemented.");
-  }
+
   constructor() { }
 
   ngOnInit() {
-    this.getListOfSavedProjects();
+
   }
 
 }
