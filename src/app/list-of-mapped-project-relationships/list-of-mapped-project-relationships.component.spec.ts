@@ -13,7 +13,7 @@ import { ModalService } from '../Services/modal.service';
 
 import { ListOfMappedProjectRelationshipsComponent } from './list-of-mapped-project-relationships.component';
 
-import {IProject, Project } from '../components/mapper-models' 
+
 import { currentId } from 'async_hooks';
 
 describe('ListOfMappedProjectRelationshipsComponent', () => {

@@ -14,10 +14,10 @@ export class UserService {
   static currentUser: any;
   constructor(private http: HttpClient) { }
 
-  apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
+  apiRoot: string = "http://perviewqa.app.parallon.com/PWA"
   public currentUser: string;
 
-  getCurrentUserID(): Observable<string> {
+  getCurrentUserID(): Observable<any> {
     let url = `${this.apiRoot}/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose');
@@ -31,12 +31,12 @@ export class UserService {
        map(data => {         
         this.currentUser = data["d"].AccountName.toUpperCase();
         return this.currentUser
-        // return data["d"].AccountName.toUpperCase();
+       
         }),
         catchError(err => {
-          console.log('this project needs to be mapped, clearly');
-          
-          return this.addPerviewProjectForMapping(project);
+          console.log('this user is not found', err);
+          return err;
+          // return this.addPerviewProjectForMapping(project);
         })   
       );    
   }
@@ -44,7 +44,7 @@ export class UserService {
   getChangePermissionToken(): Observable<string> {
     console.log('made it to changetoken function in service');
     try {
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/contextinfo`
+    let url = `http://perviewqa.app.parallon.com/PWA/_api/contextinfo`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');

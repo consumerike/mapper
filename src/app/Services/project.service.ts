@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
-import { map, tap } from "rxjs/operators";
+import { map, tap, catchError, switchMap } from "rxjs/operators";
 import { UserService } from './user-service.service';
 import { UtilityService } from "./utility.service";
 import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
@@ -15,7 +15,7 @@ import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
 //purpose: manage user's saved projects/workspace
 export class MyProjectService {
 
-  constructor(private http: HttpClient, userService: UserService, private utilityService: UtilityService) { }
+  constructor(private http: HttpClient, private userService: UserService, private utilityService: UtilityService) { }
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public userHasSavedProjects: boolean = true;
   public projectsSavedByUser: any[] = [];
@@ -27,7 +27,7 @@ export class MyProjectService {
   //   return this.userHasSavedProjects;
   // }
 
-  getSavedPerviewProjects(currentUserID: string): Observable<any[]> {
+  getSavedPerviewProjects(currentUserID: string): Observable<any> {
   console.log("first look, first kill", currentUserID);  
    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${currentUserID}%27&$select=ProjectUIDs` 
    let headers = new HttpHeaders();
@@ -49,6 +49,9 @@ export class MyProjectService {
               console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
               return this.projectsSavedByUser;
             }
+            else {
+              this.handleNoUser().subscribe();
+            }
           }
           catch {
             console.log("didn't work, here's text:", Data);
@@ -60,12 +63,34 @@ export class MyProjectService {
           // this.userHasSavedProjects = false;
           // return this.projectsSavedByUser;
           // return arrayOfProjects;
-         })
-      )
-         
+         }),
+         catchError(err => {
+          console.log('this user needs to be saved, clearly there are no projects',err);
+          this.handleNoUser();
+          return err;
+          //THIS CODE BELOW IS THE handleNoUser function on line 70...
+          // return this.userService.getChangePermissionToken()
+          // .pipe(
+          //   switchMap((data) =>{
+          //     console.log("data is changetoken", data);
+          //     let changeTokenHash = data;
+          //     return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,{});
+          //   })
+          // );
+        })  
+      );
     }
     // console.log(this.CheckForSavedProjects());
-    
+  handleNoUser(): Observable<any> {
+    return this.userService.getChangePermissionToken()
+    .pipe(
+      switchMap((data) =>{
+        console.log("data is changetoken", data);
+        let changeTokenHash = data;
+        return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,{});
+      })
+    );
+  }
     // console.log("projects saved by user before from array",this.projectsSavedByUser);
     
     // return from([this.projectsSavedByUser]);
@@ -74,9 +99,9 @@ export class MyProjectService {
   //   this.projectsSavedByUser.next(selections);
   // }
   
-  WrongDescriptionaddPerviewSelectedProjectstoWorkspace(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
+  addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
     
-    console.log('running addPerviewSelectedProjecst to WorksPACE MANYNE');
+    console.log('running addUsertoSavedList to WorksPACE MANYNE');
     console.log(changeTokenHash, "did we get the hashb?");
     
     let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`

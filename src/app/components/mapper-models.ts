@@ -13,20 +13,19 @@
       public projName = '',
       public owner = '',
       public businessOwner = '',
-      public projectChargeBackCategory = '',
-      public departments = '',
-
+      public planviewProjects = []
     ) { }
   }
 
 export class MappedProject {
-  uid: string;
+  projectName: string;
   ppl_code: string;
 }
 
-// export class {
-
-// }
+export class SavedProject {
+  projUID: string;
+  projName: string;
+}
 
     
 export class Config {
@@ -36,7 +35,6 @@ export class Config {
   projectPickerViewGuid: string;
   resourcePickerViewGuid: string;
 }
-
 
 export class Result {
   project: IProject;
