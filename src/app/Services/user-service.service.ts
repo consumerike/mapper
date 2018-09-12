@@ -32,7 +32,12 @@ export class UserService {
         this.currentUser = data["d"].AccountName.toUpperCase();
         return this.currentUser
         // return data["d"].AccountName.toUpperCase();
-        }) 
+        }),
+        catchError(err => {
+          console.log('this project needs to be mapped, clearly');
+          
+          return this.addPerviewProjectForMapping(project);
+        })   
       );    
   }
   

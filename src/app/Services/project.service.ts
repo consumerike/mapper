@@ -49,10 +49,10 @@ export class MyProjectService {
               console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
               return this.projectsSavedByUser;
             }
-            
           }
           catch {
             console.log("didn't work, here's text:", Data);
+            //need more cowbell here:
            return []; 
           }
           
@@ -61,7 +61,6 @@ export class MyProjectService {
           // return this.projectsSavedByUser;
           // return arrayOfProjects;
          })
-
       )
          
     }

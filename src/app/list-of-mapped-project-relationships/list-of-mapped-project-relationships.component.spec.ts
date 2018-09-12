@@ -1,8 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserService } from '../Services/user-service.service'
+import { Component, OnInit, Input, Output, OnChanges, OnDestroy } from '@angular/core';
+import {IProject, Project } from '../components/mapper-models' 
+import { UserService } from "../Services/user-service.service";
 import {MyProjectService} from '../Services/project.service'
-import {MapperService} from '../Services/mapper.service'
-// import { PerviewService } from '../Services/perview.service'
+import { MapperService } from '../Services/mapper.service';
+import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { takeUntil, map, tap, take, switchMap } from 'rxjs/operators';
+import { M } from "materialize-css";
+import { ModalService } from '../Services/modal.service';
 
 
 
@@ -51,17 +56,7 @@ describe('ListOfMappedProjectRelationshipsComponent', () => {
 
     }
 
-    mapperServiceStub = {
-      mappedProjects: [ {"uid": "Manhattan Project", "ppl_code": "Atomic bomb"}
-       ,{"uid": "Spiderman", "ppl_code": "Venom"}
-       ,{"uid": "X-Men", "ppl_code": "Magneto"}
-       ,{"uid": "Captain America", "ppl_code": "Red Skull"}
-       ,{"uid": "Spiderman", "ppl_code": "Green Goblin"}
-       ,{"uid": "Spiderman", "ppl_code": "The Lizard"}
-       ,{"uid": "Spiderman", "ppl_code": "Dr. Octopus"}
-       ,{"uid": "Spiderman", "ppl_code": "Rhino"}
-      ]
-    }
+
 
     TestBed.configureTestingModule({
       declarations: [ ListOfMappedProjectRelationshipsComponent ],
@@ -94,29 +89,6 @@ describe('ListOfMappedProjectRelationshipsComponent', () => {
     expect(myprojectServiceStub.userHasSavedProjects).toBe(true)
     expect(myprojectServiceStub.userWithNoSavedProjects).toBe(false)
 
-    // it('#getCurrentUserID() should return a boolean status, True if there are projects saved', () => {
-    //   expect(component.savedProjects).toBeDefined();
-    // });
-  
-  
-    // it('#userHasSavedProjects() should return a boolean status, True if there are projects saved', () => {
-    //   expect(component.savedProjects).toBeDefined();
-
-    // });
-  
-  
-    // it('#getListofPerviewProjects() should return a boolean status, True if there are projects saved', () => {
-    //   expect(component.savedProjects).toBeDefined();
-    // });
-  
-    // it('#getCurrentUserID() should return a boolean status, True if there are projects saved', () => {
-    //   expect(component.savedProjects).toBeDefined();
-    // });
-  
-  
-    // it('#getMappedPlanviewProjects should return a boolean status, True if there are projects saved', () => {
-    //   expect(component.savedProjects).toBeDefined();
-    // });
 
     
   });

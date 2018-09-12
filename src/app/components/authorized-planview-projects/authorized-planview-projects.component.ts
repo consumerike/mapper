@@ -86,7 +86,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       delete: false,
      
     },
-    
+
   };  
 
 

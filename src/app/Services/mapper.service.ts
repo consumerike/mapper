@@ -169,7 +169,7 @@ export class MapperService {
         
       }),
       catchError(err => {
-        console.log('this project needs to be mapped, clearly');
+        console.log('this project needs to be mapped, clearly',err);
         
         return this.addPerviewProjectForMapping(project);
       })  

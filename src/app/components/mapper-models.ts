@@ -19,10 +19,14 @@
     ) { }
   }
 
-export interface MappedProject {
+export class MappedProject {
   uid: string;
   ppl_code: string;
 }
+
+// export class {
+
+// }
 
     
 export class Config {
