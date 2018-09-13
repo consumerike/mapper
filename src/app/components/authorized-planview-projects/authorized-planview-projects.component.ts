@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { PlanviewService } from '../../Services/planview.service';
 import { ModalService } from '../../Services/modal.service';
 import { MyProjectService } from '../../Services/project.service';
-import { IProject } from '../mapper-models';
+import { IProject, Project, MappedProject } from '../mapper-models';
 import { Observable } from 'rxjs';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { MapperService } from '../../Services/mapper.service';
@@ -25,13 +25,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     private router: Router,
     private modalService: ModalService
   ) { }
-
-  authorizedProjects: any[];
+  
+  authorizedProjects: MappedProject[];
   private selectedProjects: any[] = [];
-  private selectedProjects$: Observable<any>
-  private myProjects: any[];
-  private perviewProject: any;
-  private listOfMappedProjects: any;
+  private perviewProject: string;
 
   ngOnInit() {
     this.getPlanviewProjects();
@@ -66,10 +63,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
      /* We need these fields: Project Name (above); Project Manager, and Business Owner
      ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      // name: {
+      // owner: {
       //   title: "Project Manager"
       // },
-      // name: {
+      // businessOwner: {
       //   title: "Business Owner"
       // },
       :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -89,12 +86,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
   };  
 
-
   getPlanviewProjects(): void {
+    console.log("getPlanViewProjects in authorized planview projects component is running...");
+    
     this.planviewService.getAuthorizedPlanviewProjects()
     .pipe( 
        takeUntil(this.unSub),
-       map(((data) => {  this.authorizedProjects = data;}))
+       map(((data) => {  this.authorizedProjects = data;console.log('anything in the data or what??',this.authorizedProjects);
+       }))
      )
      .subscribe((data) => data)
   }
@@ -134,10 +133,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     
     //end working on this:::::::
     
-    let prepSelections: any[] = this.prepareForMapping();
+    let prepSelections: MappedProject[] = this.prepareForMapping();
     // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
     prepSelections.map((mappedProject) => {
-      console.log('making audibles::', mappedProject, mappedProject.Uid, mappedProject.UID);
+      console.log('making audibles::::exactly:::::', mappedProject)
       console.log("is this the projectUID?",this.perviewProject);
       console.log("is this the selection?",mappedProject);
       
@@ -152,7 +151,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   }
  
 
-  prepareForMapping(): any[] {
+  prepareForMapping(): MappedProject[] {
     let prepSelections: any = this.selectedProjects.map((selectedProject) => {
       let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code },{})
       console.log("correct format check for mappedPlanViewProj:", formattedSelectedProject);
@@ -164,14 +163,12 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     return prepSelections;
   }
 
-  rowClick(event){
-   
-    
+  rowClick(event): void {    
     this.selectProject(event);
     console.log(event, "this is the row click.....", "these are selected:", this.selectedProjects);
   }
 
-  selectProject(event: object) {
+  selectProject(event: object): void {
     console.log('what it is yo:', event["data"]);
     
     if (this.projectIsSelected(event["data"].ppl_Code)) {
@@ -194,24 +191,24 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  unselectProject(ppl_Code: string) {
+  unselectProject(ppl_Code: string): void {
     console.log('unselect func');
     
     this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems.ppl_Code).indexOf(ppl_Code),1)
   }
 
-  clearSelections() {
+  clearSelections(): void {
     this.selectedProjects = [];
     console.log('selections cleared.');
     
   }
 
-  navigateHome(){
+  navigateHome(): void{
      this.router.navigate(['/']);
   }
 
   
-  signalModalClose() {   
+  signalModalClose(): void {   
     this.onPlanviewModalClose.emit('string');
     this.clearSelections();
     console.log('signalModalClose-planview has ran');

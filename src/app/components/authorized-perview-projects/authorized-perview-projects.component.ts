@@ -3,7 +3,7 @@ import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
 import { UserService } from '../../Services/user-service.service';
 import { MapperService } from '../../Services/mapper.service';
-import { IProject } from '../mapper-models';
+import { IProject, SavedProject } from '../mapper-models';
 import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
@@ -30,8 +30,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     private renderer: Renderer2
   ) { }
 
-  authorizedProjects: any[];
-  private selectedProjects: any[] = [];
+  authorizedProjects: IProject[];
+  private selectedProjects: IProject[] = [];
   private myProjects$ = new Subject();
   private listOfSavedProjects: any;
   changeDigestToken$: Observable<string>;
@@ -54,7 +54,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     // )
   }
   @Input()
-  listOfSavedPerviewProjects: any[];
+  listOfSavedPerviewProjects: SavedProject[];
   @Output()
   onModalClose = new EventEmitter();
 
@@ -119,8 +119,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   addSelectedProjects(): void {
     console.log('modals are a fancy way of saying....');
     
-    let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-      let formatedSelectedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
+    let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
+      let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
         ,{})
         console.log("is this correct format?",formatedSelectedProject);
         
@@ -141,7 +141,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.mapperService.checkPerviewProjectMapStatus(selectedProject).subscribe();
     })
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK INTO OWN FUNCTION PROBABLY.....
-    let updatedListOfSavedProjects: any[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
+    let updatedListOfSavedProjects: SavedProject[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
 
     console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
     
@@ -168,58 +168,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   }
 
-  WrongFunctionaddSelectedProjects(): void {  
-    let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-      let formatedSelectedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
-        ,{})
-        console.log("is this correct format?",formatedSelectedProject);
-        
-      return formatedSelectedProject
-    })
-    console.log('preppy', prepSelections);
-    this.userService.getChangePermissionToken()
-    .pipe(
-      switchMap((data) => { console.log("data is a changeToken:", data)
-        let changeToken = data;
-        return [] //this.myprojectService.addPerviewSelectedProjectstoWorkspace(changeToken,this.userService.currentUser,prepSelections)
-      })
-    )
-    .subscribe(() => console.log('did it happen or what')
-    );
-    // this.addProjects$.subscribe();
-    // this.updateProjects$ = this.addProjects$.pipe(
-    //   tap(data => this.myprojectService.getSavedPerviewProjects(this.userService.currentUser))
-
-    // );
-    // this.updateProjects$.subscribe();
-       
-    // this.myProjects$.next(prepSelections);
-    // console.log("how do you like me now??", this.myProjects$.subscribe(), "without subscription:", this.myProjects$);
-    // this.myProjects$.pipe(map(data => console.log("PLEASE", data)))
-    
-   // let updatedListOfSavedProjects: any[] = [...this.listOfSavedProjects, ...prepSelections];
-
-    //his.myprojectService.projectsSavedByUser = updatedListOfSavedProjects;
-    // let newStream = from(updatedListOfSavedProjects);
-    // this.myprojectService.projectsSavedByUser$ = newStream;  
-    // this.listOfSavedProjects = []
-    // let added = this.myProjects$.next(prepSelections);
-    // let newStream = this.myProjects$.asObservable();
-    // console.log("what is this right now?", this.myProjects$);
-    // this.listOfSavedProjects$ = newStream
-    // let newStream: Observable<any> = this.myProjects$.next(prepSelections);
-    //this.myprojectService.userHasSavedProjects = false;
-    // this.myprojectService.getSavedPerviewProjects(this.userService.currentUser);
-    console.log(this.listOfSavedProjects, "is this a list or not?");
-    this.clearSelections();
-    console.log("updatedListofSavedProjects:",this.myprojectService.projectsSavedByUser);
   
-    // this.myprojectService.getSavedPerviewProjects().subscribe((data)=> console.log('did this work??',data)
-    // );
-    // console.log(this.listOfSavedProjects$.map(data => console.log(data)).subscribe());
-  }
   
-  rowClick(event){
+  rowClick(event): void {
     console.log('this is the event registering on row click::', event);
     
     console.log("these are selected:", this.selectedProjects);
@@ -228,7 +179,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
    
   }
 
-  selectProject(event: any) {
+  selectProject(event: any): void {
     console.log(event["data"]);
        
     if (this.projectIsSelected(event["data"].projName)) {
@@ -251,22 +202,22 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  unselectProject(name: any) {
+  unselectProject(name: any): void {
     console.log('unselect function running');
     
     this.selectedProjects.splice(this.selectedProjects.map(selectedItems => {console.log(selectedItems);selectedItems.projName}).indexOf(name),1)
   }
 
-  clearSelections(){
+  clearSelections(): void {
     this.selectedProjects = [];
   }
   
 
-  navigateHome(){
+  navigateHome(): void {
     this.router.navigate(['/']);
  }
 
-  signalModalClose() {
+  signalModalClose(): void {
   this.onModalClose.emit('string');
   console.log('signalModalClose has ran');
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, OnDestroy } from '@angular/core';
-import {IProject, Project } from '../components/mapper-models' 
+import {IProject, Project, SavedProject, MappedProject } from '../components/mapper-models' 
 import { UserService } from "../Services/user-service.service";
 import {MyProjectService} from '../Services/project.service'
 import { MapperService } from '../Services/mapper.service';
@@ -25,28 +25,17 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   ) {}
    //for testing purposes: 
   projects$ = new Subject();
-  danSavedProjects$: Observable<any[]>
   currentUserID$: Observable<string>
   realSavedProjects$: Observable<any>
-  danMappedProjects$: Observable<any[]>
-  danMappedProjects: any[]
-  testSub = new Subject();
-  testbehaveSub = new BehaviorSubject(null);
-
-  currentID;
-  savedProjects: boolean
-  userHasSavedProjects: boolean
-  userWithNoSavedProjects: boolean
-  listings;
+  currentID: string;
   projectSavedByUser$: Observable<any>
   //for reals:   
   // listOfSavedPerviewProjectsSub: Subscription;
   // listOfMappedProjectsSub: Subscription;
-  listOfSavedPerviewProjects: any[];
-  mappedProjects: any[];
-  project;
-  uid: any;
-  selectedProjectUID: any;
+  listOfSavedPerviewProjects: SavedProject[];
+  mappedProjects: MappedProject[];
+  project: SavedProject;
+  selectedProject: SavedProject;
   unSub = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -57,8 +46,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   
 
   // danUpdateProjects(newProject: any): void {
-  //   this.danMappedProjects.push(newProject);
-  //   this.projects$.next(this.danMappedProjects);
+  //   this
+  //   this.projects$.next(this
   // }
 
   ngOnInit() {
@@ -84,12 +73,12 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     this.realSavedProjects$.pipe().subscribe();
        
 
-    // this.danMappedProjects$ = this.danSavedProjects$.pipe(
+    // this
     //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
-    //   tap( (data: any[]) => this.danMappedProjects = data )
+    //   tap( (data: any[]) => this
     // );
 
-    // this.danMappedProjects$
+    // this
     // .pipe(takeUntil(this.unSub))
     // .subscribe( (data: any[]) => console.log('dan', data));
     // this.projectSavedByUser$ = this.myProjectService.projectsSavedByUser$
@@ -164,25 +153,17 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     .subscribe((data) => data);
   }
 
-  getPlanviewAssociations(projects: any[])  {
+  getPlanviewAssociations(projects: SavedProject[]): void  {
       this.mapperService.getMappedPlanviewAssociations(projects)
   }
 
-  getListOfPlanviewMappedProjects() {
+  getListOfPlanviewMappedProjects(): void {
     this.mapperService.perviewMappedPlanviewAssociations(this.project)
     .subscribe((data)=>{console.log(`What's the data?`)})
   }
   
-  remove(uid){console.log(uid)}
 
-  // getMappedProjects() {
-  //   this.mapperService.getMappedProjects()
-  //   .subscribe((data) => {  
-  //     this.mappedProjects = data;
-  //   })
-  // }
-
-  deletePlanviewAssociation(mappedRelationship): any {
+  deletePlanviewAssociation(mappedRelationship: MappedProject): any {
     console.log(mappedRelationship);
     
     if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship)) {
@@ -196,7 +177,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     else console.log('canceled operation');
   }
 
-  confirmDeletionOfPlanviewAssociation(mappedRelationship: any) {
+  confirmDeletionOfPlanviewAssociation(mappedRelationship: MappedProject) {
     let decision = confirm(`Warning! This will delete the association
       created by ${this.userService.currentUser} between
       ${mappedRelationship.projectName} and ${mappedRelationship.projectGuid}
@@ -204,7 +185,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     if (decision == true) {return true}
   }
   
-  deletePerviewProject(perviewProject, index): any {
+  deletePerviewProject(perviewProject: SavedProject, index): void {
     console.log("this is the structure mayne::::::",perviewProject);
     console.log("this is the larger stucture though ::::::",this.listOfSavedPerviewProjects);
     if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
@@ -216,12 +197,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         })
       } 
     
-        //filter method stuff here:
-                      // let newMappedProjects :any[] = this.mappedProjects.filter((mappedProject) =>{
-                      //   console.log("what is mapped project within filter?",mappedProject);
-                      // if ( mappedProject.uid !== mappedRelationship.uid 
-                      //   || mappedProject.ppl_code !== mappedRelationship.ppl_code) {return true}
-                      // });
       try {
         let filteredListOfProjects = this.listOfSavedPerviewProjects.filter((savedProject) => {
           console.log('COUPLING??',savedProject["projUid"],'vs:::', perviewProject["projUid"]);
@@ -240,7 +215,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         console.log('it gets to this point at least::::this is the perviewProject::::::', perviewProject);
         console.log('making sure i have a good list here:::', this.listOfSavedPerviewProjects);
         
-        let updatedListOfSavedProjects: any[] = filteredListOfProjects;
+        let updatedListOfSavedProjects: SavedProject[] = filteredListOfProjects;
         console.log('seth meyers weekend update:', updatedListOfSavedProjects);
         
         this.userService.getItemByUserId()
@@ -317,7 +292,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     
   }
 
-  confirmDeletionOfPerviewProject(perviewProject, index) {
+  confirmDeletionOfPerviewProject(perviewProject: SavedProject, index) {
     console.log('cmon man:::::what is perviewProject, index and why??', perviewProject, index);
     console.log('cmon man:::::what is perviewProject.planviewProjects and why--looking for a ppl_Code or something??', perviewProject.planviewProjects);
     try {
@@ -341,22 +316,16 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    
   }
 
-  onSelect(selectedPerviewProject: any): void {
-    console.log("uid string:",selectedPerviewProject.uid);
-    
-    this.uid = selectedPerviewProject.uid;
-    // this.perviewProject.ppl_code = selectedPerviewProject.ppl_code;
-  }
 
   hidePerviewProjects() {
    return false;
   }
 
-  handleModalClick(perviewProj): void {
+  handleModalClick(perviewProj: SavedProject): void {
     console.log("Do i have what I need?", perviewProj);
-    this.selectedProjectUID = perviewProj;
+    this.selectedProject = perviewProj;
     this.modalService.selection = perviewProj.projUid;
-    console.log("so this will be set?",this.selectedProjectUID);
+    console.log("so this will be set?",this.selectedProject);
     
   }
 

@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse, HttpHeaders, HttpRequest } from '@angular/com
 
 import{map, mergeMap, catchError, filter, tap} from 'rxjs/operators'
 
-import  { Observable } from 'rxjs';
+import  { Observable, throwError } from 'rxjs';
 
 
 
@@ -14,10 +14,10 @@ export class UserService {
   static currentUser: any;
   constructor(private http: HttpClient) { }
 
-  apiRoot: string = "http://perviewqa.app.parallon.com/PWA"
+  apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentUser: string;
 
-  getCurrentUserID(): Observable<any> {
+  getCurrentUserID(): Observable<string> {
     let url = `${this.apiRoot}/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose');
@@ -35,7 +35,7 @@ export class UserService {
         }),
         catchError(err => {
           console.log('this user is not found', err);
-          return err;
+          return throwError(err);
           // return this.addPerviewProjectForMapping(project);
         })   
       );    
@@ -44,7 +44,7 @@ export class UserService {
   getChangePermissionToken(): Observable<string> {
     console.log('made it to changetoken function in service');
     try {
-    let url = `http://perviewqa.app.parallon.com/PWA/_api/contextinfo`
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/contextinfo`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');

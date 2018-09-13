@@ -62,44 +62,11 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
 
       return projects;
   }),
-    //break
+
     map( (data) => { console.log("authorizedPerviewProjectData",data);
     this.authorizedPerviewProjects = data; return this.authorizedPerviewProjects; })
   )
 }
-
-  // ikegetAuthorizedPerviewProjects(): Observable<any> {
-    // let setupObject = this.setupForGetPerviewProjects();
-    // console.log('does this work that way?"',setupObject.options);
-    
-    // return this.http.post(setupObject.adapterPath, setupObject.body, setupObject.options)
-    // .pipe(
-    //   map( (data) => { console.log("authorizedPerviewProjectData",data);
-    //    this.authorizedPerviewProjects = data; return this.authorizedPerviewProjects; })
-
-    // );
-    // .subscribe((data) => this.authorizedPerviewProjects = data);
-  // }
-
-  // setupForGetPerviewProjects(): any {
-  //   let headers = new HttpHeaders();
-  //   let adapterPath = "http://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"//`${this.config.adapterUrl} `
-  //   const BODY = `method=PwaGetProjectsForEditCommand&viewguid=ca9a8094-5522-e811-8109-0050568f78ef`//${this.config.projectPickerViewGuid}` 
-  //   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
-  //   let setupObject = {
-  //     options: headers,
-  //     adapterPath: adapterPath,
-  //     body: BODY
-
-  //   };
-  //   return setupObject; 
-  // }
-
-  // xgetAuthorizedPerviewProjects(): Observable<any> {
-  //   return this.http.get('./assets/mock-authorized-projects.txt', {responseType: 'json'})
-  //   .pipe(map( (data) => { this.authorizedPerviewProjects = data; return this.authorizedPerviewProjects; })
-  //   );
-  // }
-  
+ 
 }
 

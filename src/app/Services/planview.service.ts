@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter'
 
-import { IProject, Project } from '../components/mapper-models';
+import { IProject, Project, MappedProject } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
 import { map, tap } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class PlanviewService {
   config:Config;
   authorizedPlanviewProjects: any;
 
-  getAuthorizedPlanviewProjects():Observable<any> {
+  getAuthorizedPlanviewProjects():Observable<MappedProject[]> {
     let url = `http://xrdcwpdbsmsp03:5000/api/projects/admin/AuthorizedPlanViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
@@ -41,11 +41,6 @@ export class PlanviewService {
       
   }
 
-  xgetAuthorizedPlanviewProjects(): any {
-    let setupObject = this.setupForGetPlanviewProjects();
-    return this.http.post(setupObject.adapterPath, setupObject.body, setupObject.options)
-    .subscribe((data) => this.authorizedPlanviewProjects = data);
-  }
 
   setupForGetPlanviewProjects(): any {
     let headers = new HttpHeaders();

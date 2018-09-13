@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IProject, Project, Result, MappedProject } from '../components/mapper-models';
+import { IProject, Project, Result, MappedProject, SavedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { map, tap, filter, catchError } from 'rxjs/operators';
 import { Observable, Subscribable, Subscription, from, throwError } from 'rxjs';
@@ -19,52 +19,6 @@ export class MapperService {
    apiRoot: string = "https://perviewqa.app.parallon.com/PWA";
 
   
-//   public mappedProjects: any[] = [{
-// 		"uid": "Batman",
-// 		"ppl_code": "The Joker"
-// 	}, {
-// 		"uid": "Spiderman",
-// 		"ppl_code": "Venom"
-// 	}, {
-// 		"uid": "X-Men",
-// 		"ppl_code": "Magneto"
-// 	}, {
-// 		"uid": "Captain America",
-// 		"ppl_code": "Red Skull"
-// 	}, {
-// 		"uid": "Spiderman",
-// 		"ppl_code": "Green Goblin"
-// 	}, {
-// 		"uid": "Spiderman",
-// 		"ppl_code": "The Lizard"
-// 	}, {
-// 		"uid": "Spiderman",
-// 		"ppl_code": "Dr. Octopus"
-// 	}, {
-// 		"uid": "Spiderman",
-// 		"ppl_code": "Rhino"
-//   }, {
-//     "uid": "The Invisible Woman",
-//     "ppl_code": "Doctor Doom"
-//   }
-//   , {
-//     "uid": "Black Panther",
-//     "ppl_code": "Erik Killmonger"
-//   }
-//   , {
-//     "uid": "Wonder Woman",
-//     "ppl_code": "Ares"
-//   }
-//   , {
-//     "uid": "Wonder Woman",
-//     "ppl_code": "Doctor Poison"
-//   }
-//   , {
-//     "uid": "Wonder Woman",
-//     "ppl_code": "Doctor Psycho"
-//   }
-
-// ];
   public planviewMappedProjects: any;
   // private dataSourceFlag:boolean = true;
 
@@ -95,7 +49,7 @@ export class MapperService {
   //   return from([this.mappedProjects]);
   // }
   
-  getMappedPlanviewAssociations(savedPerviewProjects:any[]): any[] {
+  getMappedPlanviewAssociations(savedPerviewProjects:SavedProject[]): any[] {
     console.log("why are you saying it cannot be read: getMappedPlanviewAssociationsb", savedPerviewProjects);
     return savedPerviewProjects.map((perProj) => {
       console.log("trying to get the mappedProjects after addition:", perProj);
@@ -106,7 +60,7 @@ export class MapperService {
   }
 
   //chance this runs too quickly before data is ready...
-  perviewMappedPlanviewAssociations(project: any): Observable<any> {
+  perviewMappedPlanviewAssociations(project: SavedProject): Observable<MappedProject[]> {
     console.log('what is the project here in perviewMappedPlanviewAssociations::', project);
     
     let url = `http://xrdcwpdbsmsp03:5000/api/projects/${project.projUid}/planViewProjects`
@@ -138,7 +92,7 @@ export class MapperService {
         } 
           // this.addPerviewProjectForMapping(project).subscribe();
         // }
-        // return project.planviewProjects;
+        return project.planviewProjects;
        })
       ); 
     }
@@ -152,7 +106,7 @@ export class MapperService {
     
   }
   
-  checkPerviewProjectMapStatus(project:any): Observable<any> {
+  checkPerviewProjectMapStatus(project:SavedProject): Observable<any> {
     let url = `http://xrdcwpdbsmsp03:5000/api/projects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
@@ -177,7 +131,7 @@ export class MapperService {
    
   }
   
-  addPerviewProjectForMapping(project: any): Observable<any> {
+  addPerviewProjectForMapping(project: SavedProject): Observable<any> {
     console.log("this is the inputted project in addPerviewProjectForMapping @MapperService::::", project);
     console.log("this is the inputted project uid in addPerviewProjectForMapping @MapperService::::", project.projUid);
     console.log("this is the inputted project name in addPerviewProjectForMapping @MapperService::::", project.projName);
@@ -239,7 +193,7 @@ export class MapperService {
   }
 
   deletePlanviewAssociation(mappedRelationship:any):Observable<any> {
-    console.log('is this correct for url:projectGuid: projectUID, ppl_Code: ppl_Code ');
+    
     
     let url = `http://xrdcwpdbsmsp03:5000/api/projects/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
     let headers = new HttpHeaders();
