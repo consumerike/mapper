@@ -21,7 +21,7 @@ export class PlanviewService {
     this.config = configService.config;
   }
   config:Config;
-  authorizedPlanviewProjects: any;
+  authorizedPlanviewProjects: any; //MappedProject[]
 
   getAuthorizedPlanviewProjects():Observable<MappedProject[]> {
     let url = `http://xrdcwpdbsmsp03:5000/api/projects/admin/AuthorizedPlanViewProjects`
@@ -42,7 +42,7 @@ export class PlanviewService {
   }
 
 
-  setupForGetPlanviewProjects(): any {
+  setupForGetPlanviewProjects(): object {
     let headers = new HttpHeaders();
     let adapterPath = `${this.config.adapterUrl} `
     const BODY = `method=PwaGetProjectsForEditCommand&viewguid=${this.config.projectPickerViewGuid}` 

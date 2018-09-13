@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IProject, Project } from '../components/mapper-models';
+import { IProject, Project, SavedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
 import { map, tap, catchError, switchMap } from "rxjs/operators";
@@ -17,15 +17,8 @@ export class MyProjectService {
 
   constructor(private http: HttpClient, private userService: UserService, private utilityService: UtilityService) { }
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
-  public userHasSavedProjects: boolean = true;
-  public projectsSavedByUser: any[] = [];
-  // selections: any;
- 
-  
-  
-  // CheckForSavedProjects() :boolean {
-  //   return this.userHasSavedProjects;
-  // }
+  public projectsSavedByUser: SavedProject[] = [];
+
 
   getSavedPerviewProjects(currentUserID: string): Observable<any> {
   console.log("first look, first kill", currentUserID);  
@@ -139,7 +132,7 @@ export class MyProjectService {
   
   }
 
-  addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections) {
+  addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections): Observable<any> {
     let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
     modUser = modUser.toLowerCase();
     console.log('currentUser in addPerview Project in @projectService::', currentUser);
@@ -237,49 +230,5 @@ export class MyProjectService {
 
   }
 
-
-
-
-  //JUST IN CASE KEEPING :::::::::::
-  //   console.log('selections in deletePervierwProject in @projectService:', selections);
-  //   console.log('hash in deletePervierwProject in @projectService:', changeTokenHash);
-  //   console.log('id in deletePervierwProject in @projectService:', changeTokenHash);
-  //   console.log('selections in deletePervierwProject in @projectService:', changeTokenHash);
-    
-  //   let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
-  //   let headers = new HttpHeaders();
-  //   headers = headers.set('accept', 'application/json;odata=verbose')
-  //     .set('X-HTTP-Method','MERGE')
-  //     .set('Content-Type','application/json;odata=verbose')
-  //     .set('IF-MATCH','*')
-  //     .set('X-RequestDigest',changeTokenHash)
-  //   let options = {
-  //     headers,
-  //    }
-  //   let body = `{
-  //     "__metadata": {
-  //       "type": "SP.Data.MapperUserStateListItem"
-  //     },
-  //     "AccountID": "${currentUser}",
-  //     "ProjectUIDs":"${JSON.stringify(selections)}"
-  //   }
-  //   `   
-
-  //   console.log('soft body:', body);
-  //   try {
-  //     return this.http.post(url, body, options)
-  //     .pipe(
-  //       tap( data => {
-  //         console.log('is this a great success:', data);
-          
-  //       return data;
-  //       })
-  //     );
-  //   }
-  //   catch {
-  //     console.log('that is not working in deletePerviewProject in project.service');
-  //   }
-  
-  // }
   
 }//end of file

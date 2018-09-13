@@ -161,7 +161,7 @@ export class MapperService {
 
   }
 
-  addSingleMappedPlanviewProject(projectUID: any, selection: any): Observable<any> {
+  addSingleMappedPlanviewProject(projectUID: string, selection: MappedProject): Observable<any> {
     console.log('is this correct for url:', projectUID);
     
     let url = `http://xrdcwpdbsmsp03:5000/api/projects/${projectUID}/planViewProjects`
@@ -215,9 +215,11 @@ export class MapperService {
     
   }
 
-  deletePerviewAssociations(perviewProject: any): any {
+  deletePerviewAssociations(perviewProject: SavedProject): void {
     console.log("all the projects:",perviewProject.planviewProjects);
     perviewProject.planviewProjects.map((mappedRelationship) => {
+      console.log('ppl_COde or ppl_code check:', mappedRelationship);
+      
       this.deletePlanviewAssociation(mappedRelationship).subscribe();
     })
   }

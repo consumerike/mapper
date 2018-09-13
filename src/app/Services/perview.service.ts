@@ -20,10 +20,10 @@ export class PerviewService {
     this.config = configService.config;
   }
   config:Config;
-  authorizedPerviewProjects: any;
+  authorizedPerviewProjects: IProject[];
 
 
-getAuthorizedPerviewProjects(): Observable<IProject[]> {
+  getAuthorizedPerviewProjects(): Observable<IProject[]> {
   console.log('getProjects method called')
   let headers = new HttpHeaders();
   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
@@ -64,9 +64,11 @@ getAuthorizedPerviewProjects(): Observable<IProject[]> {
   }),
 
     map( (data) => { console.log("authorizedPerviewProjectData",data);
-    this.authorizedPerviewProjects = data; return this.authorizedPerviewProjects; })
-  )
-}
+    this.authorizedPerviewProjects = data; 
+    return this.authorizedPerviewProjects; 
+    })
+   )
+ }
  
 }
 
