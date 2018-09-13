@@ -63,7 +63,7 @@ export class MapperService {
   perviewMappedPlanviewAssociations(project: SavedProject): Observable<MappedProject[]> {
     console.log('what is the project here in perviewMappedPlanviewAssociations::', project);
     
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${project.projUid}/planViewProjects`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${project.projUid}/planViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
               .set('Access-Control-Allow-Origin','http://localhost:4200')
@@ -107,7 +107,7 @@ export class MapperService {
   }
   
   checkPerviewProjectMapStatus(project:SavedProject): Observable<any> {
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${project.projUid}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/json');
@@ -136,7 +136,7 @@ export class MapperService {
     console.log("this is the inputted project uid in addPerviewProjectForMapping @MapperService::::", project.projUid);
     console.log("this is the inputted project name in addPerviewProjectForMapping @MapperService::::", project.projName);
     
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/json');
@@ -164,7 +164,7 @@ export class MapperService {
   addSingleMappedPlanviewProject(projectUID: string, selection: MappedProject): Observable<any> {
     console.log('is this correct for url:', projectUID);
     
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${projectUID}/planViewProjects`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${projectUID}/planViewProjects`
     let headers = new HttpHeaders();
     headers =  headers.set('Content-Type', 'application/json')
                .set('accept', 'application/json')
@@ -195,7 +195,7 @@ export class MapperService {
   deletePlanviewAssociation(mappedRelationship:any):Observable<any> {
     
     
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json')
               .set('Content-Type', 'application/json');

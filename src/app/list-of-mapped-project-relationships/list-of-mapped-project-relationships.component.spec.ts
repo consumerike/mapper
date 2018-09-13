@@ -34,7 +34,10 @@ describe('ListOfMappedProjectRelationshipsComponent', () => {
     TestBed.configureTestingModule({
      
       declarations: [ ListOfMappedProjectRelationshipsComponent ],
-      providers: [ {provide: UserService, useValue: userServiceStub}]
+      providers: [ {provide: UserService, useValue: userServiceStub},
+        {provide: UserService, useValue: userServiceStub}
+      
+      ]
     })
     .compileComponents();
   }));

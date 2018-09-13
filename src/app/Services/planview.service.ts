@@ -24,7 +24,7 @@ export class PlanviewService {
   authorizedPlanviewProjects: any; //MappedProject[]
 
   getAuthorizedPlanviewProjects():Observable<MappedProject[]> {
-    let url = `http://xrdcwpdbsmsp03:5000/api/projects/admin/AuthorizedPlanViewProjects`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/admin/AuthorizedPlanViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');
