@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
 import { PlanviewService } from '../../Services/planview.service';
 import { ModalService } from '../../Services/modal.service';
 import { MyProjectService } from '../../Services/project.service';
@@ -17,7 +17,7 @@ import { Directive, Renderer2, ElementRef } from '@angular/core';
   styleUrls: ['./authorized-planview-projects.component.scss']
 })
 export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
-
+  @ViewChild('smart') smart;
   constructor(private planviewService: PlanviewService,
     private myprojectService: MyProjectService,
     private mapperService: MapperService,
@@ -212,6 +212,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     this.onPlanviewModalClose.emit('string');
     this.clearSelections();
     console.log('signalModalClose-planview has ran');
+    this.smart.grid.dataSet.deselectAll();
+
   }
   
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input, ViewChild } from '@angular/core';
 import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
 import { UserService } from '../../Services/user-service.service';
@@ -9,19 +9,16 @@ import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
 
-
-
 declare const $: any
 declare const window: Window;
 
-   
 @Component({
   selector: 'app-authorized-perview-projects',
   templateUrl: './authorized-perview-projects.component.html',
   styleUrls: ['./authorized-perview-projects.component.scss']
 })
 export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
-
+  @ViewChild('smart') smart;
   constructor(private perviewService: PerviewService,
     private myprojectService: MyProjectService,
     private userService: UserService,
@@ -43,6 +40,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPerviewProjects();
     this.getListOfSavedProjects();
+    
     // this.myProjects$.next(this.myprojectService.getSavedPerviewProjects(this.userService.currentUser));
     console.log("does this add to the list or what?",this.myProjects$.subscribe());
     // this.changeDigestToken$ = this.userService.getChangePermissionToken();
@@ -52,9 +50,11 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     //     this.addSelectedProjects(data);
     //   })
     // )
+ 
   }
   @Input()
   listOfSavedPerviewProjects: SavedProject[];
+
   @Output()
   onModalClose = new EventEmitter();
 
@@ -63,7 +63,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     this.unSub.next();
     this.unSub.complete();
   } 
-
+  
+  
   settings = {
     selectMode: 'multi',
     actions: {
@@ -173,7 +174,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   rowClick(event): void {
     console.log('this is the event registering on row click::', event);
     
-    console.log("these are selected:", this.selectedProjects);
+ 
     console.log('selected item for styling', this.selected);
     this.selectProject(event)
    
@@ -188,6 +189,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     }
     else {
       this.selectedProjects.push(event["data"]);
+      console.log("current selected projects are:", this.selectedProjects);
+      
       // this.renderer.addClass(event.target, this.selected)
     }
   }
@@ -209,6 +212,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   clearSelections(): void {
+    console.log('clearing selections');
+    
     this.selectedProjects = [];
   }
   
@@ -220,6 +225,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   signalModalClose(): void {
   this.onModalClose.emit('string');
   console.log('signalModalClose has ran');
+  this.clearSelections();
+  this.smart.grid.dataSet.deselectAll();
   }
 
 }
