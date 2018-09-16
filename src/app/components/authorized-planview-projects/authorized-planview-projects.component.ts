@@ -148,6 +148,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     
     //NEED TO UPDATE DATA AT SOME POINT
     this.clearSelections();
+    this.signalModalClose()
   }
  
 
