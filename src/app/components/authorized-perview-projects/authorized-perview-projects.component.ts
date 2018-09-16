@@ -176,11 +176,11 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
         let changeToken = data;
         return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
       })
-    ).subscribe(
-      (val) => console.log("what the heck mayne",val)
-      );
+    )
+    .subscribe((val) => {this.getListOfSavedProjects();console.log("so the list will refresh right after close....",val)});
   //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    this.getListOfSavedProjects();
+    // this.getListOfSavedProjects();
+    this.getPerviewProjects();
 
   }
 
