@@ -133,8 +133,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   addSelectedProjects(): void {
-    console.log('modals are a fancy way of saying....');
-    
+        
     let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
       let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
         ,{})
@@ -177,10 +176,11 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
         return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
       })
     )
-    .subscribe((val) => {this.getListOfSavedProjects();console.log("so the list will refresh right after close....",val)});
+    .subscribe((val) => {this.getListOfSavedProjects();  this.signalModalClose();console.log("so the list will refresh right after close....",val)});
   //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     // this.getListOfSavedProjects();
     this.getPerviewProjects();
+    // this.signalModalClose();
 
   }
 
@@ -235,13 +235,14 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   navigateHome(): void {
     this.router.navigate(['/']);
- }
+}
 
   signalModalClose(): void {
-  this.onModalClose.emit('string');
-  console.log('signalModalClose has ran');
-  this.clearSelections();
-  this.smart.grid.dataSet.deselectAll();
+    console.log('this signalModalClose function is running....');
+    this.onModalClose.emit('string');
+    console.log('signalModalClose has ran');
+    this.clearSelections();
+    this.smart.grid.dataSet.deselectAll();
   }
 
 }
