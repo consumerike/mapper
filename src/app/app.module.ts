@@ -33,8 +33,8 @@ import { routes } from "./routes";
     AppComponent,
     MapperHeaderComponent,
     MapperFooterComponent,
-    ListOfMappedProjectRelationshipsComponent,
     AuthorizedPerviewProjectsComponent,
+    ListOfMappedProjectRelationshipsComponent,
     AuthorizedPlanviewProjectsComponent,
     MappedProjectRelationshipComponent,
  
@@ -53,10 +53,10 @@ import { routes } from "./routes";
   providers: [
     ConfigService,
     UserService,
-    MapperService,
     MyProjectService,
-    PlanviewService,
+    MapperService,
     PerviewService,
+    PlanviewService,
 
   ],
   bootstrap: [AppComponent]

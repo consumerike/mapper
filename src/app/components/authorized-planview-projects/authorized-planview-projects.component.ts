@@ -213,7 +213,6 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     this.clearSelections();
     console.log('signalModalClose-planview has ran');
     this.smart.grid.dataSet.deselectAll();
-
   }
   
 

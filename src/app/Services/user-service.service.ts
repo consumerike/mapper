@@ -71,7 +71,7 @@ export class UserService {
   getItemByUserId(): Observable<any> {
     console.log('made it to getItemByUserId function in service and user is:', this.currentUser);
     try {
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
+  let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');

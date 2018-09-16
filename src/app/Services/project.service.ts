@@ -33,23 +33,28 @@ export class MyProjectService {
       return this.http.get(url,options)
       .pipe(
         map((Data) => {    
-          console.log("do i have the currentID at least?", currentUserID);
           
-          console.log("right here do I have data or not?", Data);
+          // console.log("right here do I have data or not??::data, data[d].results, [0], length", Data,Data["d"].results,Data["d"].results[0].ProjectUIDs,Data["d"].results[0].ProjectUIDs.length  );
           try {
-            if (Data["d"].results[0].ProjectUIDs.length > 0) {
+            if (Data["d"].results[0].ProjectUIDs.length >= 0) {
+              
+              
               this.projectsSavedByUser =  JSON.parse(Data["d"].results[0].ProjectUIDs);
               console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
               return this.projectsSavedByUser;
             }
             else {
-              this.handleNoUser().subscribe();
+              console.log('inside else for handleNoUser...1');
+              return [];
+              // this.handleNoUser().subscribe();
             }
           }
-          catch {
-            console.log("didn't work, here's text:", Data);
+          catch (err) {
+            console.log("didn't work, inside catch of try/catch:err,data:::",err, Data);
+            this.projectsSavedByUser = [];
+            // this.handleNoUser().subscribe();
             //need more cowbell here:
-           return []; 
+           return this.projectsSavedByUser;
           }
           
           // this.projectsSavedByUser = mockData["savedProjects"];
@@ -58,9 +63,9 @@ export class MyProjectService {
           // return arrayOfProjects;
          }),
          catchError(err => {
-          console.log('this user needs to be saved, clearly there are no projects',err);
-          this.handleNoUser();
-          return err;
+          console.log('in observable catchError()',err);
+          this.projectsSavedByUser = [];
+          return this.projectsSavedByUser;
           //THIS CODE BELOW IS THE handleNoUser function on line 70...
           // return this.userService.getChangePermissionToken()
           // .pipe(
@@ -75,12 +80,14 @@ export class MyProjectService {
     }
     // console.log(this.CheckForSavedProjects());
   handleNoUser(): Observable<any> {
+    console.log('handling no user with Rashi...');
+    
     return this.userService.getChangePermissionToken()
     .pipe(
       switchMap((data) =>{
         console.log("data is changetoken", data);
         let changeTokenHash = data;
-        return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,{});
+        return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,[]);
       })
     );
   }
@@ -93,13 +100,14 @@ export class MyProjectService {
   // }
   
   addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
-    
+    let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
+    modUser = modUser.toLowerCase();
     console.log('running addUsertoSavedList to WorksPACE MANYNE');
     console.log(changeTokenHash, "did we get the hashb?");
     
     let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
     let headers = new HttpHeaders();
-    headers = headers.set('accept', 'application/json;odata=verbose')
+    headers = headers.set('Accept', 'application/json;odata=verbose')
       .set('Content-Type','application/json;odata=verbose')
       .set('IF-MATCH','*')
       .set('X-RequestDigest',changeTokenHash)
@@ -110,7 +118,7 @@ export class MyProjectService {
       "__metadata": {
         "type": "SP.Data.MapperUserStateListItem"
       },
-      "AccountID": "${currentUser}",
+      "AccountID": "${modUser}",
       "ProjectUIDs":"${JSON.stringify(selections)}"
     }
     `   

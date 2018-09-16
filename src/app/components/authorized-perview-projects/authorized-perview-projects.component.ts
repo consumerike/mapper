@@ -28,6 +28,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ) { }
 
   authorizedProjects: IProject[];
+  selectableProjects: IProject[];
   private selectedProjects: IProject[] = [];
   private myProjects$ = new Subject();
   private listOfSavedProjects: any;
@@ -38,6 +39,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   selected: string = 'selected';
   
   ngOnInit() {
+    console.log("on initialization is running...authorizedPerviewProjectsComponent");
+    
     this.getPerviewProjects();
     this.getListOfSavedProjects();
     
@@ -66,7 +69,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   
   settings = {
-    selectMode: 'multi',
+    selectMode: 'multi',  
     actions: {
       add: false,
       edit: false,
@@ -80,7 +83,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
         title: "Project",
         editable: false,
     
-        
       },
   
       owner: {
@@ -96,14 +98,27 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   };
   
-  getPerviewProjects(): void {
+  getPerviewProjects(): any {
     this.perviewService.getAuthorizedPerviewProjects()
     .pipe( 
        takeUntil(this.unSub),
-       map(((data) => {console.log(data);
-        this.authorizedProjects = data;}))
+       map(((data) => {console.log("this is all authorized projects as data:",data);
+      this.authorizedProjects = data  
+      let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
+        if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
+         return project;
+        }
+          
+      })
+      console.log("filteredAuthorizedProjects data is here:",filteredAuthorizedProjects);
+      
+      this.selectableProjects = filteredAuthorizedProjects;
+      console.log('the selectable projects are:', this.selectableProjects);
+      return this.selectableProjects;}))
+        // return this.authorizedProjects = data;}))
      )
-     .subscribe((data) => data)
+    //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
+     .subscribe();
   }
 
   getListOfSavedProjects(): void {

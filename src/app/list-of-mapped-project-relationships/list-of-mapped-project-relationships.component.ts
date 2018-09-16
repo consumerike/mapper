@@ -150,7 +150,17 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       this.getPlanviewAssociations(this.listOfSavedPerviewProjects)
     })
     )
-    .subscribe((data) => data);
+    .subscribe((data) => {console.log('after all that what is data, savedperviewprojects...',data,this.listOfSavedPerviewProjects)
+    console.log('canelo wins');
+    console.log(this.listOfSavedPerviewProjects.length);
+    
+      if(this.listOfSavedPerviewProjects.length === 0) {
+        this.myProjectService.handleNoUser().subscribe();
+      }
+      else {
+        console.log('shut up please.')
+      }
+    });
   }
 
   getPlanviewAssociations(projects: SavedProject[]): void  {
