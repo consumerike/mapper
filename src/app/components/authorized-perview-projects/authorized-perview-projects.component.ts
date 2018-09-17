@@ -76,22 +76,28 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       delete: false
 
     },
+    pager: {
+      perPage: 6
+    },
     
     columns: {
 
       projName: {
         title: "Project",
         editable: false,
+        width: '40%'
     
       },
   
       owner: {
         title: "Project Manager",
-        editable: false
+        editable: false,
+        width: '30%'
       },
       businessOwner: {
         title: "Business Owner",
-        editable: false
+        editable: false,
+        width: '30%'
       }
       
     },
@@ -181,7 +187,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     // this.getListOfSavedProjects();
     this.getPerviewProjects();
     // this.signalModalClose();
-
   }
 
   

@@ -186,6 +186,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   confirmDeletionOfPlanviewAssociation(mappedRelationship: MappedProject) {
+    console.log('elise yikes...', mappedRelationship);
+    
     let decision = confirm(`Warning! This will delete the association
       created by ${this.userService.currentUser} between
       ${mappedRelationship.projectName} and ${mappedRelationship.projectGuid}

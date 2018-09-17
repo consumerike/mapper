@@ -15,4 +15,7 @@ i {
 .btn.cancel {
  background: rgb(229, 229, 229);
 }
+div.modal-footer {
+    display: inline;
+}
 

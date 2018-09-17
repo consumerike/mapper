@@ -1,5 +1,7 @@
-<div style="margin: auto; width: auto;">
+<div style="margin: auto;  width: auto;">
     <ng2-smart-table #smart [settings]="settings" [source]="selectableProjects" (rowSelect)=rowClick($event)></ng2-smart-table>
 </div>
-<button class="waves-light btn modal-close"  (click)="addSelectedProjects()">Submit Selections</button>
-<a class="modal-close waves-light btn" (click)="signalModalClose()">Cancel</a>
+<div>
+    <button class="waves-light btn modal-close"  (click)="addSelectedProjects()">Submit Selections</button>
+    <a class="modal-close waves-light btn" (click)="signalModalClose()">Cancel</a>
+</div>
