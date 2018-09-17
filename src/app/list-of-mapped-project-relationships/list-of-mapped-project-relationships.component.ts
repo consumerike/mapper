@@ -110,9 +110,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     $(document).ready(function(){
       $('.modal').modal({
         dismissible: false,
-        onCloseEnd: function(){console.log('what is the scope', this);
-        },
-     
+        // complete: function() {console.log('long live the king', this);}     
       });
     });
 

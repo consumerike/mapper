@@ -3,7 +3,7 @@
 
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let i = index" [attr.data-index]="i" >
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
-    <td class="col m4">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a><br>{{project.projUid}}</td>
+    <td class="col m4">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a><br><br></td>
     <td class="col m4">   
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.projectName}}
