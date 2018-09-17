@@ -171,10 +171,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
   
 
-  deletePlanviewAssociation(mappedRelationship: MappedProject): any {
-    console.log(mappedRelationship);
+  deletePlanviewAssociation(mappedRelationship: MappedProject, index): any {
+    console.log(mappedRelationship,"oh crap:", index);
     
-    if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship)) {
+    if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship, index)) {
       console.log("passed in project:", mappedRelationship);
       this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
       
@@ -185,13 +185,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     else console.log('canceled operation');
   }
 
-  confirmDeletionOfPlanviewAssociation(mappedRelationship: MappedProject) {
+  confirmDeletionOfPlanviewAssociation(mappedRelationship: MappedProject, index) {
     console.log('elise yikes...', mappedRelationship);
     
-    let decision = confirm(`Warning! This will delete the association
-      created by ${this.userService.currentUser} between
-      ${mappedRelationship.projectName} and ${mappedRelationship.projectGuid}
-      Are you sure?`);
+    let decision = confirm(`Warning! This will delete the association created between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
     if (decision == true) {return true}
   }
   
@@ -299,7 +296,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     else {console.log('canceled operation');
     }
     
-    
   }
 
   confirmDeletionOfPerviewProject(perviewProject: SavedProject, index) {
@@ -307,19 +303,16 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log('cmon man:::::what is perviewProject.planviewProjects and why--looking for a ppl_Code or something??', perviewProject.planviewProjects);
     try {
       let listOfDeletedPlanviewProjects = perviewProject.planviewProjects.map((pair) => {console.log("this is a pair", pair);
-      return pair.ppl_code})
+      return pair.projectName})
      console.log("what we need",listOfDeletedPlanviewProjects);
-     let decision = confirm(`Warning! This will delete the association
-     created by ${this.userService.currentUser} between
-     ${perviewProject.projName} and ${listOfDeletedPlanviewProjects.join()}
-     Are you sure?`);
-   if (decision == true) {return true}
+     let decision = confirm(
+    `Warning! This will delete the associations created  between ${perviewProject.projName} and ${listOfDeletedPlanviewProjects.join()}. Are you sure?`);
+     if (decision == true) {return true}
      
     }
     catch {
-      let decision = confirm(`Warning! This will delete any associations
-      with ${perviewProject.projName} Are you sure?`);
-   if (decision == true) {return true}
+      let decision = confirm(`Warning! This will delete any associations with ${perviewProject.projName} Are you sure?`);
+      if (decision == true) {return true}
      
 
     }
