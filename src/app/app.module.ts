@@ -26,6 +26,7 @@ import { AuthorizedPerviewProjectsComponent } from './components/authorized-perv
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
 import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 import { routes } from "./routes";
+import { UtilityService } from './Services/utility.service';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import { routes } from "./routes";
   providers: [
     ConfigService,
     UserService,
+    UtilityService,
     MyProjectService,
     MapperService,
     PerviewService,

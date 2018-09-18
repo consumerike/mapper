@@ -26,6 +26,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    //for testing purposes: 
   projects$ = new Subject();
   currentUserID$: Observable<string>
+  checkForSavedUser$: Observable<any>
   realSavedProjects$: Observable<any>
   currentID: string;
   projectSavedByUser$: Observable<any>
@@ -51,6 +52,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   // }
 
   ngOnInit() {
+    console.log('THE LIST OF MAPPED PROJECTS IS AT INIT....');
+    
     // this.testSub.next([1,2,3])
 
     // this.testSub.subscribe( () => {
@@ -71,6 +74,15 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       )
     );
     this.realSavedProjects$.pipe().subscribe();
+    this.checkForSavedUser$ = this.currentUserID$.pipe(
+      map((data) => {
+        console.log('checking for saved user...', data);
+        
+      this.currentID = data;
+      this.savedUserCheck(this.currentID)
+      })
+    );
+    this.checkForSavedUser$.pipe().subscribe();
        
 
     // this
@@ -135,6 +147,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     .subscribe((data) => data);
     
   } 
+
+  savedUserCheck(currentUserID: string): void {
+    this.userService.checkForSavedUser(currentUserID).subscribe();
+  }
   getSavedProjects(currentUserID: string): void {
   
    console.log('ok',currentUserID); 
@@ -153,7 +169,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log(this.listOfSavedPerviewProjects.length);
     
       if(this.listOfSavedPerviewProjects.length === 0) {
-        this.myProjectService.handleNoUser().subscribe();
+        // this.userService.checkForSavedUser(this.userService.currentUser).subscribe();
+        console.log('this always runs...');
+        
       }
       else {
         console.log('shut up please.')

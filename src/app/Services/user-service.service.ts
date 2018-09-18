@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
 
-import{map, mergeMap, catchError, filter, tap} from 'rxjs/operators'
+import{map, mergeMap, catchError, filter, tap, switchMap} from 'rxjs/operators'
 
 import  { Observable, throwError } from 'rxjs';
+import { UtilityService } from './utility.service';
 
 
 
@@ -11,8 +12,9 @@ import  { Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+
   static currentUser: any;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private utilityService: UtilityService) { }
 
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentUser: string;
@@ -99,5 +101,108 @@ export class UserService {
       
     }
   }
+
+  checkForSavedUser(currentUser: string): Observable<any> {
+    console.log('running CHECK FOR SAVED USER....');
+    
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?&$select=AccountID`
+   
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept', 'application/json;odata=verbose')
+      .set('Content-Type','Application/json;odata=verbose');
+    let options = {
+      headers,
+      withCredentials: true
+    };
+   
+    try {
+      return this.http.get(url, options)
+      .pipe(
+        map(data => {         
+        let userObjects = data["d"].results;
+        let listOfUsers = userObjects.map((userObject) => {return userObject.AccountID});
+        console.log("converted to a list of users:",listOfUsers);
+        return listOfUsers;
+         }),
+         tap((data)=>{
+           let listOfUsers = data;
+           console.log('data inside tap...then current user...', listOfUsers, currentUser);
+           
+           if(listOfUsers.includes(currentUser.toLowerCase())){
+            console.log('user is already added...');
+           }
+           else {
+             console.log('inside else about to handle a no user incident...');
+             
+             this.handleNoUser().subscribe();
+           }
+         }),
+         catchError(err => {
+           console.log('this user is not found', err);
+            return throwError(err.toString());
+           // return this.addPerviewProjectForMapping(project);
+         })   
+       );    
+    }
+    catch (err) {
+      console.log('this is what is going on', err);
+      
+    }
+  
+  }
+
+  handleNoUser(): Observable<any> {  
+    return this.getChangePermissionToken()
+    .pipe(
+      switchMap((data) =>{
+        console.log("data is changetoken", data);
+        let changeTokenHash = data;
+        return this.addUsertoSavedList(changeTokenHash,this.currentUser,[]);
+      })
+    );
+  }
+
+  addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
+    let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
+    modUser = modUser.toLowerCase();
+    console.log('running addUsertoSavedList to WorksPACE MANYNE');
+    console.log(changeTokenHash, "did we get the hashb?");
+    
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept', 'application/json;odata=verbose')
+      .set('Content-Type','application/json;odata=verbose')
+      .set('IF-MATCH','*')
+      .set('X-RequestDigest',changeTokenHash)
+    let options = {
+      headers,
+     }
+    let body = `{
+      "__metadata": {
+        "type": "SP.Data.MapperUserStateListItem"
+      },
+      "AccountID": "${modUser}",
+      "ProjectUIDs":"${JSON.stringify(selections)}"
+    }
+    `   
+
+    console.log('bigBody:', body);
+    try {
+      return this.http.post(url, body, options)
+      .pipe(
+        tap( data => {
+          console.log('is this a great success:', data);
+          
+        return data;
+        })
+      );
+    }
+    catch {
+      console.log('that is not working in addPerviewSelectedProjectstoWorkspace in project.service');
+    }
+  
+  }
+
+
   
 }

@@ -35,7 +35,6 @@ export class PlanviewService {
      return this.http.get(url,options)
       .pipe(map( (data) => {        
       this.authorizedPlanviewProjects = data;
-      console.log('captured data',this.authorizedPlanviewProjects);
       return this.authorizedPlanviewProjects;
       }));
       

@@ -78,19 +78,17 @@ export class MyProjectService {
         })  
       );
     }
-    // console.log(this.CheckForSavedProjects());
-  handleNoUser(): Observable<any> {
-    console.log('handling no user with Rashi...');
     
-    return this.userService.getChangePermissionToken()
-    .pipe(
-      switchMap((data) =>{
-        console.log("data is changetoken", data);
-        let changeTokenHash = data;
-        return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,[]);
-      })
-    );
-  }
+  // handleNoUser(): Observable<any> {  
+  //   return this.userService.getChangePermissionToken()
+  //   .pipe(
+  //     switchMap((data) =>{
+  //       console.log("data is changetoken", data);
+  //       let changeTokenHash = data;
+  //       return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,[]);
+  //     })
+  //   );
+  // }
     // console.log("projects saved by user before from array",this.projectsSavedByUser);
     
     // return from([this.projectsSavedByUser]);
@@ -99,46 +97,46 @@ export class MyProjectService {
   //   this.projectsSavedByUser.next(selections);
   // }
   
-  addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
-    let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
-    modUser = modUser.toLowerCase();
-    console.log('running addUsertoSavedList to WorksPACE MANYNE');
-    console.log(changeTokenHash, "did we get the hashb?");
+  // addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
+  //   let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
+  //   modUser = modUser.toLowerCase();
+  //   console.log('running addUsertoSavedList to WorksPACE MANYNE');
+  //   console.log(changeTokenHash, "did we get the hashb?");
     
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
-    let headers = new HttpHeaders();
-    headers = headers.set('Accept', 'application/json;odata=verbose')
-      .set('Content-Type','application/json;odata=verbose')
-      .set('IF-MATCH','*')
-      .set('X-RequestDigest',changeTokenHash)
-    let options = {
-      headers,
-     }
-    let body = `{
-      "__metadata": {
-        "type": "SP.Data.MapperUserStateListItem"
-      },
-      "AccountID": "${modUser}",
-      "ProjectUIDs":"${JSON.stringify(selections)}"
-    }
-    `   
+  //   let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
+  //   let headers = new HttpHeaders();
+  //   headers = headers.set('Accept', 'application/json;odata=verbose')
+  //     .set('Content-Type','application/json;odata=verbose')
+  //     .set('IF-MATCH','*')
+  //     .set('X-RequestDigest',changeTokenHash)
+  //   let options = {
+  //     headers,
+  //    }
+  //   let body = `{
+  //     "__metadata": {
+  //       "type": "SP.Data.MapperUserStateListItem"
+  //     },
+  //     "AccountID": "${modUser}",
+  //     "ProjectUIDs":"${JSON.stringify(selections)}"
+  //   }
+  //   `   
 
-    console.log('bigBody:', body);
-    try {
-      return this.http.post(url, body, options)
-      .pipe(
-        tap( data => {
-          console.log('is this a great success:', data);
+  //   console.log('bigBody:', body);
+  //   try {
+  //     return this.http.post(url, body, options)
+  //     .pipe(
+  //       tap( data => {
+  //         console.log('is this a great success:', data);
           
-        return data;
-        })
-      );
-    }
-    catch {
-      console.log('that is not working in addPerviewSelectedProjectstoWorkspace in project.service');
-    }
+  //       return data;
+  //       })
+  //     );
+  //   }
+  //   catch {
+  //     console.log('that is not working in addPerviewSelectedProjectstoWorkspace in project.service');
+  //   }
   
-  }
+  // }
 
   addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections): Observable<any> {
     let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)

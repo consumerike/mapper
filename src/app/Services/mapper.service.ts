@@ -82,10 +82,6 @@ export class MapperService {
         this.planviewMappedProjects = data;
         project.planviewProjects = this.planviewMappedProjects
         console.log("project.planviewProjects",this.planviewMappedProjects,);
-        console.log('IE: it did not stop:::::::::::::::::::::::::::::::::::::');
-        // return project.planviewProjects        
-        // if (project.planviewProjects.length < 1) {
-          console.log('yes it is less than 1');
           
           // this.addPerviewProjectForMapping(project).subscribe()
         //   console.log('in if loop for no projects in the array........', project);
