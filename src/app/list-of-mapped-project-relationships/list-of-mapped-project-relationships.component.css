@@ -11,7 +11,6 @@ i {
     margin-left: 1.5%;
 } 
 
-
 .btn.cancel {
  background: rgb(229, 229, 229);
 }
@@ -21,6 +20,6 @@ div.modal-footer {
 
 nav {
     background: #757575;
-    margin-bottom: 5%;
+    margin-bottom: 3%;
 }
 
