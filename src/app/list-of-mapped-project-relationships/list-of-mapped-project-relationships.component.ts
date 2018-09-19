@@ -53,15 +53,11 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   ngOnInit() {
     console.log('THE LIST OF MAPPED PROJECTS IS AT INIT....');
-    
     // this.testSub.next([1,2,3])
-
     // this.testSub.subscribe( () => {
     //   // you will never see 1,2,3 
     // })
-    
     // this.testSub.next([4,5,6])
-
     // this.danSavedProjects$ = this.myProjectService.getSavedPerviewProjects();
     this.currentUserID$ = this.userService.getCurrentUserID();
     this.realSavedProjects$ = this.currentUserID$
@@ -84,7 +80,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     );
     this.checkForSavedUser$.pipe().subscribe();
        
-
     // this
     //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
     //   tap( (data: any[]) => this
@@ -104,7 +99,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
     // end wow block
     // this.getMappedProjects();
-    
     
     // this.getPlanviewAssociations(this.listOfSavedPerviewProjects); 
     // document.addEventListener('DOMContentLoaded', function() {
