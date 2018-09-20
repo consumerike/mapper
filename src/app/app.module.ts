@@ -1,6 +1,6 @@
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import * as M from  'materialize-css'
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.min.css'
@@ -17,6 +17,8 @@ import { MyProjectService } from './Services/project.service';
 import { PlanviewService } from './Services/planview.service';
 import { PerviewService } from './Services/perview.service';
 import { MapperService } from './Services/mapper.service';
+import { UtilityService } from './Services/utility.service';
+import { CustomErrorHandlerService } from './Services/custom-error-handler.service';
 
 import { AppComponent } from './app.component';
 import { MapperHeaderComponent } from './components/mapper-header/mapper-header.component';
@@ -26,7 +28,7 @@ import { AuthorizedPerviewProjectsComponent } from './components/authorized-perv
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
 import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 import { routes } from "./routes";
-import { UtilityService } from './Services/utility.service';
+
 
 
 @NgModule({
@@ -53,6 +55,9 @@ import { UtilityService } from './Services/utility.service';
 
   providers: [
     ConfigService,
+    {provide: ErrorHandler,
+      useClass: CustomErrorHandlerService
+    },
     UserService,
     UtilityService,
     MyProjectService,

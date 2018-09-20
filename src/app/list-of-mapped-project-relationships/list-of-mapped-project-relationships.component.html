@@ -10,7 +10,7 @@
     </ul>
   </div>
 </nav>
-<p class="container">Error Section:{{Yup}}</p>
+<p class="container">Error Section:</p>
 <app-mapper-header></app-mapper-header>
 <table class="container striped blue-grey lighten-5  responsive">
 
@@ -29,4 +29,3 @@
   <app-authorized-perview-projects [listOfSavedPerviewProjects]="listOfSavedPerviewProjects" id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
   <app-authorized-planview-projects  id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
 </table>
-
