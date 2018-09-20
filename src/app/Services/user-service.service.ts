@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders, HttpRequest } from '@angular/common/http';
 
-import{map, mergeMap, catchError, filter, tap, switchMap} from 'rxjs/operators'
+import{map, mergeMap, catchError, filter, tap, switchMap, retryWhen, delayWhen, scan} from 'rxjs/operators'
 
-import  { Observable, throwError } from 'rxjs';
+import  { Observable, throwError, timer } from 'rxjs';
 import { UtilityService } from './utility.service';
 
 
@@ -35,12 +35,20 @@ export class UserService {
         return this.currentUser
        
         }),
-        catchError(err => {
-          console.log('this user is not found', err);
-          return throwError(err);
-          // return this.addPerviewProjectForMapping(project);
-        })   
-      );    
+        retryWhen((errors$: Observable<any>) => {
+          return errors$.pipe(
+            scan((count: number, currentError:string) => {
+              if (count > 3) {
+                throw currentError;
+              }
+              else{ 
+                return count += 1;
+              }
+            }, 0)
+           
+          );
+        })
+     );  
   }
   
   getChangePermissionToken(): Observable<string> {
