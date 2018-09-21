@@ -149,8 +149,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
      }       
-  }
- 
+  } 
 
   prepareForMapping(): MappedProject[] {
     try {

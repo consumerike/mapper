@@ -13,6 +13,8 @@ export class CustomErrorHandlerService  implements ErrorHandler {
   handleError(error) {
     console.warn('Caught a special error in custom handler:', error.statusText)
     alert(`There's been an unexpected error: ${error.statusText}`)
+    this.errorsPresent = true;
+    this.errorList.push(error.statusText);
   }
 
   clearErrorList() :void {

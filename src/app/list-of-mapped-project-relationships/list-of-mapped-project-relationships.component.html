@@ -10,7 +10,7 @@
     </ul>
   </div>
 </nav>
-<p class="container">Error Section:</p>
+<p *ngIf *ngFor="let error of errorList; let f = index" [attr.data-index]="f" class="container">Error Section:</p>
 <app-mapper-header></app-mapper-header>
 <table class="container striped blue-grey lighten-5  responsive">
 

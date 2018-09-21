@@ -4,6 +4,7 @@ import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/c
 import { map, tap, filter, catchError } from 'rxjs/operators';
 import { Observable, Subscribable, Subscription, from, throwError } from 'rxjs';
 import { MyProjectService } from './project.service';
+import { CustomErrorHandlerService } from './custom-error-handler.service';
 
 
 @Injectable({
@@ -13,41 +14,19 @@ import { MyProjectService } from './project.service';
 export class MapperService {
  
   
-  constructor(private http: HttpClient, private myProjectService: MyProjectService) {
+  constructor(private http: HttpClient, private myProjectService: MyProjectService, private errorService: CustomErrorHandlerService) {
     
    }
    apiRoot: string = "https://perviewqa.app.parallon.com/PWA";
 
   
   public planviewMappedProjects: any;
-  // private dataSourceFlag:boolean = true;
 
-  // getMappedProjects(): Observable<any> {
-  //   if(this.dataSourceFlag === true) {  
-  //     return this.http.get('./assets/mapper-projects.txt', {responseType: 'json'})
-  //     .pipe (
-  //       map( (data) => {
-  //         console.log(data);
-  //         try {
-          
-  //          this.mappedProjects = data["mappedProjects"]
-  //          this.dataSourceFlag = false;
-  //          return this.mappedProjects;
-  //         }
-  //        // this.mappedProjects = data["mappedProjects"]
-  //        catch{
-  //         console.log("is this running??--it shouldn't be....");
-  //        } error => console.log(error);
-                 
-  //       })
+  handleError(error) :void {
+    this.errorService.errorList.push(error);
+    this.errorService.errorsPresent = true;
+  }
 
-  //     )
-    
-  //   }
-  //   console.log(this.dataSourceFlag);    
-  //   console.log("Given false flag", this.mappedProjects);
-  //   return from([this.mappedProjects]);
-  // }
   
   getMappedPlanviewAssociations(savedPerviewProjects:SavedProject[]): any[] {
     console.log("why are you saying it cannot be read: getMappedPlanviewAssociationsb", savedPerviewProjects);
@@ -89,15 +68,19 @@ export class MapperService {
           // this.addPerviewProjectForMapping(project).subscribe();
         // }
         return project.planviewProjects;
+       }),
+       catchError(err => {
+        let errorMessage = new Error("Error: Did not successfully get mapped PlanView projects from database")
+        this.handleError(errorMessage);
+        return [];
        })
       ); 
     }
-   
     catch(error) {
       console.log('what IS MY ERROR SHOULD BE 404::::::',onerror,error,Error);
-      
       console.log("that didn't work in perviewMappedPlanviewAssociations function...adding perview project for mapping now....");
       this.addPerviewProjectForMapping(project).subscribe()
+      console.log('this should never run logically I do NOT think.... does it?????????????');
     }
     
   }
@@ -119,11 +102,11 @@ export class MapperService {
         
       }),
       catchError(err => {
-        console.log('this project needs to be mapped, clearly',err);
+        console.log('this project needs to be mapped, clearly',err.statusText);
         
         return this.addPerviewProjectForMapping(project);
       })  
-    )
+    );
    
   }
   
@@ -147,7 +130,13 @@ export class MapperService {
    try {
     return this.http.post(url,prepBody,options)
     .pipe(
-      map((data) => { console.log('worked in addPerviewProjectForMapping:',data); return data})
+      map((data) => { console.log('worked in addPerviewProjectForMapping:',data); return data}),
+      catchError(err => {
+        console.log('in observable catchError()',err);
+        let errorMessage = new Error("Error: Did not successfully add perview project for mapping")
+        this.handleError(errorMessage);
+        return err.statusText;
+      })
     )
    }
    catch {
@@ -177,10 +166,15 @@ export class MapperService {
     console.log('hardbody check for format:', body);
     try {
       return this.http.post(url,body,options)
-      .pipe((data) => { console.log('worked in addSingleMappedPlanviewProject:',data); return data}
-      )
-
-      
+      .pipe(
+        tap((data) => { console.log('worked in addSingleMappedPlanviewProject:',data); return data}),
+        catchError(err => {
+          console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully add planview project to database")
+          this.handleError(errorMessage);
+          return err.statusText;
+        })
+      );      
     }
     catch {console.log('crap, does not work@mapperService--addSingleMappedPlanviewProject');
     }
@@ -188,9 +182,7 @@ export class MapperService {
       
   }
 
-  deletePlanviewAssociation(mappedRelationship:any):Observable<any> {
-    
-    
+  deletePlanviewAssociation(mappedRelationship:any):Observable<any> {    
     let url = `https://xrdcwpdbsmsp03:40001/api/projects/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json')
@@ -201,14 +193,19 @@ export class MapperService {
     }
     try {
       return this.http.delete(url,options)
-      .pipe((data) => { console.log('worked in @mapperService--deleteplanViewassociation:',data); return data}
-      )
+      .pipe(tap((data) => { console.log('worked in @mapperService--deleteplanViewassociation:',data); return data}),
+      catchError(err => {
+        console.log('in observable catchError()',err);
+        let errorMessage = new Error("Error: Did not successfully delete PlanView project from database")
+        this.handleError(errorMessage);
+        return err.statusText;
+      })
+      );
     }
     catch {
       console.log('well that did not work');
       
     }
-    
   }
 
   deletePerviewAssociations(perviewProject: SavedProject): void {

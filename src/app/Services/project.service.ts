@@ -6,6 +6,7 @@ import { map, tap, catchError, switchMap } from "rxjs/operators";
 import { UserService } from './user-service.service';
 import { UtilityService } from "./utility.service";
 import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
+import { CustomErrorHandlerService } from './custom-error-handler.service';
 
 
 @Injectable({
@@ -15,10 +16,14 @@ import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
 //purpose: manage user's saved projects/workspace
 export class MyProjectService {
 
-  constructor(private http: HttpClient, private userService: UserService, private utilityService: UtilityService) { }
+  constructor(private http: HttpClient, private errorService: CustomErrorHandlerService, private userService: UserService, private utilityService: UtilityService) { }
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public projectsSavedByUser: SavedProject[] = [];
 
+  handleError(error) :void {
+    this.errorService.errorList.push(error);
+    this.errorService.errorsPresent = true;
+  }
 
   getSavedPerviewProjects(currentUserID: string): Observable<any> {
   console.log("first look, first kill", currentUserID);  
@@ -52,91 +57,21 @@ export class MyProjectService {
           catch (err) {
             console.log("didn't work, inside catch of try/catch:err,data:::",err, Data);
             this.projectsSavedByUser = [];
-            // this.handleNoUser().subscribe();
-            //need more cowbell here:
            return this.projectsSavedByUser;
           }
-          
-          // this.projectsSavedByUser = mockData["savedProjects"];
-          // this.userHasSavedProjects = false;
-          // return this.projectsSavedByUser;
-          // return arrayOfProjects;
+
          }),
          catchError(err => {
           console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully get saved projects from database")
+          this.handleError(errorMessage);
           this.projectsSavedByUser = [];
           return this.projectsSavedByUser;
-          //THIS CODE BELOW IS THE handleNoUser function on line 70...
-          // return this.userService.getChangePermissionToken()
-          // .pipe(
-          //   switchMap((data) =>{
-          //     console.log("data is changetoken", data);
-          //     let changeTokenHash = data;
-          //     return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,{});
-          //   })
-          // );
         })  
       );
     }
     
-  // handleNoUser(): Observable<any> {  
-  //   return this.userService.getChangePermissionToken()
-  //   .pipe(
-  //     switchMap((data) =>{
-  //       console.log("data is changetoken", data);
-  //       let changeTokenHash = data;
-  //       return this.addUsertoSavedList(changeTokenHash,this.userService.currentUser,[]);
-  //     })
-  //   );
-  // }
-    // console.log("projects saved by user before from array",this.projectsSavedByUser);
-    
-    // return from([this.projectsSavedByUser]);
-    
-  // addPerviewSelectedProjects(selections: any[]): void {
-  //   this.projectsSavedByUser.next(selections);
-  // }
-  
-  // addUsertoSavedList(changeTokenHash:any, currentUser:any, selections:any): Observable<any> {
-  //   let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
-  //   modUser = modUser.toLowerCase();
-  //   console.log('running addUsertoSavedList to WorksPACE MANYNE');
-  //   console.log(changeTokenHash, "did we get the hashb?");
-    
-  //   let url = `https://perviewqa.app.parallon.com/PWA/_api/Web/Lists/GetByTitle('MapperUserState')/Items`
-  //   let headers = new HttpHeaders();
-  //   headers = headers.set('Accept', 'application/json;odata=verbose')
-  //     .set('Content-Type','application/json;odata=verbose')
-  //     .set('IF-MATCH','*')
-  //     .set('X-RequestDigest',changeTokenHash)
-  //   let options = {
-  //     headers,
-  //    }
-  //   let body = `{
-  //     "__metadata": {
-  //       "type": "SP.Data.MapperUserStateListItem"
-  //     },
-  //     "AccountID": "${modUser}",
-  //     "ProjectUIDs":"${JSON.stringify(selections)}"
-  //   }
-  //   `   
 
-  //   console.log('bigBody:', body);
-  //   try {
-  //     return this.http.post(url, body, options)
-  //     .pipe(
-  //       tap( data => {
-  //         console.log('is this a great success:', data);
-          
-  //       return data;
-  //       })
-  //     );
-  //   }
-  //   catch {
-  //     console.log('that is not working in addPerviewSelectedProjectstoWorkspace in project.service');
-  //   }
-  
-  // }
 
   addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections): Observable<any> {
     let modUser = this.utilityService.modifyCurrentUserVariable(currentUser)
@@ -169,22 +104,19 @@ export class MyProjectService {
       "ProjectUIDs":'${JSON.stringify(selections)}'
     }
     `   
-
-    console.log('big body add:', body);
-    try {
       return this.http.post(url, body, options)
       .pipe(
         tap( data => {
           console.log('is this a great success:', data);
-          
-        return data;
+          return data;
+        }),
+        catchError(err => {
+          console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully add project to your user profile")
+          this.handleError(errorMessage);
+          return err.statusText;
         })
       );
-    }
-    catch {
-      console.log('that is not working in addPerviewProject in project.service');
-    }
-
   }
 
   deletePerviewProject(currentUser:any,changeTokenHash:any, id: any, selections) {
@@ -227,6 +159,12 @@ export class MyProjectService {
           console.log('is this a great success:', data);
           
         return data;
+        }),
+        catchError(err => {
+          console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully delete project in your user profile")
+          this.handleError(errorMessage);
+          return err.statusText;
         })
       );
     }
