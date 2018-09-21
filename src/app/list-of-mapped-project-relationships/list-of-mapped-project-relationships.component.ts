@@ -126,9 +126,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
   }
 
-  handleError(error) {
+  handleError(error) :void {
     this.errorService.errorList.push(error);
     this.errorService.errorsPresent = true;
+  }
+
+  handleErrorQuietly(error): void {
+    console.warn(error);
   }
 
   updateChanges(): any {
@@ -256,10 +260,16 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   confirmDeletionOfPlanviewAssociation(mappedRelationship: MappedProject, index) {
-    console.log('ghello mappy relationship...', mappedRelationship);
-    
-    let decision = confirm(`Warning! This will delete the association created between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
-    if (decision == true) {return true}
+    try {
+      console.log('ghello mappy relationship...', mappedRelationship);
+      
+      let decision = confirm(`Warning! This will delete the association created between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
+      if (decision == true) {return true}
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: could not confirm deletion of planview association')
+      this.handleError(errorMessage);
+    }
   }
   
   deletePerviewProject(perviewProject: SavedProject, index): void {
@@ -321,9 +331,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         // this.getSavedProjects(this.currentID);
         
       }
-      catch {
-        console.log('whelp try did NOT work in delete perview project');
-        
+      catch (err) {
+       let errorMessage = new Error('Error: Did not delete PerView project successfully')
+       this.handleError(errorMessage);
       }
     }
     else {console.log('canceled operation');
@@ -360,10 +370,16 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
   refreshProjectList(event): void {
-    console.log('this is running the refresh of list');
-    console.log(event, "is there ane vent");
-    
-    this.getSavedProjects(this.currentID);
+    try {
+      console.log('this is running the refresh of list');
+      console.log(event, "is there ane vent");
+      this.getSavedProjects(this.currentID);
+    }
+    catch (err) {
+      let errorMessage = new Error('Error:Projects Did not successfully update.')
+      this.handleError(errorMessage);
+     }
+
   }
 
 

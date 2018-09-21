@@ -8,6 +8,7 @@ import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
+import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
 
 declare const $: any
 declare const window: Window;
@@ -18,13 +19,15 @@ declare const window: Window;
   styleUrls: ['./authorized-perview-projects.component.scss']
 })
 export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
+
   @ViewChild('smart') smart;
   constructor(private perviewService: PerviewService,
     private myprojectService: MyProjectService,
     private userService: UserService,
     private mapperService: MapperService,
     private router: Router,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private errorService: CustomErrorHandlerService
   ) { }
 
   authorizedProjects: IProject[];
@@ -55,6 +58,17 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     // )
  
   }
+
+
+  handleError(error) :void {
+    this.errorService.errorList.push(error);
+    this.errorService.errorsPresent = true;
+  }
+
+  handleErrorQuietly(error): void {
+    console.warn(error);
+  }
+
   @Input()
   listOfSavedPerviewProjects: SavedProject[];
 
@@ -105,136 +119,182 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   };
   
   getPerviewProjects(): any {
-    this.perviewService.getAuthorizedPerviewProjects()
-    .pipe( 
-       takeUntil(this.unSub),
-       map(((data) => {console.log("this is all authorized projects as data:",data);
-      this.authorizedProjects = data  
-      let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
-        if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
-         return project;
-        }
-          
-      })
-      console.log("filteredAuthorizedProjects data is here:",filteredAuthorizedProjects);
-      
-      this.selectableProjects = filteredAuthorizedProjects;
-      console.log('the selectable projects are:', this.selectableProjects);
-      return this.selectableProjects;}))
-        // return this.authorizedProjects = data;}))
-     )
-    //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
-     .subscribe();
+    try {
+
+      this.perviewService.getAuthorizedPerviewProjects()
+      .pipe( 
+         takeUntil(this.unSub),
+         map(((data) => {console.log("this is all authorized projects as data:",data);
+        this.authorizedProjects = data  
+        let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
+          if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
+           return project;
+          }
+            
+        })
+        console.log("filteredAuthorizedProjects data is here:",filteredAuthorizedProjects);
+        
+        this.selectableProjects = filteredAuthorizedProjects;
+        console.log('the selectable projects are:', this.selectableProjects);
+        return this.selectableProjects;}))
+          // return this.authorizedProjects = data;}))
+       )
+      //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
+       .subscribe();
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      this.handleError(errorMessage);
+     }
   }
 
   getListOfSavedProjects(): void {
-    this.myprojectService.getSavedPerviewProjects(this.userService.currentUser).pipe(
-      takeUntil(this.unSub),
-      map((data) => {
-        console.log("do I have the savedProjects or not??", data);
-        this.listOfSavedProjects = data;
-      })
-    )
-    .subscribe( (data) => data);
+    try {
+
+      this.myprojectService.getSavedPerviewProjects(this.userService.currentUser).pipe(
+        takeUntil(this.unSub),
+        map((data) => {
+          console.log("do I have the savedProjects or not??", data);
+          this.listOfSavedProjects = data;
+        })
+      )
+      .subscribe( (data) => data);
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Failed to get list of saved projects for filtering to selectable projects')
+      this.handleErrorQuietly(errorMessage);
+     }
   }
 
   addSelectedProjects(): void {
-        
-    let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
-      let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
-        ,{})
-        console.log("is this correct format?",formatedSelectedProject);
-        
-      return formatedSelectedProject
-    })
-    console.log('preppy', prepSelections);
-
-    let id;
-    console.log('it gets to this point at least::::good list from listOfSavedProjects:', this.listOfSavedProjects);
-    console.log('making sure i have a good list here from input():::', this.listOfSavedPerviewProjects);
-    console.log("i'm trying to add this list, correct??",prepSelections);
-
-    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK OUT INTO OWN FUNCTION PROBABLY....
-    prepSelections.map((selectedProject) => {
-      //GET project successfully or receive 404 error.
-      //If 404 error then map the project here
-      //otherwise continue....
-      this.mapperService.checkPerviewProjectMapStatus(selectedProject).subscribe();
-    })
-    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK INTO OWN FUNCTION PROBABLY.....
-    let updatedListOfSavedProjects: SavedProject[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
-
-    console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
-    
-    this.userService.getItemByUserId()
-    .pipe(
-      // takeUntil(this.unSub),
-     switchMap((data) => {
-        console.log("data is id:",data);
-        
-        id = data;
-        console.log("data is a id:", data);
-        return this.userService.getChangePermissionToken()
+    try {
+      let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
+        let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
+          ,{})
+          console.log("is this correct format?",formatedSelectedProject);
+          
+        return formatedSelectedProject
       })
-      ,switchMap((data) => {
-        console.log('want this to be changeToke:', data);
-        let changeToken = data;
-        return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
+      console.log('preppy', prepSelections);
+  
+      let id;
+      console.log('it gets to this point at least::::good list from listOfSavedProjects:', this.listOfSavedProjects);
+      console.log('making sure i have a good list here from input():::', this.listOfSavedPerviewProjects);
+      console.log("i'm trying to add this list, correct??",prepSelections);
+  
+      //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK OUT INTO OWN FUNCTION PROBABLY....
+      prepSelections.map((selectedProject) => {
+        //GET project successfully or receive 404 error.
+        //If 404 error then map the project here
+        //otherwise continue....
+        this.mapperService.checkPerviewProjectMapStatus(selectedProject).subscribe();
       })
-    )
-    .subscribe((val) => {this.getListOfSavedProjects();  this.signalModalClose();console.log("so the list will refresh right after close....",val)});
-  //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    // this.getListOfSavedProjects();
-    this.getPerviewProjects();
-    // this.signalModalClose();
+      //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK INTO OWN FUNCTION PROBABLY.....
+      let updatedListOfSavedProjects: SavedProject[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
+  
+      console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
+      
+      this.userService.getItemByUserId()
+      .pipe(
+        // takeUntil(this.unSub),
+       switchMap((data) => {
+          console.log("data is id:",data);
+          
+          id = data;
+          console.log("data is a id:", data);
+          return this.userService.getChangePermissionToken()
+        })
+        ,switchMap((data) => {
+          console.log('want this to be changeToke:', data);
+          let changeToken = data;
+          return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
+        })
+      )
+      .subscribe((val) => {this.getListOfSavedProjects();  this.signalModalClose();console.log("so the list will refresh right after close....",val)});
+    //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+      // this.getListOfSavedProjects();
+      this.getPerviewProjects();
+      // this.signalModalClose();
+
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Did not successfully add PerView project')
+      this.handleError(errorMessage);
+     }
+        
   }
 
   
   
   rowClick(event): void {
-    console.log('this is the event registering on row click::', event);
-    
- 
-    console.log('selected item for styling', this.selected);
-    this.selectProject(event)
+    try {
+      console.log('this is the event registering on row click::', event);
+      console.log('selected item for styling', this.selected);
+      this.selectProject(event)
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Experiencing row click in selection issues')
+      this.handleErrorQuietly(errorMessage);
+     }
    
   }
 
   selectProject(event: any): void {
     console.log(event["data"]);
-       
-    if (this.projectIsSelected(event["data"].projName)) {
-       this.unselectProject(event["data"].projName)
-      //  this.renderer.removeClass(event.target, this.selected)
+    try {
+      if (this.projectIsSelected(event["data"].projName)) {
+         this.unselectProject(event["data"].projName)
+        //  this.renderer.removeClass(event.target, this.selected)
+      }
+      else {
+        this.selectedProjects.push(event["data"]);
+        console.log("current selected projects are:", this.selectedProjects);
+        
+        // this.renderer.addClass(event.target, this.selected)
+      }
     }
-    else {
-      this.selectedProjects.push(event["data"]);
-      console.log("current selected projects are:", this.selectedProjects);
-      
-      // this.renderer.addClass(event.target, this.selected)
-    }
+    catch (err) {
+      let errorMessage = new Error('Error: Experiencing select project issues')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   projectIsSelected(name: string): boolean {
+
     console.log('running');
     console.log(this.selectedProjects.map(t=>t["projName"]).indexOf(name));
     console.log(this.selectedProjects.map(t=>t["projName"]));
-    
-    if (this.selectedProjects.map(t=>t["projName"]).indexOf(name) > -1) {
-      return true;
+    try {
+      if (this.selectedProjects.map(t=>t["projName"]).indexOf(name) > -1) {
+        return true;
+      }
     }
+    catch (err) {
+      let errorMessage = new Error('Error: Experiencing ProjectIsSelected() issues')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   unselectProject(name: any): void {
     console.log('unselect function running');
-    
-    this.selectedProjects.splice(this.selectedProjects.map(selectedItems => {console.log(selectedItems);selectedItems.projName}).indexOf(name),1)
+    try {
+      this.selectedProjects.splice(this.selectedProjects.map(selectedItems => {console.log(selectedItems);selectedItems.projName}).indexOf(name),1)
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Experiencing unselectProject() issues')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   clearSelections(): void {
     console.log('clearing selections');
-    
-    this.selectedProjects = [];
+    try {
+      this.selectedProjects = [];
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Experiencing clear selection issues')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
   
 
@@ -243,11 +303,17 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 }
 
   signalModalClose(): void {
-    console.log('this signalModalClose function is running....');
-    this.onModalClose.emit('string');
-    console.log('signalModalClose has ran');
-    this.clearSelections();
-    this.smart.grid.dataSet.deselectAll();
+    try {
+      console.log('this signalModalClose function is running....');
+      this.onModalClose.emit('string');
+      console.log('signalModalClose has ran');
+      this.clearSelections();
+      this.smart.grid.dataSet.deselectAll();
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Did not delete PerView project successfully')
+      this.handleError(errorMessage);
+     }
   }
 
 }
