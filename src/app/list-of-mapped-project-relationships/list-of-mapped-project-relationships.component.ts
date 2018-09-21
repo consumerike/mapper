@@ -37,6 +37,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   mappedProjects: MappedProject[];
   project: SavedProject;
   selectedProject: SavedProject;
+  
+  errorsPresent: boolean = false;
   unSub = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -120,6 +122,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             // complete: function() {console.log('long live the king', this);}     
           });
         });
+
+        this.errorsPresent = this.errorService.errorsPresent;
+        console.log("checking the status of errors:",this.errorsPresent, this.errorService.errorList);
+        
     }
     catch(error){
       this.handleError(error);
@@ -366,6 +372,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     this.selectedProject = perviewProj;
     this.modalService.selection = perviewProj.projUid;
     console.log("so this will be set?",this.selectedProject);
+  }
+
+  refreshListOfMappedProjectsView(): void {
     
   }
 

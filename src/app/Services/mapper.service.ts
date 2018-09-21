@@ -23,8 +23,12 @@ export class MapperService {
   public planviewMappedProjects: any;
 
   handleError(error) :void {
+    console.log('handle error is running');
+    
     this.errorService.errorList.push(error);
     this.errorService.errorsPresent = true;
+    console.log("did the error add?",this.errorService.errorList);
+    
   }
 
   

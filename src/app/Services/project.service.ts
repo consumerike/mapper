@@ -42,8 +42,6 @@ export class MyProjectService {
           // console.log("right here do I have data or not??::data, data[d].results, [0], length", Data,Data["d"].results,Data["d"].results[0].ProjectUIDs,Data["d"].results[0].ProjectUIDs.length  );
           try {
             if (Data["d"].results[0].ProjectUIDs.length >= 0) {
-              
-              
               this.projectsSavedByUser =  JSON.parse(Data["d"].results[0].ProjectUIDs);
               console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
               return this.projectsSavedByUser;
