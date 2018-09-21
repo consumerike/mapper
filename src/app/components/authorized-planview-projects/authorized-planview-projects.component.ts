@@ -10,6 +10,7 @@ import { MapperService } from '../../Services/mapper.service';
 import { takeUntil, map, tap, take } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Directive, Renderer2, ElementRef } from '@angular/core';
+import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
 
 @Component({
   selector: 'app-authorized-planview-projects',
@@ -23,7 +24,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     private mapperService: MapperService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private errorService: CustomErrorHandlerService
   ) { }
   
   authorizedProjects: MappedProject[];
@@ -39,6 +41,15 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     
     // this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
+  }
+
+  handleError(error) :void {
+    this.errorService.errorList.push(error);
+    this.errorService.errorsPresent = true;
+  }
+
+  handleErrorQuietly(error): void {
+    console.warn(error);
   }
   
   // @Input()
@@ -87,97 +98,103 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   };  
 
   getPlanviewProjects(): void {
-    console.log("getPlanViewProjects in authorized planview projects component is running...");
-    
-    this.planviewService.getAuthorizedPlanviewProjects()
-    .pipe( 
-       takeUntil(this.unSub),
-       map(((data) => {  this.authorizedProjects = data;console.log('anything in the data or what??',this.authorizedProjects);
-       }))
-     )
-     .subscribe((data) => data)
+    try {
+      console.log("getPlanViewProjects in authorized planview projects component is running...");
+      
+      this.planviewService.getAuthorizedPlanviewProjects()
+      .pipe( 
+         takeUntil(this.unSub),
+         map(((data) => {  this.authorizedProjects = data;console.log('anything in the data or what??',this.authorizedProjects);
+         }))
+       )
+       .subscribe((data) => data)
+    }
+    catch (err) {
+      let errorMessage = new Error('Error: Did not successfully display Planview projects for selection')
+      this.handleError(errorMessage);
+     }   
   }
 
-  //NO LONGER IN USE:
-  // getListofMappedProjects(): void {
-  //   this.mapperService.getMappedProjects().pipe(
-  //     takeUntil(this.unSub),
-  //     map( (data) => {
-  //       console.log("do I have the mappedProjects?", data);
-
-  //       this.listOfMappedProjects = data;
-  
-  //     })
-  //   )
-  //   .subscribe((data) => data);
-  // }
-
   handleModalClick(perviewProj): void {
-    console.log("Do i have all i need?", perviewProj);
-    
-    // this.projectUID = perviewProj;
+    try {
+      console.log("Do i have all i need?", perviewProj);
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: issues with handleModalClick()')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   addSelectedProjects(): void {
-    // let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-    //   return {"uid": this.perviewProject, "ppl_code": selectedProject};
-    // })
-    // console.log("getting input", this.projectUID);
-    //working on this :::::::::
-      // return savedPerviewProjects.map((perProj) => {
-      //   return this.perviewMappedPlanviewAssociations(perProj).subscribe()
-      // })
-
     console.log('ike has handles', this.modalService.selection);
-    
-    
-    //end working on this:::::::
-    
-    let prepSelections: MappedProject[] = this.prepareForMapping();
-    // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
-    prepSelections.map((mappedProject) => {
-      console.log('making audibles::::exactly:::::', mappedProject)
-      console.log("is this the projectUID?",this.perviewProject);
-      console.log("is this the selection?",mappedProject);
+    try {
+      let prepSelections: MappedProject[] = this.prepareForMapping();
+      // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
+      prepSelections.map((mappedProject) => {
+        console.log('making audibles::::exactly:::::', mappedProject)
+        console.log("is this the projectUID?",this.perviewProject);
+        console.log("is this the selection?",mappedProject);
+        
+        this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe()
+      })
+      // console.log("this is the updatedlist:",updatedListofMappedProjects);
+      // this.mapperService.mappedProjects = updatedListofMappedProjects
+      // console.log("is harley quinn in the mapped projects?", this.mapperService.mappedProjects);
       
-      this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe()
-    })
-    // console.log("this is the updatedlist:",updatedListofMappedProjects);
-    // this.mapperService.mappedProjects = updatedListofMappedProjects
-    // console.log("is harley quinn in the mapped projects?", this.mapperService.mappedProjects);
-    
-    //NEED TO UPDATE DATA AT SOME POINT
-    this.clearSelections();
-    this.signalModalClose()
+      //NEED TO UPDATE DATA AT SOME POINT
+      this.clearSelections();
+      this.signalModalClose()
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      this.handleError(errorMessage);
+     }       
   }
  
 
   prepareForMapping(): MappedProject[] {
-    let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-      let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code },{})
-      console.log("correct format check for mappedPlanViewProj:", formattedSelectedProject);
-      return formattedSelectedProject;
-    })
-    console.log('prepSchool:', prepSelections);
-    
-    
-    return prepSelections;
+    try {
+      let prepSelections: any = this.selectedProjects.map((selectedProject) => {
+        let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code },{})
+        console.log("correct format check for mappedPlanViewProj:", formattedSelectedProject);
+        return formattedSelectedProject;
+      })
+      console.log('prepSchool:', prepSelections);
+      
+      
+      return prepSelections;
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   rowClick(event): void {    
-    this.selectProject(event);
-    console.log(event, "this is the row click.....", "these are selected:", this.selectedProjects);
+    try {
+      this.selectProject(event);
+      console.log(event, "this is the row click.....", "these are selected:", this.selectedProjects);
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   selectProject(event: object): void {
     console.log('what it is yo:', event["data"]);
-    
-    if (this.projectIsSelected(event["data"].ppl_Code)) {
-       this.unselectProject(event["data"].ppl_Code);
+    try {
+      if (this.projectIsSelected(event["data"].ppl_Code)) {
+         this.unselectProject(event["data"].ppl_Code);
+      }
+      else {
+        this.selectedProjects.push(event["data"]);
+      }
     }
-    else {
-      this.selectedProjects.push(event["data"]);
-    }
+    catch(err) {
+      let errorMessage = new Error('Error: Issues with selectProject()')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   projectIsSelected(ppl_Code: string): boolean {
@@ -186,22 +203,37 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     
     console.log('next',this.selectedProjects.map(t=>t["ppl_Code"]).indexOf(ppl_Code));
     console.log('yo',this.selectedProjects.map(t=>t["ppl_Code"]));
-
-    if (this.selectedProjects.map(t=>t["ppl_Code"]).indexOf(ppl_Code) > -1) {
-      return true;
+    try {
+      if (this.selectedProjects.map(t=>t["ppl_Code"]).indexOf(ppl_Code) > -1) {
+        return true;
+      }
     }
+    catch(err) {
+      let errorMessage = new Error('Error: Issues w/ planview\'s projectIsSelected()')
+      this.handleErrorQuietly(errorMessage);
+    }   
   }
 
   unselectProject(ppl_Code: string): void {
     console.log('unselect func');
-    
-    this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems.ppl_Code).indexOf(ppl_Code),1)
+    try {
+      this.selectedProjects.splice(this.selectedProjects.map(selectedItems => selectedItems.ppl_Code).indexOf(ppl_Code),1)
+    }
+    catch(err) {
+      let errorMessage = new Error("Error: Issues with planview's unselectProject()")
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   clearSelections(): void {
-    this.selectedProjects = [];
-    console.log('selections cleared.');
-    
+    try {
+      this.selectedProjects = [];
+      console.log('selections cleared.');
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Issues with clear selections() in planview authorized component')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
 
   navigateHome(): void{
@@ -210,10 +242,16 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
   
   signalModalClose(): void {   
-    this.onPlanviewModalClose.emit('string');
-    this.clearSelections();
-    console.log('signalModalClose-planview has ran');
-    this.smart.grid.dataSet.deselectAll();
+    try {
+      this.onPlanviewModalClose.emit('string');
+      this.clearSelections();
+      console.log('signalModalClose-planview has ran');
+      this.smart.grid.dataSet.deselectAll();
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Issues with signalModalClose() in authorized-planview-projects.ts')
+      this.handleErrorQuietly(errorMessage);
+     }   
   }
   
 

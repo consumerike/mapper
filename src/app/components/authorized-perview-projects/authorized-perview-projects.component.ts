@@ -120,7 +120,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   getPerviewProjects(): any {
     try {
-
       this.perviewService.getAuthorizedPerviewProjects()
       .pipe( 
          takeUntil(this.unSub),
@@ -130,7 +129,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
           if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
            return project;
           }
-            
         })
         console.log("filteredAuthorizedProjects data is here:",filteredAuthorizedProjects);
         
@@ -142,7 +140,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
        .subscribe();
     }
-    catch (err) {
+    catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
      }
