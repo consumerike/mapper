@@ -31,6 +31,11 @@ export class MapperService {
     console.log('what is error status now???', this.errorService.errorsPresent);
   }
 
+  handleErrorQuietly(error): void {
+    console.warn(error);
+  }
+
+
   
   getMappedPlanviewAssociations(savedPerviewProjects:SavedProject[]): any[] {
     console.log("why are you saying it cannot be read: getMappedPlanviewAssociationsb", savedPerviewProjects);

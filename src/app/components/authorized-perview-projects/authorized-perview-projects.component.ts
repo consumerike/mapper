@@ -123,9 +123,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.perviewService.getAuthorizedPerviewProjects()
       .pipe( 
          takeUntil(this.unSub),
-         map(((data) => {console.log("this is all authorized projects as data:",data);
-        this.authorizedProjects = data  
-        let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
+         tap((data)=>{this.authorizedProjects = data;}),
+         map(((data) => {console.log("this is all authorized projects as data:",data);  
+          let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
           if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
            return project;
           }
@@ -228,9 +228,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.handleError(errorMessage);
      }
         
-  }
-
-  
+  }  
   
   rowClick(event): void {
     try {

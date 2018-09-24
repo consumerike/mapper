@@ -104,7 +104,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       this.planviewService.getAuthorizedPlanviewProjects()
       .pipe( 
          takeUntil(this.unSub),
-         map(((data) => {  this.authorizedProjects = data;console.log('anything in the data or what??',this.authorizedProjects);
+         map(((data) => {  this.authorizedProjects = data;console.log('tiger woods',this.authorizedProjects);
          }))
        )
        .subscribe((data) => data)
