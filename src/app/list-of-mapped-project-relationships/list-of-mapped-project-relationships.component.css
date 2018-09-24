@@ -23,7 +23,7 @@ nav {
     margin-bottom: 3%;
 }
 
-.errors {
+#error-section {
     color: red;
 }
 

@@ -127,6 +127,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
 
   addSelectedProjects(): void {
     console.log('ike has handles', this.modalService.selection);
+    this.errorService.clearErrorList();
     try {
       let prepSelections: MappedProject[] = this.prepareForMapping();
       // let updatedListofMappedProjects: any[] = [...this.listOfMappedProjects, ...prepSelections];
@@ -135,20 +136,22 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
         console.log("is this the projectUID?",this.perviewProject);
         console.log("is this the selection?",mappedProject);
         
-        this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe()
+        this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe(
+          () => {     this.clearSelections();
+                      this.signalModalClose()}
+        )
       })
       // console.log("this is the updatedlist:",updatedListofMappedProjects);
       // this.mapperService.mappedProjects = updatedListofMappedProjects
       // console.log("is harley quinn in the mapped projects?", this.mapperService.mappedProjects);
       
       //NEED TO UPDATE DATA AT SOME POINT
-      this.clearSelections();
-      this.signalModalClose()
+ 
     }
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
-     }       
+    }       
   } 
 
   prepareForMapping(): MappedProject[] {

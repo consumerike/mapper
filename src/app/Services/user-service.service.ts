@@ -5,6 +5,7 @@ import{map, mergeMap, catchError, filter, tap, switchMap, retryWhen, delayWhen, 
 
 import  { Observable, throwError, timer } from 'rxjs';
 import { UtilityService } from './utility.service';
+import { CustomErrorHandlerService } from './custom-error-handler.service';
 
 
 
@@ -13,11 +14,20 @@ import { UtilityService } from './utility.service';
 })
 export class UserService {
 
-  static currentUser: any;
-  constructor(private http: HttpClient, private utilityService: UtilityService) { }
-
+  constructor(private http: HttpClient, private utilityService: UtilityService, private errorService: CustomErrorHandlerService) { }
+  
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentUser: string;
+
+  handleError(error) :void {
+    this.errorService.addError(error);
+    this.errorService.setErrorsPresentStatus(true);
+  }
+
+  handleErrorQuietly(error): void {
+    console.warn(error);
+    
+  }
 
   getCurrentUserID(): Observable<string> {
     let url = `${this.apiRoot}/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
@@ -81,7 +91,7 @@ export class UserService {
   getItemByUserId(): Observable<any> {
     console.log('made it to getItemByUserId function in service and user is:', this.currentUser);
     try {
-  let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -101,12 +111,16 @@ export class UserService {
           console.log('is this running here: as metadata:', data["d"].results[0].__metadata.id);
           
          return data["d"].results[0].__metadata.id;
-        })
+        }),
+        catchError(err => {
+          let errorMessage = new Error("Error: Could not successfully add or delete PerView project")
+          this.handleError(errorMessage);
+         throw err;
+         })
       );
      }
     catch {
       console.log('not working...');
-      
     }
   }
 
@@ -120,7 +134,7 @@ export class UserService {
       .set('Content-Type','Application/json;odata=verbose');
     let options = {
       headers,
-      withCredentials: true
+      // withCredentials: true
     };
    
     try {
@@ -146,8 +160,10 @@ export class UserService {
            }
          }),
          catchError(err => {
-           console.log('this user is not found', err);
-            return throwError('cmon man' + err.toString());
+          let errorMessage = new Error("Error: Did not successfully find checkForSavedUser() in userservice in database")
+          this.handleErrorQuietly(errorMessage);
+          throw errorMessage;
+            // return throwError('cmon man' + err.toString());
            // return this.addPerviewProjectForMapping(project);
          })   
        );    

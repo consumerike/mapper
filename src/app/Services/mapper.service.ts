@@ -26,9 +26,9 @@ export class MapperService {
     console.log('handle error is running');
     
     this.errorService.errorList.push(error);
-    this.errorService.errorsPresent = true;
+    this.errorService.setErrorsPresentStatus(true);
     console.log("did the error add?",this.errorService.errorList);
-    
+    console.log('what is error status now???', this.errorService.errorsPresent);
   }
 
   
@@ -49,8 +49,8 @@ export class MapperService {
     let url = `https://xrdcwpdbsmsp03:40001/api/projects/${project.projUid}/planViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
-              .set('Access-Control-Allow-Origin','http://localhost:4200')
-              .set('Access-Control-Expose-Headers', 'accept');
+              // .set('Access-Control-Allow-Origin','http://localhost:4200')
+              // .set('Access-Control-Expose-Headers', 'accept');
     let options = {
       headers,
     }  
@@ -139,7 +139,7 @@ export class MapperService {
         console.log('in observable catchError()',err);
         let errorMessage = new Error("Error: Did not successfully add perview project for mapping")
         this.handleError(errorMessage);
-        return err.statusText;
+        throw errorMessage;
       })
     )
    }
@@ -202,7 +202,7 @@ export class MapperService {
         console.log('in observable catchError()',err);
         let errorMessage = new Error("Error: Did not successfully delete PlanView project from database")
         this.handleError(errorMessage);
-        return err.statusText;
+        throw errorMessage;
       })
       );
     }
@@ -213,12 +213,19 @@ export class MapperService {
   }
 
   deletePerviewAssociations(perviewProject: SavedProject): void {
-    console.log("all the projects:",perviewProject.planviewProjects);
-    perviewProject.planviewProjects.map((mappedRelationship) => {
-      console.log('ppl_COde or ppl_code check:', mappedRelationship);
-      
-      this.deletePlanviewAssociation(mappedRelationship).subscribe();
-    })
+    try{
+      console.log("all the projects:",perviewProject.planviewProjects);
+      perviewProject.planviewProjects.map((mappedRelationship) => {
+        console.log('ppl_COde or ppl_code check:', mappedRelationship);
+        
+        this.deletePlanviewAssociation(mappedRelationship).subscribe();
+      })
+
+    }
+    catch(err){
+      let errorMessage = new Error('Error: Your changes may have failed to update')
+      this.handleError(errorMessage);
+    }
   }
 
 }//END OF FILE

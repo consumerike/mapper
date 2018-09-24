@@ -5,6 +5,7 @@ import { ErrorHandler,Injectable } from '@angular/core';
 })
 export class CustomErrorHandlerService  implements ErrorHandler {
 
+
   constructor() { }
 
   public errorList: any[] = [];
@@ -13,13 +14,32 @@ export class CustomErrorHandlerService  implements ErrorHandler {
   handleError(error) {
     // console.warn('Caught a special error in custom handler:', error.statusText)
     // alert(`There's been an unexpected error: ${error.statusText}`)
-    this.errorsPresent = true;
+    this.setErrorsPresentStatus(false);
     this.errorList.push(error.statusText);
+  }
+
+  addError(error: any): void {
+    this.errorList.push(error);
+  }
+
+  setErrorsPresentStatus(status:boolean): void {
+    this.errorsPresent = status;
+  }
+
+  getErrorList(): string[] {
+    return this.errorList;
   }
 
   clearErrorList() :void {
     this.errorList = [];
     this.errorsPresent = false;
   }
+
+  getErrorsPresentStatus(): boolean {
+    console.log('is this running: getErrorsPresentStatus...');
+    return this.errorsPresent;
+  }
+
+
 
 }

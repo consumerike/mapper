@@ -9,19 +9,28 @@ import 'rxjs/add/operator/filter'
 import { IProject, Project } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
-import { map } from 'rxjs/operators';
+import { map, catchError, finalize } from 'rxjs/operators';
+import { CustomErrorHandlerService } from './custom-error-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerviewService {
 
-  constructor(private http:HttpClient, private configService: ConfigService) {
+  constructor(private http:HttpClient, private configService: ConfigService,private errorService: CustomErrorHandlerService) {
     this.config = configService.config;
   }
   config:Config;
   authorizedPerviewProjects: IProject[];
+  
+  handleError(error) :void {
+    this.errorService.addError(error);
+    this.errorService.setErrorsPresentStatus(true);
+  }
 
+  handleErrorQuietly(error): void {
+    console.warn(error);
+  }
 
   getAuthorizedPerviewProjects(): Observable<IProject[]> {
   console.log('getProjects method called')
@@ -66,8 +75,16 @@ export class PerviewService {
     map( (data) => { console.log("authorizedPerviewProjectData",data);
     this.authorizedPerviewProjects = data; 
     return this.authorizedPerviewProjects; 
-    })
-   )
+    }),
+    catchError((err) => {
+        console.log('in observable catchError()',err);
+        let errorMessage = new Error("Error: Did not successfully get authorized perview projects for display ")
+        this.handleError(errorMessage);
+        console.log('why are you not firing??');
+        
+        throw errorMessage;
+      })
+   );
  }
  
 }

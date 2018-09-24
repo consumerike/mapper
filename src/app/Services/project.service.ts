@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project, SavedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
-import { map, tap, catchError, switchMap } from "rxjs/operators";
+import { map, tap, catchError, switchMap, finalize } from "rxjs/operators";
 import { UserService } from './user-service.service';
 import { UtilityService } from "./utility.service";
 import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
@@ -21,8 +21,8 @@ export class MyProjectService {
   public projectsSavedByUser: SavedProject[] = [];
 
   handleError(error) :void {
-    this.errorService.errorList.push(error);
-    this.errorService.errorsPresent = true;
+    this.errorService.addError(error);
+    this.errorService.setErrorsPresentStatus(true);
   }
 
   getSavedPerviewProjects(currentUserID: string): Observable<any> {
@@ -64,8 +64,9 @@ export class MyProjectService {
           let errorMessage = new Error("Error: Did not successfully get saved projects from database")
           this.handleError(errorMessage);
           this.projectsSavedByUser = [];
-          return this.projectsSavedByUser;
-        })  
+          throw errorMessage;
+        }),
+        finalize(()=>{console.log('what now??',this.errorService.errorsPresent,this.errorService.getErrorList());return this.projectsSavedByUser;})  
       );
     }
     
@@ -112,7 +113,7 @@ export class MyProjectService {
           console.log('in observable catchError()',err);
           let errorMessage = new Error("Error: Did not successfully add project to your user profile")
           this.handleError(errorMessage);
-          return err.statusText;
+          throw errorMessage;
         })
       );
   }

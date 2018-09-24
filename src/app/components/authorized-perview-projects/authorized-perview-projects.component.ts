@@ -5,7 +5,7 @@ import { UserService } from '../../Services/user-service.service';
 import { MapperService } from '../../Services/mapper.service';
 import { IProject, SavedProject } from '../mapper-models';
 import { Observable, Subject, from } from 'rxjs';
-import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
+import { takeUntil, map, tap, switchMap, delay, catchError, finalize } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { Router } from '@angular/router';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
@@ -61,8 +61,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
 
   handleError(error) :void {
-    this.errorService.errorList.push(error);
-    this.errorService.errorsPresent = true;
+    this.errorService.addError(error);
+    this.errorService.setErrorsPresentStatus(true);
   }
 
   handleErrorQuietly(error): void {
@@ -148,7 +148,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   getListOfSavedProjects(): void {
     try {
-
       this.myprojectService.getSavedPerviewProjects(this.userService.currentUser).pipe(
         takeUntil(this.unSub),
         map((data) => {
@@ -165,6 +164,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   addSelectedProjects(): void {
+    this.errorService.clearErrorList();
     try {
       let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
         let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
@@ -189,12 +189,12 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       })
       //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: BREAK INTO OWN FUNCTION PROBABLY.....
       let updatedListOfSavedProjects: SavedProject[] = [...this.listOfSavedPerviewProjects, ...prepSelections];
-  
+      
       console.log('what is the updatedList for the good body: ', updatedListOfSavedProjects);
       
       this.userService.getItemByUserId()
       .pipe(
-        // takeUntil(this.unSub),
+       takeUntil(this.unSub),
        switchMap((data) => {
           console.log("data is id:",data);
           
@@ -207,13 +207,21 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
           let changeToken = data;
           return this.myprojectService.addPerviewSelectedProjectstoWorkspace(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
         })
+        ,catchError(err => {
+          console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully add perview project")
+          this.handleError(errorMessage);
+       
+          throw errorMessage;
+        })
+        ,finalize(()=>{this.signalModalClose();} )
       )
-      .subscribe((val) => {this.getListOfSavedProjects();  this.signalModalClose();console.log("so the list will refresh right after close....",val)});
-    //prepare for mapping function::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      // this.getListOfSavedProjects();
+      .subscribe((val) => {
+        this.clearSelections();
+        this.getListOfSavedProjects();  this.signalModalClose();                  
+      });
+  
       this.getPerviewProjects();
-      // this.signalModalClose();
-
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not successfully add PerView project')
@@ -295,18 +303,20 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
      }   
   }
   
-
   navigateHome(): void {
     this.router.navigate(['/']);
-}
+  }
+  
+
 
   signalModalClose(): void {
     try {
       console.log('this signalModalClose function is running....');
-      this.onModalClose.emit('string');
+      this.onModalClose.emit();
       console.log('signalModalClose has ran');
       this.clearSelections();
       this.smart.grid.dataSet.deselectAll();
+      
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not delete PerView project successfully')

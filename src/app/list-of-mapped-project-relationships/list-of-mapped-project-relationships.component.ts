@@ -4,8 +4,8 @@ import { CustomErrorHandlerService } from '../Services/custom-error-handler.serv
 import { UserService } from "../Services/user-service.service";
 import {MyProjectService} from '../Services/project.service'
 import { MapperService } from '../Services/mapper.service';
-import { Subject, Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { takeUntil, map, tap, take, switchMap } from 'rxjs/operators';
+import { Subject, Observable, BehaviorSubject, Subscription, from } from 'rxjs';
+import { takeUntil, map, tap, take, switchMap, catchError, finalize } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { ModalService } from '../Services/modal.service';
 
@@ -39,6 +39,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   selectedProject: SavedProject;
   
   errorsPresent: boolean = false;
+  errorList: any[];
   unSub = new Subject<void>();
 
   ngOnDestroy(): void {
@@ -116,43 +117,36 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         //     complete: function() {console.log('running as intended'), this.getSavedProjects(); } 
         //   });
         // });
-        $(document).ready(function(){
+        $(document).ready(function() {
           $('.modal').modal({
             dismissible: false,
-            // complete: function() {console.log('long live the king', this);}     
+            complete: function() {console.log('long live the king', this);}     
           });
         });
 
-        this.errorsPresent = this.errorService.errorsPresent;
+        this.errorsPresent = this.determineErrorStatus();
+        this.errorList = this.getErrorList();
         console.log("checking the status of errors:",this.errorsPresent, this.errorService.errorList);
-        
     }
     catch(error){
       this.handleError(error);
     }
   }
 
+  ngOnChanges(){
+
+  }
+
   handleError(error) :void {
-    this.errorService.errorList.push(error);
-    this.errorService.errorsPresent = true;
+    this.errorService.addError(error);
+    this.errorService.setErrorsPresentStatus(true);
   }
 
   handleErrorQuietly(error): void {
     console.warn(error);
   }
 
-  updateChanges(): any {
-    try {
-      throw new Error("Error: This is not implemented yet...Your changes may have failed to update.");
-    }
-    catch(err) {
-      console.log('catching error...', err);
-      let errorMessage = new Error('Error: Your changes may have failed to update')
-      this.handleError(errorMessage);
-    }
-    // this.mapperService.updateData();
-    
-  }
+
   
   getCurrentUserID(): void {
     try {
@@ -195,11 +189,19 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         console.log("after updating does getSavedProjects() in listComponent work?", this.listOfSavedPerviewProjects);
         
         this.getPlanviewAssociations(this.listOfSavedPerviewProjects)
-      })
+      }),
+        catchError((err) => {
+          console.log('in observable catchError()',err);
+          let errorMessage = new Error("Error: Did not successfully get saved perview projects ....")
+          this.handleError(errorMessage);
+          throw errorMessage;
+        }),
+        finalize(()=>{this.updateChanges();})
       )
-      .subscribe((data) => {console.log('after all that what is data, savedperviewprojects...',data,this.listOfSavedPerviewProjects)
-      console.log('canelo wins');
-      console.log(this.listOfSavedPerviewProjects.length);
+      .subscribe((data) => { 
+        this.errorsPresent = this.determineErrorStatus();
+        this.getErrorList();
+        console.log(this.listOfSavedPerviewProjects.length);
       
         if(this.listOfSavedPerviewProjects.length === 0) {
           // this.userService.checkForSavedUser(this.userService.currentUser).subscribe();
@@ -209,13 +211,14 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         else {
           console.log('shut up please.')
         }
+      },(err)=>{this.handleError(err);console.log(err,'how have i rory');this.errorsPresent= true; this.errorList[0]= err; this.updateChanges();
       });
-      }
-    catch(err) {
-      let errorMessage = new Error('Error: Cannot display saved projects')
-      this.handleError(errorMessage);
-    }
   }
+  catch(err) {
+    let errorMessage = new Error('Error: Cannot display saved projects')
+    this.handleError(errorMessage);
+  }
+ }
 
   getPlanviewAssociations(projects: SavedProject[]): void  {
     try {
@@ -229,13 +232,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   }
 
 
-
-
   getListOfPlanviewMappedProjects(): void {
     try {
       this.mapperService.perviewMappedPlanviewAssociations(this.project)
       .pipe(takeUntil(this.unSub))
-      .subscribe((data) => {console.log(`What's the data?`, data)})
+      .subscribe((data) => {console.log(`What's the data?`, data)
+        this.errorsPresent = this.determineErrorStatus();
+      })
     }
     catch(err) {
       let errorMessage = new Error('Error: Cannot display Planview Associations(2)')
@@ -251,6 +254,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       
       if (this.confirmDeletionOfPlanviewAssociation(mappedRelationship, index)) {
         console.log("passed in project:", mappedRelationship);
+        this.errorService.clearErrorList();
         this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
         
         console.log("reflect delete", this.listOfSavedPerviewProjects);
@@ -262,6 +266,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Did not succesfully delete Planview Association')
       this.handleError(errorMessage);
+      this.getSavedProjects(this.currentID);
     }
   }
 
@@ -282,8 +287,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("this is the structure mayne::::::",perviewProject);
     console.log("this is the larger stucture though ::::::",this.listOfSavedPerviewProjects);
     if (this.confirmDeletionOfPerviewProject(perviewProject, index)) {
-      
-        console.log("this is the structure mayne::::::",perviewProject);
+      this.errorService.clearErrorList();
+      console.log("this is the structure mayne::::::",perviewProject);
       if (perviewProject.planviewProjects  && typeof perviewProject.planviewProjects != 'undefined') {
         perviewProject.planviewProjects.map((mappedRelationship) => {
           this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
@@ -304,13 +309,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         });
         console.log("Cmon seth meyers:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",filteredListOfProjects);
         //end filter methods stuff
-        let id;
         console.log('it gets to this point at least::::this is the perviewProject::::::', perviewProject);
         console.log('making sure i have a good list here:::', this.listOfSavedPerviewProjects);
         
         let updatedListOfSavedProjects: SavedProject[] = filteredListOfProjects;
         console.log('seth meyers weekend update:', updatedListOfSavedProjects);
         
+        let id;
         this.userService.getItemByUserId()
         .pipe(
           takeUntil(this.unSub),
@@ -324,12 +329,18 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             console.log('want this to be changeToke:', data);
             let changeToken = data;
             return this.myProjectService.deletePerviewProject(this.userService.currentUser,changeToken,id,updatedListOfSavedProjects)
-          })
-        ).subscribe(
+          }),
+          catchError((err) => {
+            console.log('in observable catchError()',err);
+            let errorMessage = new Error("Error: Did not successfully delete perview project ....")
+            this.handleError(errorMessage);
+            throw errorMessage;
+
+          })).subscribe(
          
           
           () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::');this.getSavedProjects(this.currentID)}
-         
+          
           // (val) => console.log("what the heck mayne",val)
           );
           console.log('this is right after the subscribe and getting ready to getSaved Projects....');
@@ -338,6 +349,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         
       }
       catch (err) {
+        console.log('toronto');
+        
        let errorMessage = new Error('Error: Did not delete PerView project successfully')
        this.handleError(errorMessage);
       }
@@ -374,21 +387,53 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("so this will be set?",this.selectedProject);
   }
 
-  refreshListOfMappedProjectsView(): void {
-    
-  }
 
   refreshProjectList(event): void {
+    console.log("is the event the new list from modals??", event);
+    this.errorList = event;
     try {
-      console.log('this is running the refresh of list');
-      console.log(event, "is there ane vent");
-      this.getSavedProjects(this.currentID);
+    this.updateChanges();
+    this.getSavedProjects(this.currentID);
+      
     }
     catch (err) {
       let errorMessage = new Error('Error:Projects Did not successfully update.')
       this.handleError(errorMessage);
      }
+  }
 
+  updateChanges(): any {
+    console.log('update changes is running...');
+    
+    try {
+      this.determineErrorStatus();
+      console.log(this.getErrorList());
+      
+      this.getErrorList();
+    }
+   
+   
+    catch(err) {
+      console.log('catching error...', err);
+      let errorMessage = new Error('Error: Your changes may have failed to update')
+      this.handleErrorQuietly(errorMessage);
+    }
+    // this.mapperService.updateData();
+    
+  }
+  
+  determineErrorStatus(): boolean {
+    let errStatusAsBoolean = this.errorService.getErrorsPresentStatus();
+    console.log(this.errorsPresent);
+    
+    return errStatusAsBoolean;
+  }
+
+  getErrorList(): any[] {
+    console.log(
+    'get error list is running');
+    this.errorList = this.errorService.getErrorList();
+    return this.errorList;
   }
 
 
