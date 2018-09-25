@@ -9,6 +9,7 @@ import { takeUntil, map, tap, take, switchMap, catchError, finalize } from 'rxjs
 import { M } from "materialize-css";
 import { ModalService } from '../Services/modal.service';
 import { PerviewService } from '../Services/perview.service';
+import { PlanviewService } from '../Services/planview.service';
 
 declare const $: any
 declare const window: Window;
@@ -22,9 +23,12 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
  
   selectableProjects: IProject[];
+  selectablePlanviewProjects: MappedProject[];
   authorizedProjects: IProject[];
+  authorizedPlanviewProjects: MappedProject[];
   constructor(private userService: UserService, private myProjectService: MyProjectService
     ,private mapperService: MapperService, private modalService: ModalService, private errorService: CustomErrorHandlerService,private perviewService: PerviewService
+    ,private planviewService: PlanviewService
   ) {}
    //for testing purposes: 
   projects$ = new Subject();
@@ -86,7 +90,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })
         );
         this.checkForSavedUser$.pipe().subscribe();
-          
+        this.getSelectablePlanviewProjects();
         // this
         //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
         //   tap( (data: any[]) => this
@@ -342,7 +346,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })).subscribe(
          
           
-          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects(this.currentID);this.fish();}
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects(this.currentID);this.getSelectablePerviewProjects();}
           
           // (val) => console.log("what the heck mayne",val)
           );
@@ -383,7 +387,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    
   }
 
-  fish(){
+  getSelectablePerviewProjects() {
     console.log('when is swedish fish running??');
     
     try {
@@ -417,11 +421,49 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   }
 
+     
+
+  getSelectablePlanviewProjects() {
+    try {
+      console.log("getPlanViewProjects in authorized planview projects component is running...");
+      
+      this.planviewService.getAuthorizedPlanviewProjects()
+      .pipe( 
+         takeUntil(this.unSub),
+         map( (data) => {  this.authorizedPlanviewProjects = data;console.log('all pv projects',this.authorizedPlanviewProjects);
+           let filteredAuthorizedPlanviewProjects = this.authorizedPlanviewProjects.filter((planviewProject)=> {
+             console.log('one and the same ni',this.selectedProject,'planview project tho', planviewProject);
+             ;
+             
+             if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.name.toLowerCase()) < 0) {
+               return planviewProject;
+             }
+           })
+           this.selectablePlanviewProjects = filteredAuthorizedPlanviewProjects;
+           console.log("this go around",this.selectablePlanviewProjects);
+           
+           return this.selectablePlanviewProjects;
+         })
+       )
+       .subscribe((data) => {console.log('typical Tuesday PM',this.selectablePlanviewProjects);this.selectablePlanviewProjects = data;}
+       )
+    }
+    catch (err) {
+      console.log('we are inside the catch for get selectablePlanviewProjects:');
+      
+      let errorMessage = new Error('Error: Did not successfully display Planview projects for selection')
+      this.handleError(errorMessage);
+      return this.authorizedPlanviewProjects;
+     }   
+  }
+  
+
   handleModalClick(perviewProj: SavedProject): void {
     console.log("Do i have what I need?", perviewProj);
     this.selectedProject = perviewProj;
     this.modalService.selection = perviewProj.projUid;
     console.log("so this will be set?",this.selectedProject);
+    this.getSelectablePlanviewProjects();
   }
 
 
@@ -431,7 +473,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     try {
     this.updateChanges();
     this.getSavedProjects(this.currentID);
-    this.fish();
+    this.getSelectablePerviewProjects();
+    this.getSelectablePlanviewProjects();
     
     }
     catch (err) {

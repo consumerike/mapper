@@ -16,7 +16,7 @@
 </div>
 
 <app-mapper-header></app-mapper-header>
-<table class="container striped blue-grey lighten-5  responsive">
+<table  class="container striped blue-grey lighten-5  responsive">
 
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let p = index" [attr.data-index]="p" >
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
@@ -29,7 +29,7 @@
     </td>
     <td class="col m4"><a (click)="handleModalClick(project)"   class="waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
-  <app-mapper-footer (click)="fish()"><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
+  <app-mapper-footer  (click)="getSelectablePerviewProjects()"><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
   <app-authorized-perview-projects [listOfSavedPerviewProjects]="listOfSavedPerviewProjects" id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
-  <app-authorized-planview-projects  id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
+  <app-authorized-planview-projects [selectablePlanviewProjects]="selectablePlanviewProjects"  id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
 </table>

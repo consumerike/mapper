@@ -31,7 +31,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ) { }
 
   authorizedProjects: IProject[];
-  // selectableProjects: IProject[];
+ 
   private selectedProjects: IProject[] = [];
   private myProjects$ = new Subject();
   private listOfSavedProjects: any;
@@ -120,7 +120,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   };
   
-  getPerviewProjects(): any {
+  getPerviewProjects(): void {
     try {
       this.perviewService.getAuthorizedPerviewProjects()
       .pipe( 

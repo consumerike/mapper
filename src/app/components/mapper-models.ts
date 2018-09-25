@@ -25,6 +25,15 @@ export class MappedProject {
   projectName: string;
   ppl_code: string;
   projectGuid?: string;
+  name?: string;
+}
+
+export class PlanviewProject {
+  ppl_Code: string;
+  name: string;
+  plan_id: string;
+  proj_mgr: string;
+  projectSponsor: string
 }
 
 export class SavedProject {

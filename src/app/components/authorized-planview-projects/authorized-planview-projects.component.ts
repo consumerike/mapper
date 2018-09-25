@@ -33,11 +33,12 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   private perviewProject: string;
 
   ngOnInit() {
-    this.getPlanviewProjects();
+    // this.getPlanviewProjects();
     // this.getListofMappedProjects();
     this.perviewProject = this.modalService.selection;
     console.log("did the input() work this time??",this.perviewProject);
     console.log('after selection:', this.perviewProject);
+    this.getPlanviewProjects();
     
     // this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
@@ -56,7 +57,9 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   // projectUID: any;  
   unSub = new Subject<void>();
   
-
+  @Input()
+  selectablePlanviewProjects: MappedProject[]
+  
   @Output()
   onPlanviewModalClose = new EventEmitter<string>()
 
@@ -105,6 +108,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       .pipe( 
          takeUntil(this.unSub),
          map(((data) => {  this.authorizedProjects = data;console.log('tiger woods',this.authorizedProjects);
+           this.selectablePlanviewProjects = data;
          }))
        )
        .subscribe((data) => data)
