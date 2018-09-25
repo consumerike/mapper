@@ -13,5 +13,6 @@ export class MapperFooterComponent implements OnInit {
   ngOnInit() {
 
   }
+  
 
 }

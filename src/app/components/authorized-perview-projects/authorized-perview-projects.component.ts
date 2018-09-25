@@ -31,7 +31,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ) { }
 
   authorizedProjects: IProject[];
-  selectableProjects: IProject[];
+  // selectableProjects: IProject[];
   private selectedProjects: IProject[] = [];
   private myProjects$ = new Subject();
   private listOfSavedProjects: any;
@@ -71,6 +71,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   @Input()
   listOfSavedPerviewProjects: SavedProject[];
+  @Input()
+  selectableProjects: IProject[];
 
   @Output()
   onModalClose = new EventEmitter();
@@ -138,7 +140,10 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
           // return this.authorizedProjects = data;}))
        )
       //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
-       .subscribe();
+       .subscribe(
+         (data)=>{console.log('looking to see when this runs...?', data);}
+         
+       );
     }
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
@@ -218,10 +223,10 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       )
       .subscribe((val) => {
         this.clearSelections();
-        this.getListOfSavedProjects();  this.signalModalClose();                  
+        this.getListOfSavedProjects();  this.signalModalClose(); this.getPerviewProjects();                
       });
   
-      this.getPerviewProjects();
+      // this.getPerviewProjects();
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not successfully add PerView project')
@@ -314,7 +319,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       console.log('signalModalClose has ran');
       this.clearSelections();
       this.smart.grid.dataSet.deselectAll();
-      
+      this.getPerviewProjects();
+      // this.getListOfSavedProjects();
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not delete PerView project successfully')

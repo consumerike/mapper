@@ -8,6 +8,7 @@ import { Subject, Observable, BehaviorSubject, Subscription, from } from 'rxjs';
 import { takeUntil, map, tap, take, switchMap, catchError, finalize } from 'rxjs/operators';
 import { M } from "materialize-css";
 import { ModalService } from '../Services/modal.service';
+import { PerviewService } from '../Services/perview.service';
 
 declare const $: any
 declare const window: Window;
@@ -20,8 +21,10 @@ declare const window: Window;
 export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDestroy {
 
  
+  selectableProjects: IProject[];
+  authorizedProjects: IProject[];
   constructor(private userService: UserService, private myProjectService: MyProjectService
-    ,private mapperService: MapperService, private modalService: ModalService, private errorService: CustomErrorHandlerService
+    ,private mapperService: MapperService, private modalService: ModalService, private errorService: CustomErrorHandlerService,private perviewService: PerviewService
   ) {}
    //for testing purposes: 
   projects$ = new Subject();
@@ -201,8 +204,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       .subscribe((data) => { 
         this.errorsPresent = this.determineErrorStatus();
         this.getErrorList();
-        console.log(this.listOfSavedPerviewProjects.length);
-      
+        console.log(this.listOfSavedPerviewProjects.length,this.listOfSavedPerviewProjects,"i data not projects?", data);
+                
         if(this.listOfSavedPerviewProjects.length === 0) {
           // this.userService.checkForSavedUser(this.userService.currentUser).subscribe();
           console.log('this always runs...');
@@ -339,7 +342,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })).subscribe(
          
           
-          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::');this.getSavedProjects(this.currentID)}
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects(this.currentID);this.fish();}
           
           // (val) => console.log("what the heck mayne",val)
           );
@@ -380,6 +383,40 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    
   }
 
+  fish(){
+    console.log('when is swedish fish running??');
+    
+    try {
+      this.perviewService.getAuthorizedPerviewProjects()
+      .pipe( 
+         takeUntil(this.unSub),
+         tap((data)=>{this.authorizedProjects = data;}),
+         map(((data) => {console.log("this is all authorized projects as data:",data);  
+          let filteredAuthorizedProjects = this.authorizedProjects.filter((project) => {
+          if(this.listOfSavedPerviewProjects.map(savedProject => savedProject.projUid.toLowerCase()).indexOf(project.projUid.toLowerCase()) < 0) {
+           return project;
+          }
+        })
+        console.log("filteredAuthorizedProjects data is here:",filteredAuthorizedProjects);
+        
+        this.selectableProjects = filteredAuthorizedProjects;
+        console.log('the selectable projects are:', this.selectableProjects);
+        return this.selectableProjects;}))
+          // return this.authorizedProjects = data;}))
+       )
+      //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
+       .subscribe(
+         (data)=>{console.log('looking to see when this runs...?', this.selectableProjects=data);}
+         
+       );
+    }
+    catch(err) {
+      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      this.handleError(errorMessage);
+     }
+
+  }
+
   handleModalClick(perviewProj: SavedProject): void {
     console.log("Do i have what I need?", perviewProj);
     this.selectedProject = perviewProj;
@@ -394,7 +431,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     try {
     this.updateChanges();
     this.getSavedProjects(this.currentID);
-      
+    this.fish();
+    
     }
     catch (err) {
       let errorMessage = new Error('Error:Projects Did not successfully update.')
