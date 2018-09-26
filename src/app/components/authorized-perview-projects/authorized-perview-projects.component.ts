@@ -320,7 +320,15 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.clearSelections();
       this.smart.grid.dataSet.deselectAll();
       this.getPerviewProjects();
-      // this.getListOfSavedProjects();
+    
+        /* Want to implement clearing of filtering on selection here....
+      // this.source.reset();
+      // this.source.setFilter([],true,false);
+      // this.source.setSort([],false)
+      // this.source.setPage(1)
+      // this.source.refresh();
+    */
+   
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not delete PerView project successfully')

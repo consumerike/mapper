@@ -11,6 +11,7 @@ import { takeUntil, map, tap, take } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Directive, Renderer2, ElementRef } from '@angular/core';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'app-authorized-planview-projects',
@@ -32,6 +33,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   private selectedProjects: any[] = [];
   private perviewProject: string;
 
+  @Input()
+  selectablePlanviewProjects: MappedProject[]
+  
+  @Output()
+  onPlanviewModalClose = new EventEmitter<string>()
+
+  private source: LocalDataSource
+
   ngOnInit() {
     // this.getPlanviewProjects();
     // this.getListofMappedProjects();
@@ -39,6 +48,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     console.log("did the input() work this time??",this.perviewProject);
     console.log('after selection:', this.perviewProject);
     this.getPlanviewProjects();
+
+    // this.source = new LocalDataSource(this.selectablePlanviewProjects)  
+ 
+
+  
+    
+    
+
     
     // this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
@@ -53,15 +70,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     console.warn(error);
   }
   
-  // @Input()
-  // projectUID: any;  
+
   unSub = new Subject<void>();
   
-  @Input()
-  selectablePlanviewProjects: MappedProject[]
-  
-  @Output()
-  onPlanviewModalClose = new EventEmitter<string>()
+ 
 
   ngOnDestroy(): void {
     this.unSub.next();
@@ -72,25 +84,22 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     selectMode: 'multi',
     columns: {
       name: {
-        title: "Project Name"
+        title: "Project",
+        filter: {
+          descriptionField: 'search Project'
+        }
       },
-     /* We need these fields: Project Name (above); Project Manager, and Business Owner
-     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      // owner: {
-      //   title: "Project Manager"
-      // },
-      // businessOwner: {
-      //   title: "Business Owner"
-      // },
-      :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-      */
-     
-      ppl_Code: {
-        title: "ID"
+      proj_mgr: {
+        title: "Project Manager"
+      },
+      projectSponsor: {
+        title: "Business Owner"
+      },     
+      plan_id: {
+        title: "Planview ID"
       }
     },
+
     actions: {
       add: false,
       edit: false,
@@ -253,6 +262,16 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       this.clearSelections();
       console.log('signalModalClose-planview has ran');
       this.smart.grid.dataSet.deselectAll();
+
+    /* Want to implement clearing of filtering on selection here....
+        this.source = new LocalDataSource(this.selectablePlanviewProjects)  
+        this.source.reset();
+    
+       this.source.setFilter([],true,false);
+       this.source.setSort([],false)
+       this.source.setPage(1)
+       this.source.refresh();
+    */
     }
     catch(err) {
       let errorMessage = new Error('Error: Issues with signalModalClose() in authorized-planview-projects.ts')
