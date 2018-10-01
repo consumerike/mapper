@@ -20,14 +20,19 @@
 
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let p = index" [attr.data-index]="p" >
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
-    <td class="col m4">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a><br><br></td>
-    <td class="col m4">   
+    <td class="col m3">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a><br><br></td>
+    <td class="col m3">   
       <ul *ngFor="let project of project.planviewProjects; let i = index" class="offset-m2" [attr.data-index]="i">
         {{project.projectName}}
         <a (click)="deletePlanviewAssociation(project,p)"><i class="tiny material-icons waves-light red"> close</i></a>
       </ul>
     </td>
-    <td class="col m4"><a (click)="handleModalClick(project)"   class="waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
+    <td class="col m3">
+      <ul *ngFor="let project of project.planviewProjects; let w = index" class="offset-m2" [attr.data-index]="w">
+          {{project.mappedByName }}
+      </ul>
+    </td>
+    <td class="col m3"><a (click)="handleModalClick(project)"   class="waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer  (click)="getSelectablePerviewProjects()"><a class="modal-trigger" href="#authorizedPerviewModal"></a></app-mapper-footer> 
   <app-authorized-perview-projects [listOfSavedPerviewProjects]="listOfSavedPerviewProjects" id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
