@@ -60,6 +60,45 @@ export class UserService {
         })
      );  
   }
+
+  getUserName(): Observable<string> {
+    
+    let modUserID = this.currentUser.toLowerCase();
+    let encodedUrlSegment = this.utilityService.modifyUrlSegmentForEncoding(modUserID);
+    console.log("this is the encoded segment",encodedUrlSegment);
+    
+    let url = `https://perviewqa.app.parallon.com/pwa/_api/web/siteusers?$filter=LoginName%20eq%20%27i%3A0%23.w%7C${encodedUrlSegment}%27`
+    console.log("this is the encoded url here:",url);
+    
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose')
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+     
+    let options = {
+      headers,   
+     }  
+     
+    return this.http.get(url, options).pipe(
+      map( data => {
+        console.log('say my name say my name', data["d"].results[0].Title);
+        this.userName = data["d"].results[0].Title
+        return this.userName;
+      }),
+      catchError(err => {
+        let errorMessage = new Error("Error: The ability to save who is mapping a project has been compromised")
+        this.handleError(errorMessage);
+       throw errorMessage;
+       })
+    );
+  }
+
+  getUserNameForDisplay(): string {
+    return this.userName;
+  }
+
+  getCurrentUserforDisplay(): string {
+    return this.currentUser;
+  }
   
   getChangePermissionToken(): Observable<string> {
     console.log('made it to changetoken function in service');
