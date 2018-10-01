@@ -18,6 +18,7 @@ export class UserService {
   
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentUser: string;
+  public userName: string;
 
   handleError(error) :void {
     this.errorService.addError(error);
