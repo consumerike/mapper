@@ -36,6 +36,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   checkForSavedUser$: Observable<any>
   realSavedProjects$: Observable<any>
   currentID: string;
+  userName: string;
   projectSavedByUser$: Observable<any>
   //for reals:   
   // listOfSavedPerviewProjectsSub: Subscription;
@@ -77,6 +78,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             console.log('current ID is data right?',data);
             this.currentID = data;
             this.getSavedProjects(this.currentID);
+            this.userService.getUserName().pipe(tap(data=> {this.userName = data;})).subscribe();
             }
           )
         );
