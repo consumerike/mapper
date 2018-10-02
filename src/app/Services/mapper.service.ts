@@ -59,7 +59,7 @@ export class MapperService {
     let options = {
       headers,
     }  
-
+    
     console.log("need to be passing in a projectUIDman",project.projUid);
     try {    
     return this.http.get(url,options)
@@ -112,7 +112,6 @@ export class MapperService {
       }),
       catchError(err => {
         console.log('this project needs to be mapped, clearly',err.statusText);
-        
         return this.addPerviewProjectForMapping(project);
       })  
     );

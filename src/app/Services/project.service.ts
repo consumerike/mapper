@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IProject, Project, SavedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
-import { map, tap, catchError, switchMap, finalize } from "rxjs/operators";
+import { map, tap, catchError, switchMap, finalize, retryWhen, scan } from "rxjs/operators";
 import { UserService } from './user-service.service';
 import { UtilityService } from "./utility.service";
 import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
@@ -25,51 +25,52 @@ export class MyProjectService {
     this.errorService.setErrorsPresentStatus(true);
   }
 
-  getSavedPerviewProjects(currentUserID: string): Observable<any> {
-  console.log("first look, first kill", currentUserID);  
-   let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${currentUserID}%27&$select=ProjectUIDs` 
-   let headers = new HttpHeaders();
-   headers = headers.set('accept', 'application/json;odata=verbose');
-   let options = {
-     headers,
-     withCredentials: true,
-   };
-   
-      return this.http.get(url,options)
-      .pipe(
-        map((Data) => {    
-          
-          // console.log("right here do I have data or not??::data, data[d].results, [0], length", Data,Data["d"].results,Data["d"].results[0].ProjectUIDs,Data["d"].results[0].ProjectUIDs.length  );
-          try {
-            if (Data["d"].results[0].ProjectUIDs.length >= 0) {
-              this.projectsSavedByUser =  JSON.parse(Data["d"].results[0].ProjectUIDs);
-              console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
-              return this.projectsSavedByUser;
-            }
-            else {
-              console.log('inside else for handleNoUser...1');
-              return [];
-              // this.handleNoUser().subscribe();
-            }
-          }
-          catch (err) {
-            console.log("didn't work, inside catch of try/catch:err,data:::",err, Data);
-            this.projectsSavedByUser = [];
-           return this.projectsSavedByUser;
-          }
-
-         }),
-         catchError(err => {
-          console.log('in observable catchError()',err);
-          let errorMessage = new Error("Error: Did not successfully get saved projects from database")
-          this.handleError(errorMessage);
-          this.projectsSavedByUser = [];
-          throw errorMessage;
-        }),
-        finalize(()=>{console.log('what now??',this.errorService.errorsPresent,this.errorService.getErrorList());return this.projectsSavedByUser;})  
-      );
-    }
+  getSavedPerviewProjects(currentUser: string): Observable<any> {
+  
+    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${currentUser}%27&$select=ProjectUIDs` 
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json;odata=verbose');
+    let options = {
+      headers,
+      withCredentials: true,
+    };
+    console.log("have to have global Boulder here",this.userService.currentUser);
+    console.log("have to have local CSrpings here",currentUser);
     
+       return this.http.get(url,options)
+       .pipe(
+         map((Data) => {    
+           
+           // console.log("right here do I have data or not??::data, data[d].results, [0], length", Data,Data["d"].results,Data["d"].results[0].ProjectUIDs,Data["d"].results[0].ProjectUIDs.length  );
+               this.projectsSavedByUser =  JSON.parse(Data["d"].results[0].ProjectUIDs);
+               console.log("is this coming through correctly mate?", Data["d"].results[0].ProjectUIDs, "to json vers",this.projectsSavedByUser);
+               return this.projectsSavedByUser;
+ 
+          }),
+          retryWhen((errors$: Observable<any>) => {
+           return errors$.pipe(
+             scan((count: number, currentError:string) => {
+               if (count > 3) {
+                 throw currentError;
+               }
+               else{ 
+                 return count += 1;
+               }
+             }, 0)
+            
+           );
+         }),
+          catchError(err => {
+           console.log('in observable catchError()',err);
+           let errorMessage = new Error("Error: Did not successfully get saved projects from database")
+           this.handleError(errorMessage);
+           this.projectsSavedByUser = [];
+           throw errorMessage;
+         }),
+         finalize(()=>{console.log('kill yourself!! (projects saved by user, errors present boolean,error list',this.projectsSavedByUser,this.errorService.errorsPresent,this.errorService.getErrorList());return this.projectsSavedByUser;})  
+       );
+     }
+     
 
 
   addPerviewSelectedProjectstoWorkspace(currentUser:any,changeTokenHash:any, id: any, selections): Observable<any> {

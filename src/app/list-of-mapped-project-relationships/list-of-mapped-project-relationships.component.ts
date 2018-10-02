@@ -77,7 +77,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           map((data) =>  {
             console.log('current ID is data right?',data);
             this.currentID = data;
-            this.getSavedProjects(this.currentID);
+            this.getSavedProjects();
             this.userService.getUserName().pipe(tap(data=> {this.userName = data;})).subscribe();
             }
           )
@@ -187,9 +187,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
   }
 
-  getSavedProjects(currentUserID: string): void {
+  getSavedProjects(): void {
    try {
-    console.log('ok',currentUserID); 
+    
       this.myProjectService.getSavedPerviewProjects(this.currentID)
       .pipe(
         takeUntil(this.unSub),
@@ -267,7 +267,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
         
         console.log("reflect delete", this.listOfSavedPerviewProjects);
-        this.getSavedProjects(this.currentID)
+        this.getSavedProjects()
         console.log("said ok");
       }
       else console.log('canceled operation');
@@ -275,7 +275,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Did not succesfully delete Planview Association')
       this.handleError(errorMessage);
-      this.getSavedProjects(this.currentID);
+      this.getSavedProjects();
     }
   }
 
@@ -348,7 +348,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })).subscribe(
          
           
-          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects(this.currentID);this.getSelectablePerviewProjects();}
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects();this.getSelectablePerviewProjects();}
           
           // (val) => console.log("what the heck mayne",val)
           );
@@ -474,7 +474,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     this.errorList = event;
     try {
     this.updateChanges();
-    this.getSavedProjects(this.currentID);
+    this.getSavedProjects();
     this.getSelectablePerviewProjects();
     this.getSelectablePlanviewProjects();
     

@@ -42,7 +42,7 @@ export class UserService {
     return this.http.get(url, options)
      .pipe(
        map(data => {         
-        this.currentUser = data["d"].AccountName.toUpperCase();
+        this.currentUser = data["d"].AccountName.toLowerCase();
         return this.currentUser
        
         }),
