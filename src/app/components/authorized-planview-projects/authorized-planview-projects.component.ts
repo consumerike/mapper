@@ -172,7 +172,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   } 
 
   prepareForMapping(): MappedProject[] {
-    console.log('do i have the username when i need it?', this.userName);
+    console.log('do i have the username when i need it?', this.userService.userName);
     
     try {
       let prepSelections: any = this.selectedProjects.map((selectedProject) => {
