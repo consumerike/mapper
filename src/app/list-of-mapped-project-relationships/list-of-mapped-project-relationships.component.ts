@@ -190,7 +190,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   getSavedProjects(currentUserID: string): void {
    try {
     console.log('ok',currentUserID); 
-      this.myProjectService.getSavedPerviewProjects(this.userService.currentUser)
+      this.myProjectService.getSavedPerviewProjects(this.currentID)
       .pipe(
         takeUntil(this.unSub),
         map( (data) => {
