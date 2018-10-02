@@ -12,6 +12,8 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Directive, Renderer2, ElementRef } from '@angular/core';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
 import { LocalDataSource } from 'ng2-smart-table';
+import { UserService } from '../../Services/user-service.service';
+import { UtilityService } from '../../Services/utility.service';
 
 @Component({
   selector: 'app-authorized-planview-projects',
@@ -21,6 +23,8 @@ import { LocalDataSource } from 'ng2-smart-table';
 export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   @ViewChild('smart') smart;
   constructor(private planviewService: PlanviewService,
+    private userService: UserService,
+    private utilityService: UtilityService,
     private myprojectService: MyProjectService,
     private mapperService: MapperService,
     private route: ActivatedRoute,
@@ -168,10 +172,14 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   } 
 
   prepareForMapping(): MappedProject[] {
+    console.log('do i have the username when i need it?', this.userName);
+    
     try {
       let prepSelections: any = this.selectedProjects.map((selectedProject) => {
-        let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code },{})
-        console.log("correct format check for mappedPlanViewProj:", formattedSelectedProject);
+        //strip out the 34 ID:
+        let modifiedUserID =  this.utilityService.modifyCurrentUser(this.userService.currentUser);
+        let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code,mappedBy34:modifiedUserID, mappedByName:this.userService.userName},{})
+        console.log("correct format check for these times:", formattedSelectedProject);
         return formattedSelectedProject;
       })
       console.log('prepSchool:', prepSelections);
@@ -184,7 +192,6 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       this.handleErrorQuietly(errorMessage);
      }   
   }
-
   rowClick(event): void {    
     try {
       this.selectProject(event);
