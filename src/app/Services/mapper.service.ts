@@ -85,10 +85,15 @@ export class MapperService {
             mappedByName: "none"
           };
           
-          if(mappedProject.mappedByName != null ?  mappedProject : Object.assign({mappedBy34: "none", mappedByName: "none"},mappedProject)) {
+          if(mappedProject.mappedByName != null && mappedProject.mappedBy34 != null) {//  Object.assign({mappedBy34: "none", mappedByName: "none"},mappedProject)) {
             console.log("nullCheckNow", mappedProject);
             return mappedProject
           }  
+          else {
+            console.log('does nulling ever work??');
+            let newMappedProject = Object.assign({mappedBy34: "none", mappedByName: "none"}, mappedProject);
+            return newMappedProject;
+          }
         })
         console.log("after null check what is...project.planviewProjects??", project.planviewProjects);
   
