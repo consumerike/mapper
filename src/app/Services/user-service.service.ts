@@ -14,7 +14,8 @@ import { CustomErrorHandlerService } from './custom-error-handler.service';
 })
 export class UserService {
 
-  constructor(private http: HttpClient, private utilityService: UtilityService, private errorService: CustomErrorHandlerService) { }
+  constructor(private http: HttpClient, private utilityService: UtilityService, private errorService: CustomErrorHandlerService) { console.log('inside user service is running...');
+  }
   
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public currentUser: string;

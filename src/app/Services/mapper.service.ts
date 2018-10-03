@@ -15,6 +15,7 @@ export class MapperService {
  
   
   constructor(private http: HttpClient, private myProjectService: MyProjectService, private errorService: CustomErrorHandlerService) {
+    console.log('inside mapper service is running');
     
    }
    apiRoot: string = "https://perviewqa.app.parallon.com/PWA";

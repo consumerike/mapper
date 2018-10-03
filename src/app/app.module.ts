@@ -13,11 +13,11 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { ConfigService } from "./Services/config.service";
 import { UserService } from './Services/user-service.service';
+import { UtilityService } from './Services/utility.service';
+import { MapperService } from './Services/mapper.service';
 import { MyProjectService } from './Services/project.service';
 import { PlanviewService } from './Services/planview.service';
 import { PerviewService } from './Services/perview.service';
-import { MapperService } from './Services/mapper.service';
-import { UtilityService } from './Services/utility.service';
 import { CustomErrorHandlerService } from './Services/custom-error-handler.service';
 
 import { AppComponent } from './app.component';
@@ -60,8 +60,8 @@ import { routes } from "./routes";
     },
     UserService,
     UtilityService,
-    MyProjectService,
     MapperService,
+    MyProjectService,
     PerviewService,
     PlanviewService,
 

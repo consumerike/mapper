@@ -6,7 +6,8 @@ import { ErrorHandler,Injectable } from '@angular/core';
 export class CustomErrorHandlerService  implements ErrorHandler {
 
 
-  constructor() { }
+  constructor() {console.log('error handler service accounted for');
+   }
 
   public errorList: any[] = [];
   public errorsPresent:boolean = false;

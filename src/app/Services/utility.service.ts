@@ -5,7 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class UtilityService {
 
-  constructor() { }
+  constructor() {console.log('inside utilityservice is running');
+   }
 
   modifyCurrentUserVariable(currentUser:string) {
     //add a \ after hca\currentUser

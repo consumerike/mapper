@@ -82,7 +82,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             }
           )
         );
-        this.realSavedProjects$.pipe().subscribe();
+        this.realSavedProjects$.subscribe(() => this.getSelectablePerviewProjects());
         this.checkForSavedUser$ = this.currentUserID$.pipe(
           map((data) => {
             console.log('checking for saved user...', data);
@@ -92,7 +92,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })
         );
         this.checkForSavedUser$.pipe().subscribe();
-        this.getSelectablePlanviewProjects();
+        // this.getSelectablePerviewProjects();
+        // this.getSelectablePlanviewProjects();
         // this
         //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
         //   tap( (data: any[]) => this
@@ -136,6 +137,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.errorsPresent = this.determineErrorStatus();
         this.errorList = this.getErrorList();
         console.log("checking the status of errors:",this.errorsPresent, this.errorService.errorList);
+        console.log('do i have the projects i need at this point perview selecatble projects',this.selectableProjects);
+        
     }
     catch(error){
       this.handleError(error);
@@ -348,7 +351,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })).subscribe(
          
           
-          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects();this.getSelectablePerviewProjects();}
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.refreshProjectList(event);}
           
           // (val) => console.log("what the heck mayne",val)
           );
@@ -389,7 +392,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    
   }
 
-  getSelectablePerviewProjects() {
+  getSelectablePerviewProjects(): void {
     console.log('when is swedish fish running??');
     
     try {
@@ -419,7 +422,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
+      throw errorMessage;
      }
+     
 
   }
 
@@ -470,8 +475,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
 
   refreshProjectList(event): void {
-    console.log("is the event the new list from modals??", event);
-    this.errorList = event;
+    console.log(event);
+    
+    
     try {
     this.updateChanges();
     this.getSavedProjects();

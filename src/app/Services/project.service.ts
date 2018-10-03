@@ -16,7 +16,8 @@ import { CustomErrorHandlerService } from './custom-error-handler.service';
 //purpose: manage user's saved projects/workspace
 export class MyProjectService {
 
-  constructor(private http: HttpClient, private errorService: CustomErrorHandlerService, private userService: UserService, private utilityService: UtilityService) { }
+  constructor(private http: HttpClient, private errorService: CustomErrorHandlerService, private userService: UserService, private utilityService: UtilityService) {console.log('inside myProjectService is running');
+   }
   apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
   public projectsSavedByUser: SavedProject[] = [];
 

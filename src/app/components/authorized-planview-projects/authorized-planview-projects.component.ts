@@ -51,7 +51,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     this.perviewProject = this.modalService.selection;
     console.log("did the input() work this time??",this.perviewProject);
     console.log('after selection:', this.perviewProject);
-    this.getPlanviewProjects();
+    // this.getPlanviewProjects();
 
     // this.source = new LocalDataSource(this.selectablePlanviewProjects)  
  

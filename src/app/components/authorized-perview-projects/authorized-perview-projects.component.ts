@@ -44,8 +44,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log("on initialization is running...authorizedPerviewProjectsComponent");
     
-    this.getPerviewProjects();
-    this.getListOfSavedProjects();
+    // this.getPerviewProjects();
+    // this.getListOfSavedProjects();
     
     // this.myProjects$.next(this.myprojectService.getSavedPerviewProjects(this.userService.currentUser));
     console.log("does this add to the list or what?",this.myProjects$.subscribe());
@@ -226,7 +226,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
         this.getListOfSavedProjects();  this.signalModalClose(); this.getPerviewProjects();                
       });
   
-      // this.getPerviewProjects();
+      this.getPerviewProjects();
     }
     catch (err) {
       let errorMessage = new Error('Error: Did not successfully add PerView project')

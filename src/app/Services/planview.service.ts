@@ -19,7 +19,8 @@ import { UserService } from './user-service.service';
 export class PlanviewService {
 
 
-  constructor(private http:HttpClient, private configService: ConfigService, private utilityService: UtilityService, private userService: UserService) {
+  constructor(private http:HttpClient, private configService: ConfigService, private utilityService: UtilityService, private userService: UserService) { console.log('planview service accounted for');
+  
     this.config = configService.config;
   }
   config:Config;
