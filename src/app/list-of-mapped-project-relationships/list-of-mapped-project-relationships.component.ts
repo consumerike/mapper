@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, OnChanges, OnDestroy } from '@angular
 import {IProject, Project, SavedProject, MappedProject } from '../components/mapper-models' 
 import { CustomErrorHandlerService } from '../Services/custom-error-handler.service';
 import { UserService } from "../Services/user-service.service";
+import { UtilityService } from '../Services/utility.service';
 import {MyProjectService} from '../Services/project.service'
 import { MapperService } from '../Services/mapper.service';
 import { Subject, Observable, BehaviorSubject, Subscription, from } from 'rxjs';
@@ -26,7 +27,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   selectablePlanviewProjects: MappedProject[];
   authorizedProjects: IProject[];
   authorizedPlanviewProjects: MappedProject[];
-  constructor(private userService: UserService, private myProjectService: MyProjectService
+  constructor(private userService: UserService,private utilityService: UtilityService, private myProjectService: MyProjectService
     ,private mapperService: MapperService, private modalService: ModalService, private errorService: CustomErrorHandlerService,private perviewService: PerviewService
     ,private planviewService: PlanviewService
   ) {}
@@ -64,6 +65,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   ngOnInit() {
     console.log('THE LIST OF MAPPED PROJECTS IS AT INIT....');
+    
+    
     // this.testSub.next([1,2,3])
     // this.testSub.subscribe( () => {
     //   // you will never see 1,2,3 
@@ -74,15 +77,15 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.currentUserID$ = this.userService.getCurrentUserID();
         this.realSavedProjects$ = this.currentUserID$
         .pipe(
+          takeUntil(this.unSub),
           map((data) =>  {
             console.log('current ID is data right?',data);
             this.currentID = data;
-            this.getSavedProjects();
+            this.getSavedProjects(this.currentID);
             this.userService.getUserName().pipe(tap(data=> {this.userName = data;})).subscribe();
-            }
-          )
+            })
         );
-        this.realSavedProjects$.subscribe(() => this.getSelectablePerviewProjects());
+        this.realSavedProjects$.pipe().subscribe();
         this.checkForSavedUser$ = this.currentUserID$.pipe(
           map((data) => {
             console.log('checking for saved user...', data);
@@ -92,7 +95,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })
         );
         this.checkForSavedUser$.pipe().subscribe();
-        // this.getSelectablePerviewProjects();
+        // this.userService.getUserName().pipe(tap(data=> {this.userName = data;})).subscribe();
         // this.getSelectablePlanviewProjects();
         // this
         //   map( (data: any[]) => this.mapperService.getMappedPlanviewAssociations(data)),
@@ -137,8 +140,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.errorsPresent = this.determineErrorStatus();
         this.errorList = this.getErrorList();
         console.log("checking the status of errors:",this.errorsPresent, this.errorService.errorList);
-        console.log('do i have the projects i need at this point perview selecatble projects',this.selectableProjects);
-        
     }
     catch(error){
       this.handleError(error);
@@ -190,9 +191,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
   }
 
-  getSavedProjects(): void {
+  getSavedProjects(currentUserID: string): void {
    try {
-    
+    console.log('ok',currentUserID); 
       this.myProjectService.getSavedPerviewProjects(this.currentID)
       .pipe(
         takeUntil(this.unSub),
@@ -208,22 +209,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           this.handleError(errorMessage);
           throw errorMessage;
         }),
-        finalize(()=>{this.updateChanges();})
+        finalize(()=>{this.displayErrors();})
       )
       .subscribe((data) => { 
-        this.errorsPresent = this.determineErrorStatus();
-        this.getErrorList();
-        console.log(this.listOfSavedPerviewProjects.length,this.listOfSavedPerviewProjects,"i data not projects?", data);
-                
-        if(this.listOfSavedPerviewProjects.length === 0) {
-          // this.userService.checkForSavedUser(this.userService.currentUser).subscribe();
-          console.log('this always runs...');
-          
-        }
-        else {
-          console.log('shut up please.')
-        }
-      },(err)=>{this.handleError(err);console.log(err,'how have i rory');this.errorsPresent= true; this.errorList[0]= err; this.updateChanges();
+
+      console.log("number of projects currently:",this.listOfSavedPerviewProjects.length);
+
+      },(err)=>{this.handleError(err);this.errorsPresent= true; this.errorList[0]= err; this.displayErrors();
       });
   }
   catch(err) {
@@ -270,7 +262,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.mapperService.deletePlanviewAssociation(mappedRelationship).subscribe();
         
         console.log("reflect delete", this.listOfSavedPerviewProjects);
-        this.getSavedProjects()
+        this.getSavedProjects(this.currentID)
         console.log("said ok");
       }
       else console.log('canceled operation');
@@ -278,7 +270,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Did not succesfully delete Planview Association')
       this.handleError(errorMessage);
-      this.getSavedProjects();
+      this.getSavedProjects(this.currentID);
     }
   }
 
@@ -311,6 +303,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         let filteredListOfProjects = this.listOfSavedPerviewProjects.filter((savedProject) => {
           console.log('COUPLING??',savedProject["projUid"],'vs:::', perviewProject["projUid"]);
           console.log('COUPLING??',typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
+          console.log('tf John??',savedProject["projUID"], typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
           let a = savedProject["projUid"]
           let b = perviewProject["projUid"]
           if (a !== b) {
@@ -351,13 +344,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           })).subscribe(
          
           
-          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.refreshProjectList(event);}
+          () =>  {console.log('this is inside the subscribe function getting ready to get saved projects::::::', this.listOfSavedPerviewProjects);this.getSavedProjects(this.currentID);this.getSelectablePerviewProjects();}
           
           // (val) => console.log("what the heck mayne",val)
           );
           console.log('this is right after the subscribe and getting ready to getSaved Projects....');
           
-        // this.getSavedProjects(this.currentID);
+        this.getSavedProjects(this.currentID);
         
       }
       catch (err) {
@@ -392,7 +385,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
    
   }
 
-  getSelectablePerviewProjects(): void {
+  getSelectablePerviewProjects() {
     console.log('when is swedish fish running??');
     
     try {
@@ -422,9 +415,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
-      throw errorMessage;
      }
-     
 
   }
 
@@ -440,9 +431,8 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
          map( (data) => {  this.authorizedPlanviewProjects = data;console.log('all pv projects',this.authorizedPlanviewProjects);
            let filteredAuthorizedPlanviewProjects = this.authorizedPlanviewProjects.filter((planviewProject)=> {
              console.log('one and the same ni',this.selectedProject,'planview project tho', planviewProject);
-             ;
              
-             if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.name.toLowerCase()) < 0) {
+             if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.projectName.toLowerCase()) < 0) {
                return planviewProject;
              }
            })
@@ -457,7 +447,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
     catch (err) {
       console.log('we are inside the catch for get selectablePlanviewProjects:');
-      
       let errorMessage = new Error('Error: Did not successfully display Planview projects for selection')
       this.handleError(errorMessage);
       return this.authorizedPlanviewProjects;
@@ -475,12 +464,12 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
 
   refreshProjectList(event): void {
-    console.log(event);
-    
-    
+    console.log("is the event the new list from modals??", event);
+    this.errorList = event;
     try {
-    this.updateChanges();
-    this.getSavedProjects();
+    this.displayErrors();
+    console.log('this current user:', this.currentID);
+    this.getSavedProjects(this.currentID);
     this.getSelectablePerviewProjects();
     this.getSelectablePlanviewProjects();
     
@@ -488,39 +477,34 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch (err) {
       let errorMessage = new Error('Error:Projects Did not successfully update.')
       this.handleError(errorMessage);
+      throw errorMessage;
      }
   }
 
-  updateChanges(): any {
+  displayErrors(): any {
     console.log('update changes is running...');
     
     try {
-      this.determineErrorStatus();
-      console.log(this.getErrorList());
-      
+      this.determineErrorStatus(); 
       this.getErrorList();
     }
    
-   
     catch(err) {
       console.log('catching error...', err);
-      let errorMessage = new Error('Error: Your changes may have failed to update')
+      let errorMessage = new Error('Error: Your errors may have failed to display')
       this.handleErrorQuietly(errorMessage);
     }
-    // this.mapperService.updateData();
     
   }
   
   determineErrorStatus(): boolean {
     let errStatusAsBoolean = this.errorService.getErrorsPresentStatus();
     console.log(this.errorsPresent);
-    
     return errStatusAsBoolean;
   }
 
   getErrorList(): any[] {
-    console.log(
-    'get error list is running');
+  console.log('getting errorlist');
     this.errorList = this.errorService.getErrorList();
     return this.errorList;
   }

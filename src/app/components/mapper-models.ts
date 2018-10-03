@@ -25,7 +25,8 @@ export class MappedProject {
   projectName: string;
   ppl_code: string;
   projectGuid?: string;
-  name?: string;
+  mappedBy34?: string;
+  mappedByName?: string;
 }
 
 export class PlanviewProject {

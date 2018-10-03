@@ -178,6 +178,8 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       let prepSelections: any = this.selectedProjects.map((selectedProject) => {
         //strip out the 34 ID:
         let modifiedUserID =  this.utilityService.modifyCurrentUser(this.userService.currentUser);
+        console.log(`is the modified user ID working??: value equals: ${modifiedUserID}`);
+        
         let formattedSelectedProject = Object.assign({projectName:selectedProject.name, ppl_code:selectedProject.ppl_Code,mappedBy34:modifiedUserID, mappedByName:this.userService.userName},{})
         console.log("correct format check for these times:", formattedSelectedProject);
         return formattedSelectedProject;

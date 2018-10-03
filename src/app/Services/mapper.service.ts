@@ -62,26 +62,41 @@ export class MapperService {
     }  
     
     console.log("need to be passing in a projectUIDman",project.projUid);
+    /*
+     projectName: string;
+  ppl_code: string;
+  projectGuid?: string;
+  mappedBy34?: string;
+  mappedByName?: string;
+  */
     try {    
     return this.http.get(url,options)
     .pipe(
       map(data => {        
       console.log(onerror);
-      console.log("this is the array essentially",data)
+      console.log(`this is the array essentially for ${project.projName}`,data)
         this.planviewMappedProjects = data;
         project.planviewProjects = this.planviewMappedProjects
-        console.log("project.planviewProjects",this.planviewMappedProjects,);
+        console.log("project.planviewProjects",this.planviewMappedProjects);
+       
+        project.planviewProjects.map((mappedProject) => {
+          let nullMappedProject = {
+            mappedBy34: "none",
+            mappedByName: "none"
+          };
           
-          // this.addPerviewProjectForMapping(project).subscribe()
-        //   console.log('in if loop for no projects in the array........', project);
-        // } 
-          // this.addPerviewProjectForMapping(project).subscribe();
-        // }
+          if(mappedProject.mappedByName != null ?  mappedProject : Object.assign({mappedBy34: "none", mappedByName: "none"},mappedProject)) {
+            console.log("nullCheckNow", mappedProject);
+            return mappedProject
+          }  
+        })
+        console.log("after null check what is...project.planviewProjects??", project.planviewProjects);
+  
         return project.planviewProjects;
        }),
        catchError(err => {
         let errorMessage = new Error("Error: Did not successfully get mapped PlanView projects from database")
-        this.handleError(errorMessage);
+        this.handleErrorQuietly(errorMessage);
         return [];
        })
       ); 
@@ -92,7 +107,6 @@ export class MapperService {
       this.addPerviewProjectForMapping(project).subscribe()
       console.log('this should never run logically I do NOT think.... does it?????????????');
     }
-    
   }
   
   checkPerviewProjectMapStatus(project:SavedProject): Observable<any> {

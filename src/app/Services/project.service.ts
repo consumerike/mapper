@@ -62,7 +62,7 @@ export class MyProjectService {
            );
          }),
           catchError(err => {
-           console.log('in observable catchError()',err);
+           console.log('incredulous in observable catchError()',err);
            let errorMessage = new Error("Error: Did not successfully get saved projects from database")
            this.handleError(errorMessage);
            this.projectsSavedByUser = [];
