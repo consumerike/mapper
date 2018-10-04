@@ -9,7 +9,7 @@ import { ResolverService } from "./Services/resolver.service";
 import { PlanviewResolverService } from "./Services/planview-resolver.service";
 export let routes = [
     { path: "", component: ListOfMappedProjectRelationshipsComponent, pathMatch: "full" },
-    { path: "#authorizedPerviewProjects" ,component:AuthorizedPerviewProjectsComponent, resolve: {selectablePerviewProjects: ResolverService} },
+    { path: "#authorizedPerviewModal" ,component:AuthorizedPerviewProjectsComponent, resolve: {selectablePerviewProjects: ResolverService} },
     { path: '#authorizedPlanviewProjects', component:AuthorizedPlanviewProjectsComponent, resolve: {selectablePlanviewProjects: PlanviewResolverService}}
     // { path: '/ConfirmDeletion', component: ConfirmationDialogueComponent }
 ];
