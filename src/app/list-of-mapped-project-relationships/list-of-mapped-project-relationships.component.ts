@@ -418,7 +418,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
      }
 
   }
-
      
 
   getSelectablePlanviewProjects() {
@@ -430,14 +429,14 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
          takeUntil(this.unSub),
          map( (data) => {  this.authorizedPlanviewProjects = data;console.log('all pv projects',this.authorizedPlanviewProjects);
            let filteredAuthorizedPlanviewProjects = this.authorizedPlanviewProjects.filter((planviewProject)=> {
-             console.log('one and the same ni',this.selectedProject,'planview project tho', planviewProject);
+             console.log(`the selected project is: ${this.selectedProject},the planview project though equals ${planviewProject}`);
              
              if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.projectName.toLowerCase()) < 0) {
                return planviewProject;
              }
            })
            this.selectablePlanviewProjects = filteredAuthorizedPlanviewProjects;
-           console.log("this go around",this.selectablePlanviewProjects);
+           console.log(`this go around selectable planview projects equals ${this.selectablePlanviewProjects}`);
            
            return this.selectablePlanviewProjects;
          })
