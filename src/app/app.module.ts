@@ -28,6 +28,8 @@ import { AuthorizedPerviewProjectsComponent } from './components/authorized-perv
 import { AuthorizedPlanviewProjectsComponent } from './components/authorized-planview-projects/authorized-planview-projects.component';
 import { MappedProjectRelationshipComponent } from './components/mapped-project-relationship/mapped-project-relationship.component';
 import { routes } from "./routes";
+import { ResolverService } from './Services/resolver.service';
+import { PlanviewResolverService } from './Services/planview-resolver.service';
 
 
 
@@ -62,6 +64,8 @@ import { routes } from "./routes";
     UtilityService,
     MapperService,
     MyProjectService,
+    ResolverService,
+    PlanviewResolverService,
     PerviewService,
     PlanviewService,
 

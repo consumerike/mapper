@@ -54,7 +54,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   ngOnDestroy(): void {
     this.unSub.next();
     this.unSub.complete();
-    // this.listOfSavedPerviewProjectsSub.unsubscribe();
+    
   }
   
 

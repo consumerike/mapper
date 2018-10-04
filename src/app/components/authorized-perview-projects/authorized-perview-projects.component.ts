@@ -7,7 +7,7 @@ import { IProject, SavedProject } from '../mapper-models';
 import { Observable, Subject, from } from 'rxjs';
 import { takeUntil, map, tap, switchMap, delay, catchError, finalize } from 'rxjs/operators';
 import { M } from "materialize-css";
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
 
 declare const $: any
@@ -26,7 +26,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private mapperService: MapperService,
     private router: Router,
-    private renderer: Renderer2,
+    private route: ActivatedRoute,
     private errorService: CustomErrorHandlerService
   ) { }
 
