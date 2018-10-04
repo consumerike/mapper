@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ViewChild } 
 import { PlanviewService } from '../../Services/planview.service';
 import { ModalService } from '../../Services/modal.service';
 import { MyProjectService } from '../../Services/project.service';
-import { IProject, Project, MappedProject } from '../mapper-models';
+import { IProject, Project, MappedProject, PlanviewProject } from '../mapper-models';
 import { Observable } from 'rxjs';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { MapperService } from '../../Services/mapper.service';
@@ -33,12 +33,12 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     private errorService: CustomErrorHandlerService
   ) { }
   
-  authorizedProjects: MappedProject[];
+  authorizedProjects: PlanviewProject[];
   private selectedProjects: any[] = [];
   private perviewProject: string;
 
   @Input()
-  selectablePlanviewProjects: MappedProject[]
+  selectablePlanviewProjects: PlanviewProject[]
   
   @Output()
   onPlanviewModalClose = new EventEmitter<string>()

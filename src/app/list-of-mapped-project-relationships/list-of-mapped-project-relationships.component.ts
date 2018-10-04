@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, OnDestroy } from '@angular/core';
-import {IProject, Project, SavedProject, MappedProject } from '../components/mapper-models' 
+import {IProject, Project, SavedProject, MappedProject, PlanviewProject } from '../components/mapper-models' 
 import { CustomErrorHandlerService } from '../Services/custom-error-handler.service';
 import { UserService } from "../Services/user-service.service";
 import { UtilityService } from '../Services/utility.service';
@@ -24,9 +24,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
  
   selectableProjects: IProject[];
-  selectablePlanviewProjects: MappedProject[];
+  selectablePlanviewProjects: PlanviewProject[];
   authorizedProjects: IProject[];
-  authorizedPlanviewProjects: MappedProject[];
+  authorizedPlanviewProjects: PlanviewProject[];
   constructor(private userService: UserService,private utilityService: UtilityService, private myProjectService: MyProjectService
     ,private mapperService: MapperService, private modalService: ModalService, private errorService: CustomErrorHandlerService,private perviewService: PerviewService
     ,private planviewService: PlanviewService
@@ -427,11 +427,14 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       this.planviewService.getAuthorizedPlanviewProjects()
       .pipe( 
          takeUntil(this.unSub),
-         map( (data) => {  this.authorizedPlanviewProjects = data;console.log('all pv projects',this.authorizedPlanviewProjects);
-           let filteredAuthorizedPlanviewProjects = this.authorizedPlanviewProjects.filter((planviewProject)=> {
+         map( (data) => { this.authorizedPlanviewProjects = data;console.log('all pv projects',this.authorizedPlanviewProjects);
+           let filteredAuthorizedPlanviewProjects = this.authorizedPlanviewProjects.filter((planviewProject: PlanviewProject)=> {
              console.log(`the selected project is: ${this.selectedProject},the planview project though equals ${planviewProject}`);
+             console.log("what is the selected project here:", this.selectedProject);
              
-             if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.projectName.toLowerCase()) < 0) {
+             if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.name.toLowerCase()) < 0) {
+               console.log('does this ever get in here??');
+               
                return planviewProject;
              }
            })

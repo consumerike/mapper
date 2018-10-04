@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter'
 
-import { IProject, Project, MappedProject } from '../components/mapper-models';
+import { IProject, Project, MappedProject, PlanviewProject } from '../components/mapper-models';
 import { Config } from "../components/mapper-models";
 import { ConfigService } from "./config.service";
 import { map, tap } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class PlanviewService {
   config:Config;
   authorizedPlanviewProjects: any; //MappedProject[]
 
-  getAuthorizedPlanviewProjects():Observable<MappedProject[]> {
+  getAuthorizedPlanviewProjects():Observable<PlanviewProject[]> {
     let modified34ID = this.utilityService.modifyCurrentUser(this.userService.currentUser);
     console.log("mod 34 ID equals",modified34ID);
     
