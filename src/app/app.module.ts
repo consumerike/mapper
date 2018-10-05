@@ -21,6 +21,7 @@ import { PerviewService } from './Services/perview.service';
 import { CustomErrorHandlerService } from './Services/custom-error-handler.service';
 
 import { AppComponent } from './app.component';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { MapperHeaderComponent } from './components/mapper-header/mapper-header.component';
 import { MapperFooterComponent } from './components/mapper-footer/mapper-footer.component';
 import { ListOfMappedProjectRelationshipsComponent } from './list-of-mapped-project-relationships/list-of-mapped-project-relationships.component';
@@ -36,6 +37,7 @@ import { PlanviewResolverService } from './Services/planview-resolver.service';
 @NgModule({
   declarations: [
     AppComponent,
+    LoadingSpinnerComponent,
     MapperHeaderComponent,
     MapperFooterComponent,
     AuthorizedPerviewProjectsComponent,

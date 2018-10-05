@@ -47,6 +47,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   project: SavedProject;
   selectedProject: SavedProject;
   
+  showSpinner: boolean = true;
   errorsPresent: boolean = false;
   errorList: any[];
   unSub = new Subject<void>();
@@ -85,7 +86,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
             this.userService.getUserName().pipe(tap(data=> {this.userName = data;})).subscribe();
             })
         );
-        this.realSavedProjects$.pipe().subscribe();
+        this.realSavedProjects$.pipe().subscribe(
+          () => {this.showSpinner = false; this.getSelectablePerviewProjects();}
+        );
         this.checkForSavedUser$ = this.currentUserID$.pipe(
           map((data) => {
             console.log('checking for saved user...', data);
@@ -278,7 +281,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     try {
       console.log('ghello mappy relationship...', mappedRelationship);
       
-      let decision = confirm(`Warning! This will delete the association created between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
+      let decision = confirm(`Warning! This will delete the association created by ${mappedRelationship.mappedByName} between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
       if (decision == true) {return true}
     }
     catch(err) {
@@ -408,7 +411,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
        )
       //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
        .subscribe(
-         (data)=>{console.log('looking to see when this runs...?', this.selectableProjects=data);}
+         (data)=>{console.log('looking to see when get selectable perview projects() runs...?', this.selectableProjects=data, this.modalService.showSpinner);this.modalService.hideSpinner();}
          
        );
     }
@@ -444,7 +447,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
            return this.selectablePlanviewProjects;
          })
        )
-       .subscribe((data) => {console.log('typical Tuesday PM',this.selectablePlanviewProjects);this.selectablePlanviewProjects = data;}
+       .subscribe((data) => {this.showSpinner = false;console.log('typical Tuesday PM',this.selectablePlanviewProjects);this.selectablePlanviewProjects = data;}
        )
     }
     catch (err) {

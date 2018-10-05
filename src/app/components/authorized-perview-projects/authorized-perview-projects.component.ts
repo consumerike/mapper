@@ -9,6 +9,7 @@ import { takeUntil, map, tap, switchMap, delay, catchError, finalize } from 'rxj
 import { M } from "materialize-css";
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
+import { ModalService } from '../../Services/modal.service';
 
 declare const $: any
 declare const window: Window;
@@ -27,7 +28,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     private mapperService: MapperService,
     private router: Router,
     private route: ActivatedRoute,
-    private errorService: CustomErrorHandlerService
+    private errorService: CustomErrorHandlerService,
+    public modalService: ModalService
   ) { }
 
   authorizedProjects: IProject[];
@@ -39,7 +41,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   projectsSavedByUser$: Observable<any>
   addProjects$: Observable<any>;
   updateProjects$: Observable<any>
-  selected: string = 'selected';
+  selected: any = 'selected';
+
+  showSpinner: boolean = this.modalService.showSpinner;
   
   ngOnInit() {
     console.log("on initialization is running...authorizedPerviewProjectsComponent");
@@ -56,7 +60,12 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     //     this.addSelectedProjects(data);
     //   })
     // )
- 
+   this.selected = this.route.snapshot.data;
+   console.log('this is the exclusive', this.selected, this.route.snapshot.data.selectablePerviewProjects);
+   console.log('you people');
+   console.log('showspinnger status:', this.modalService.showSpinner);
+   
+   
   }
 
 
@@ -73,6 +82,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   listOfSavedPerviewProjects: SavedProject[];
   @Input()
   selectableProjects: IProject[];
+ 
 
   @Output()
   onModalClose = new EventEmitter();

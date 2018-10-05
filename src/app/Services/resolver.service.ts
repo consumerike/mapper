@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 import { IProject, SavedProject } from '../components/mapper-models';
 import { PerviewService } from './perview.service';
 import { takeUntil, map, tap, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, from } from 'rxjs';
 import { UserService } from './user-service.service';
 import { MyProjectService } from './project.service';
 
@@ -14,9 +14,9 @@ import { MyProjectService } from './project.service';
 })
 
 
-export class ResolverService implements Resolve<IProject[]> {
+export class ResolverService implements Resolve <Observable<IProject[]>> {
 
-  selectableProjects: IProject[];
+  selectableProjects: any[];
   listOfSavedPerviewProjects: SavedProject[];
   authorizedProjects: IProject[];
 
@@ -27,7 +27,7 @@ export class ResolverService implements Resolve<IProject[]> {
     this.unSub.complete();  
   }
 
-  resolve(): IProject[] {
+  resolve(): Observable<IProject[]> {
     //return observable
     try {
        this.myProjectService.getSavedPerviewProjects(this.userService.currentUser)
@@ -47,13 +47,14 @@ export class ResolverService implements Resolve<IProject[]> {
           console.log('the selectable projects are:', this.selectableProjects);
           return this.selectableProjects;})
         }))
-       )
-       .subscribe();
+       );
+       
     }
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleErrorQuietly(errorMessage);
-      return this.selectableProjects;
+      return from(this.selectableProjects);
+      // return from(this.selectableProjects);
      }
 
   }
