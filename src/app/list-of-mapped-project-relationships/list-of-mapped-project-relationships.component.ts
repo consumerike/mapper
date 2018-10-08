@@ -92,7 +92,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.checkForSavedUser$ = this.currentUserID$.pipe(
           map((data) => {
             console.log('checking for saved user...', data);
-            
           this.currentID = data;
           this.savedUserCheck(this.currentID)
           })
