@@ -375,7 +375,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       return pair.projectName})
      console.log("what we need",listOfDeletedPlanviewProjects);
      let decision = confirm(
-    `Warning! This will delete the associations created  between ${perviewProject.projName} and ${listOfDeletedPlanviewProjects.join()}. Are you sure?`);
+    `Warning! This will delete ALL associations created  between ${perviewProject.projName}. Are you sure?`);
      if (decision == true) {return true}
      
     }

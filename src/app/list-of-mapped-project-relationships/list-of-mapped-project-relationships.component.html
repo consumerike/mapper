@@ -1,9 +1,7 @@
-<!-- <nav>3 hours later...
-  
-</nav> -->
+
 <nav>
   <div class="nav-wrapper">
-    <!-- <a href="#" class="brand-logo right">Logo</a> -->
+    <a href="#" class="brand-logo center">Planview Data Mapper</a>
     <ul id="nav-mobile" class="left hide-on-med-and-down">
       <li><a href="https://perviewqa.app.parallon.com/PWA/default.aspx">Exit to Perview</a></li>
       <li><a href="https://perviewqa.app.parallon.com/PWA/projectbicenter/All%20Reports/Forms/Portfolio%20Reports.aspx">Exit to BI Reports</a></li>
@@ -15,7 +13,7 @@
 </div>
 
 <app-mapper-header></app-mapper-header>
-<table  class="container striped blue-grey lighten-5  responsive">
+<table  class="container striped grey-darken-1 responsive">
   <app-loading-spinner *ngIf="showSpinner"></app-loading-spinner>
   
     <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let p = index" [attr.data-index]="p" >
