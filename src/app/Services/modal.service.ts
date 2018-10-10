@@ -7,8 +7,8 @@ export class ModalService {
 
   constructor() { }
   
-  showSpinner: boolean = true;
   public selection: string;
+  showSpinner: boolean = true;
 
   hideSpinner(): void{
     console.log('hide spinner now!');
@@ -19,4 +19,5 @@ export class ModalService {
   getSpinnerStatus(): boolean {
     return this.showSpinner;
   }
+
 }

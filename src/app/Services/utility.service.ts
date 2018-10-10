@@ -8,6 +8,8 @@ export class UtilityService {
   constructor() {console.log('inside utilityservice is running');
    }
 
+  showSpinner: boolean = true;
+
   modifyCurrentUserVariable(currentUser:string) {
     //add a \ after hca\currentUser
     let modifiedUserName = currentUser.replace('\\','\\\\')
@@ -31,5 +33,21 @@ export class UtilityService {
     
     return encodedSegment;
   }
+
+  setSpinner(status:boolean): void {
+    this.showSpinner = status;
+  }
+
+  hideSpinner(): void {
+    console.log('hide spinner now!');
+    
+    this.showSpinner = false;
+  }
+
+  getSpinnerStatus(): boolean {
+    return this.showSpinner;
+  }
+  
+  
 }
 

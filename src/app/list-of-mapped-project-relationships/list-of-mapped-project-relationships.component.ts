@@ -135,7 +135,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         $(document).ready(function() {
           $('.modal').modal({
             dismissible: false,
-            complete: function() {console.log('long live the king', this);}     
+            startingTop: '5%',
+            endingTop: '25%'  ,
+            preventScrolling: true,
+            complete: function() {console.log('long live the king', this);}
           });
         });
 
@@ -148,7 +151,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
   }
 
-  ngOnChanges(){
+  ngOnChanges() {
 
   }
 
@@ -160,8 +163,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   handleErrorQuietly(error): void {
     console.warn(error);
   }
-
-
   
   getCurrentUserID(): void {
     try {
@@ -179,8 +180,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       let errorMessage = new Error('Error: The current user is not being retrieved')
       this.handleError(errorMessage);
     }
-   
-    
   } 
 
   savedUserCheck(currentUserID: string): void {
@@ -195,6 +194,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   getSavedProjects(currentUserID: string): void {
    try {
+    this.utilityService.setSpinner(true);
     console.log('ok',currentUserID); 
       this.myProjectService.getSavedPerviewProjects(this.currentID)
       .pipe(
@@ -214,9 +214,9 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         finalize(()=>{this.displayErrors();})
       )
       .subscribe((data) => { 
-
-      console.log("number of projects currently:",this.listOfSavedPerviewProjects.length);
-
+        console.log("number of projects currently:",this.listOfSavedPerviewProjects.length);
+        
+        this.utilityService.hideSpinner();
       },(err)=>{this.handleError(err);this.errorsPresent= true; this.errorList[0]= err; this.displayErrors();
       });
   }
@@ -267,7 +267,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.getSavedProjects(this.currentID)
         console.log("said ok");
       }
-      else console.log('canceled operation');
+      else console.log('cancelled operation');
     }
     catch(err) {
       let errorMessage = new Error('Error: Did not succesfully delete Planview Association')
@@ -391,6 +391,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log('when is swedish fish running??');
     
     try {
+      this.utilityService.setSpinner(true);
       this.perviewService.getAuthorizedPerviewProjects()
       .pipe( 
          takeUntil(this.unSub),
@@ -410,7 +411,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
        )
       //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
        .subscribe(
-         (data)=>{console.log('looking to see when get selectable perview projects() runs...?', this.selectableProjects=data, this.modalService.showSpinner);this.modalService.hideSpinner();}
+         (data)=>{console.log('looking to see when get selectable perview projects() runs...?', this.selectableProjects=data, this.modalService.showSpinner);this.utilityService.hideSpinner();}
          
        );
     }
@@ -511,6 +512,10 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   console.log('getting errorlist');
     this.errorList = this.errorService.getErrorList();
     return this.errorList;
+  }
+
+  getSpinnerStatus(): boolean {
+    return this.utilityService.getSpinnerStatus();
   }
 
 

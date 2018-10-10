@@ -3,7 +3,7 @@
   <div class="nav-wrapper">
     <a href="#" class="brand-logo center">Planview Data Mapper</a>
     <ul id="nav-mobile" class="left hide-on-med-and-down">
-      <li><a href="https://perviewqa.app.parallon.com/PWA/default.aspx">Exit to Perview</a></li>
+      <li><a href="https://perviewqa.app.parallon.com/PWA/default.aspx">Exit to PerView</a></li>
       <li><a href="https://perviewqa.app.parallon.com/PWA/projectbicenter/All%20Reports/Forms/Portfolio%20Reports.aspx">Exit to BI Reports</a></li>
     </ul>
   </div>
@@ -13,10 +13,9 @@
 </div>
 
 <app-mapper-header></app-mapper-header>
-<table  class="container striped grey-darken-1 responsive">
-  <app-loading-spinner *ngIf="showSpinner"></app-loading-spinner>
-  
-    <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let p = index" [attr.data-index]="p" >
+<app-loading-spinner *ngIf="getSpinnerStatus()"></app-loading-spinner>
+<table [hidden]="getSpinnerStatus()"  class="container striped grey-darken-1 responsive">
+    <tr class="row m12" *ngFor="let project of listOfSavedPerviewProjects; let p = index" [attr.data-index]="p">
     <input class="bg" type="checkbox" name="perViewProject" value="project.name" id="i">
     <td class="col m3">{{project.projName}}<a (click)="deletePerviewProject(project, i)"><i class="tiny material-icons waves-light red"> close</i></a><br><br></td>
     <td class="col m3">   
@@ -33,6 +32,6 @@
     <td class="col m3"><a (click)="handleModalClick(project)"   class="waves-light btn modal-trigger" href="#authorizedPlanviewModal" >Add Planview Project</a></td>
   </tr>
   <app-mapper-footer  (click)="getSelectablePerviewProjects()"><a class="modal-trigger"  href="#authorizedPerviewModal"></a></app-mapper-footer> 
-  <app-authorized-perview-projects [routerLink]="['authorizedPerviewModal']" [listOfSavedPerviewProjects]="listOfSavedPerviewProjects"[selectableProjects]="selectableProjects" id="authorizedPerviewModal" class="modal"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
+  <app-authorized-perview-projects [routerLink]="['authorizedPerviewModal']" [listOfSavedPerviewProjects]="listOfSavedPerviewProjects"[selectableProjects]="selectableProjects" id="authorizedPerviewModal" class="modal modal-fixed-footer"(onModalClose)="refreshProjectList($event)" ></app-authorized-perview-projects>
   <app-authorized-planview-projects [selectablePlanviewProjects]="selectablePlanviewProjects"  id="authorizedPlanviewModal" class="modal" (onPlanviewModalClose)=refreshProjectList($event)></app-authorized-planview-projects>
 </table>

@@ -10,6 +10,7 @@ import { M } from "materialize-css";
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
 import { ModalService } from '../../Services/modal.service';
+import { UtilityService } from '../../Services/utility.service';
 
 declare const $: any
 declare const window: Window;
@@ -25,6 +26,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   constructor(private perviewService: PerviewService,
     private myprojectService: MyProjectService,
     private userService: UserService,
+    private utilityService: UtilityService,
     private mapperService: MapperService,
     private router: Router,
     private route: ActivatedRoute,
@@ -43,7 +45,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   updateProjects$: Observable<any>
   selected: any = 'selected';
 
-  showSpinner: boolean = this.modalService.showSpinner;
+  showSpinner: boolean = this.utilityService.showSpinner;
   
   ngOnInit() {
     console.log("on initialization is running...authorizedPerviewProjectsComponent");
@@ -102,9 +104,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       delete: false
 
     },
-    pager: {
-      perPage: 6
-    },
+
     
     columns: {
 
@@ -180,6 +180,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
   addSelectedProjects(): void {
     this.errorService.clearErrorList();
+    this.utilityService.setSpinner(true);
     try {
       let prepSelections: SavedProject[] = this.selectedProjects.map((selectedProject) => {
         let formatedSelectedProject: SavedProject = Object.assign({projUid:selectedProject.projUid, projName: selectedProject.projName}
@@ -232,7 +233,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
         ,finalize(()=>{this.signalModalClose();} )
       )
       .subscribe((val) => {
-        this.clearSelections();
+        this.clearSelections(); this.hideSpinner();
         this.getListOfSavedProjects();  this.signalModalClose(); this.getPerviewProjects();                
       });
   
@@ -243,7 +244,15 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.handleError(errorMessage);
      }
         
-  }  
+  }
+  
+  getSpinnerStatus(): boolean {
+    return this.utilityService.getSpinnerStatus();
+  }
+
+  hideSpinner(): void {
+    this.utilityService.hideSpinner();
+  }
   
   rowClick(event): void {
     try {
