@@ -111,19 +111,19 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       projName: {
         title: "Project",
         editable: false,
-        width: '40%'
+        width: '60%'
     
       },
   
       owner: {
         title: "Project Manager",
         editable: false,
-        width: '30%'
+        width: '20%'
       },
       businessOwner: {
         title: "Business Owner",
         editable: false,
-        width: '30%'
+        width: '20%'
       }
       
     },
