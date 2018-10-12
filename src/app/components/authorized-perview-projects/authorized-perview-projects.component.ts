@@ -49,7 +49,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     console.log("on initialization is running...authorizedPerviewProjectsComponent");
-    
+    this.setSearchPlaceholderValues();
     // this.getPerviewProjects();
     // this.getListOfSavedProjects();
     
@@ -105,7 +105,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
 
     },
 
-    
     columns: {
 
       projName: {
@@ -339,7 +338,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       this.clearSelections();
       this.smart.grid.dataSet.deselectAll();
       this.getPerviewProjects();
-    
+      this.clearSearchBoxes();
+      
         /* Want to implement clearing of filtering on selection here....
       // this.source.reset();
       // this.source.setFilter([],true,false);
@@ -353,6 +353,20 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
       let errorMessage = new Error('Error: Did not delete PerView project successfully')
       this.handleError(errorMessage);
      }
+  }
+
+  clearSearchBoxes(): void {
+    let inputFilters = Array.from(document.getElementsByTagName("input-filter"));
+    inputFilters.forEach((filterElement) => { (filterElement.firstElementChild as HTMLOptionElement).value = ""});
+    //for placebholders: 0 = perviewProject; 1 = "Project manager"; 2= "Business Owner"; 3="Project" (planviewProject)
+    console.log("these are the input filters:",inputFilters);
+    
+  }
+
+  setSearchPlaceholderValues(): void {
+    let searchProjectHint = document.getElementsByTagName("input-filter")[0].firstElementChild.setAttribute("placeholder","search Project");
+    let searchManagerHint = document.getElementsByTagName("input-filter")[1].firstElementChild.setAttribute("placeholder","search Project Manager");
+    let searchOwnerHint = document.getElementsByTagName("input-filter")[2].firstElementChild.setAttribute("placeholder","search Business Owner");    
   }
 
 }

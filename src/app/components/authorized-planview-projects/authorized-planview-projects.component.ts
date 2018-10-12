@@ -52,7 +52,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     console.log("did the input() work this time??",this.perviewProject);
     console.log('after selection:', this.perviewProject);
     // this.getPlanviewProjects();
-
+    this.setSearchPlaceholderValues();
     // this.source = new LocalDataSource(this.selectablePlanviewProjects)  
  
 
@@ -271,6 +271,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       this.clearSelections();
       console.log('signalModalClose-planview has ran');
       this.smart.grid.dataSet.deselectAll();
+      this.clearSearchBoxes();
 
     /* Want to implement clearing of filtering on selection here....
         this.source = new LocalDataSource(this.selectablePlanviewProjects)  
@@ -286,6 +287,24 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
       let errorMessage = new Error('Error: Issues with signalModalClose() in authorized-planview-projects.ts')
       this.handleErrorQuietly(errorMessage);
      }   
+  }
+
+  clearSearchBoxes(): void {
+    let inputFilters = Array.from(document.getElementsByTagName("input-filter"));
+    inputFilters.forEach((filterElement) => { (filterElement.firstElementChild as HTMLOptionElement).value = ""});
+    
+    //for placebholders: 0 = perviewProject; 1 = "Project manager"; 2= "Business Owner"; 3="Project" (planviewProject)
+    console.log("these are the input filters:",inputFilters);
+    
+  }
+
+  
+  setSearchPlaceholderValues(): void {
+    let searchProjectHint = document.getElementsByTagName("input-filter")[3].firstElementChild.setAttribute("placeholder","search Project");
+    let searchManagerHint = document.getElementsByTagName("input-filter")[4].firstElementChild.setAttribute("placeholder","search Project Manager");
+    let searchOwnerHint = document.getElementsByTagName("input-filter")[5].firstElementChild.setAttribute("placeholder","search Business Owner");
+    let searchIDHint = document.getElementsByTagName("input-filter")[6].firstElementChild.setAttribute("placeholder","search Planview ID");
+    
   }
   
 
