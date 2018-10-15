@@ -136,7 +136,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           $('.modal').modal({
             dismissible: false,
             startingTop: '5%',
-            endingTop: '25%'  ,
+            endingTop: '20%'  ,
             preventScrolling: true,
             complete: function() {console.log('long live the king', this);}
           });

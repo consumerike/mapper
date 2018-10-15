@@ -9,10 +9,6 @@ button,a {
   margin-right: 51px;
 }
 
-nav {
-  background: cadetblue;
-}
-
 
 
 :host /deep/ {
@@ -39,7 +35,7 @@ nav {
   ng2-smart-table-pager {
    
     nav{
-      margin-top: 1%;
+     
       background: #757575
     }
   }
