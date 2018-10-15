@@ -59,7 +59,12 @@ export class UserService {
             }, 0)
            
           );
-        })
+        }),
+        catchError(err => {
+          let errorMessage = new Error("Error: Cannot get current user ID. Please contract your PerView administrator")
+          this.handleError(errorMessage);
+         throw errorMessage;
+         })
      );  
   }
 

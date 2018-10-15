@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, ViewChild, AfterViewChecked } from '@angular/core';
 import { PlanviewService } from '../../Services/planview.service';
 import { ModalService } from '../../Services/modal.service';
 import { MyProjectService } from '../../Services/project.service';
@@ -20,7 +20,8 @@ import { UtilityService } from '../../Services/utility.service';
   templateUrl: './authorized-planview-projects.component.html',
   styleUrls: ['./authorized-planview-projects.component.scss']
 })
-export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
+export class AuthorizedPlanviewProjectsComponent implements OnInit, AfterViewChecked, OnDestroy {
+ 
   @ViewChild('smart') smart;
   constructor(private planviewService: PlanviewService,
     private userService: UserService,
@@ -52,7 +53,6 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     console.log("did the input() work this time??",this.perviewProject);
     console.log('after selection:', this.perviewProject);
     // this.getPlanviewProjects();
-    this.setSearchPlaceholderValues();
     // this.source = new LocalDataSource(this.selectablePlanviewProjects)  
  
 
@@ -63,6 +63,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
     
     // this.route.params.subscribe((params: Params) => this.perviewProject = params["project.uid"]);        
     // this.handleModalClick(this.projectUID);
+  }
+
+  ngAfterViewChecked(): void {
+    this.setPlanviewSearchHints();
   }
 
   handleError(error) :void {
@@ -299,7 +303,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, OnDestroy {
   }
 
   
-  setSearchPlaceholderValues(): void {
+  setPlanviewSearchHints(): void {
     let searchProjectHint = document.getElementsByTagName("input-filter")[3].firstElementChild.setAttribute("placeholder","search Project");
     let searchManagerHint = document.getElementsByTagName("input-filter")[4].firstElementChild.setAttribute("placeholder","search Project Manager");
     let searchOwnerHint = document.getElementsByTagName("input-filter")[5].firstElementChild.setAttribute("placeholder","search Business Owner");

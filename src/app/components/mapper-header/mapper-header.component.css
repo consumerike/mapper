@@ -1,3 +1,9 @@
 .bg{
     background-color: green;
 }
+
+.glove {
+    box-sizing: border-box;
+    width: 90%;
+    margin-left: 5%;
+}

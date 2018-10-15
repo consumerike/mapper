@@ -145,6 +145,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         this.errorsPresent = this.determineErrorStatus();
         this.errorList = this.getErrorList();
         console.log("checking the status of errors:",this.errorsPresent, this.errorService.errorList);
+       
     }
     catch(error){
       this.handleError(error);
@@ -457,7 +458,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       return this.authorizedPlanviewProjects;
      }   
   }
-  
+ 
 
   handleModalClick(perviewProj: SavedProject): void {
     console.log("Do i have what I need?", perviewProj);

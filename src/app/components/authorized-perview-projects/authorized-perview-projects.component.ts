@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Output, EventEmitter, Input, ViewChild, AfterViewChecked } from '@angular/core';
 import { PerviewService } from '../../Services/perview.service';
 import { MyProjectService } from '../../Services/project.service';
 import { UserService } from '../../Services/user-service.service';
@@ -20,7 +20,7 @@ declare const window: Window;
   templateUrl: './authorized-perview-projects.component.html',
   styleUrls: ['./authorized-perview-projects.component.scss']
 })
-export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
+export class AuthorizedPerviewProjectsComponent implements OnInit,AfterViewChecked, OnDestroy {
 
   @ViewChild('smart') smart;
   constructor(private perviewService: PerviewService,
@@ -49,7 +49,6 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
   
   ngOnInit() {
     console.log("on initialization is running...authorizedPerviewProjectsComponent");
-    this.setSearchPlaceholderValues();
     // this.getPerviewProjects();
     // this.getListOfSavedProjects();
     
@@ -68,6 +67,10 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
    console.log('showspinnger status:', this.modalService.showSpinner);
    
    
+  }
+
+  ngAfterViewChecked() {
+    this.setPerviewSearchHints();
   }
 
 
@@ -150,7 +153,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
        )
       //  .subscribe((data)  => {console.log('selectable projects in subscribe is the data:', data);this.selectableProjects = data;return data} )
        .subscribe(
-         (data)=>{console.log('looking to see when this runs...?', data);}
+         (data)=>{console.log('looking to see when this runs...?', data);this.setPerviewSearchHints();}
          
        );
     }
@@ -363,7 +366,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit, OnDestroy {
     
   }
 
-  setSearchPlaceholderValues(): void {
+  setPerviewSearchHints(): void {
+    console.log('set search placeholder values is running...', document.getElementsByName("input-filter"));
+    
     let searchProjectHint = document.getElementsByTagName("input-filter")[0].firstElementChild.setAttribute("placeholder","search Project");
     let searchManagerHint = document.getElementsByTagName("input-filter")[1].firstElementChild.setAttribute("placeholder","search Project Manager");
     let searchOwnerHint = document.getElementsByTagName("input-filter")[2].firstElementChild.setAttribute("placeholder","search Business Owner");    

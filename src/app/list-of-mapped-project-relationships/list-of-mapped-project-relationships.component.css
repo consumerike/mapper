@@ -26,10 +26,25 @@ nav {
 #error-section {
     color: red;
 }
-
+td {
+    padding: 0;
+}
 td > ul.offset-m2 {
     margin-top: 0;
 }
 
+.smallText {
+    font-size: .7rem;
+    padding-left: 0;
+    padding-right:0;
+}
 
+.glove {
+    box-sizing: border-box;
+    width: 90%;
+    margin-left: 5%;
+}
 
+.biggerButton {
+    padding:0;
+}
