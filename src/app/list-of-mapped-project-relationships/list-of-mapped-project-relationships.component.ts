@@ -115,7 +115,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         // wow block
         // this.getCurrentUserID();
         // this.getSavedProjects(this.currentID);
-
         // end wow block
         // this.getMappedProjects();
         
@@ -212,12 +211,12 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
           this.handleError(errorMessage);
           throw errorMessage;
         }),
-        finalize(()=>{this.displayErrors();})
+        finalize(()=>{this.displayErrors();this.utilityService.hideSpinner();})
       )
       .subscribe((data) => { 
         console.log("number of projects currently:",this.listOfSavedPerviewProjects.length);
         
-        this.utilityService.hideSpinner();
+        // this.utilityService.hideSpinner();
       },(err)=>{this.handleError(err);this.errorsPresent= true; this.errorList[0]= err; this.displayErrors();
       });
   }
@@ -306,7 +305,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
         let filteredListOfProjects = this.listOfSavedPerviewProjects.filter((savedProject) => {
           console.log('COUPLING??',savedProject["projUid"],'vs:::', perviewProject["projUid"]);
           console.log('COUPLING??',typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
-          console.log('tf John??',savedProject["projUID"], typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
+          console.log('tf??',savedProject["projUID"], typeof (savedProject["projUid"]),'vs:::', typeof(perviewProject["projUid"]));
           let a = savedProject["projUid"]
           let b = perviewProject["projUid"]
           if (a !== b) {
@@ -427,7 +426,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   getSelectablePlanviewProjects() {
     try {
       console.log("getPlanViewProjects in authorized planview projects component is running...");
-      
+      this.utilityService.setSpinner(true);
       this.planviewService.getAuthorizedPlanviewProjects()
       .pipe( 
          takeUntil(this.unSub),
@@ -448,7 +447,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
            return this.selectablePlanviewProjects;
          })
        )
-       .subscribe((data) => {this.showSpinner = false;console.log('typical Tuesday PM',this.selectablePlanviewProjects);this.selectablePlanviewProjects = data;}
+       .subscribe((data) => {this.utilityService.hideSpinner();console.log('typical Tuesday PM',this.selectablePlanviewProjects);this.selectablePlanviewProjects = data;}
        )
     }
     catch (err) {

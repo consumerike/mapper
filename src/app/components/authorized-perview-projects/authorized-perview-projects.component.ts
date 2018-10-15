@@ -369,9 +369,9 @@ export class AuthorizedPerviewProjectsComponent implements OnInit,AfterViewCheck
   setPerviewSearchHints(): void {
     console.log('set search placeholder values is running...', document.getElementsByName("input-filter"));
     
-    let searchProjectHint = document.getElementsByTagName("input-filter")[0].firstElementChild.setAttribute("placeholder","search Project");
-    let searchManagerHint = document.getElementsByTagName("input-filter")[1].firstElementChild.setAttribute("placeholder","search Project Manager");
-    let searchOwnerHint = document.getElementsByTagName("input-filter")[2].firstElementChild.setAttribute("placeholder","search Business Owner");    
+    let searchProjectHint = document.getElementsByTagName("input-filter")[0].firstElementChild.setAttribute("placeholder","Search Project");
+    let searchManagerHint = document.getElementsByTagName("input-filter")[1].firstElementChild.setAttribute("placeholder","Search Project Manager");
+    let searchOwnerHint = document.getElementsByTagName("input-filter")[2].firstElementChild.setAttribute("placeholder","Search Business Owner");    
   }
 
 }

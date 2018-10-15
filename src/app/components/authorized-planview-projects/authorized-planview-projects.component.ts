@@ -304,10 +304,10 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, AfterViewChe
 
   
   setPlanviewSearchHints(): void {
-    let searchProjectHint = document.getElementsByTagName("input-filter")[3].firstElementChild.setAttribute("placeholder","search Project");
-    let searchManagerHint = document.getElementsByTagName("input-filter")[4].firstElementChild.setAttribute("placeholder","search Project Manager");
-    let searchOwnerHint = document.getElementsByTagName("input-filter")[5].firstElementChild.setAttribute("placeholder","search Business Owner");
-    let searchIDHint = document.getElementsByTagName("input-filter")[6].firstElementChild.setAttribute("placeholder","search Planview ID");
+    let searchProjectHint = document.getElementsByTagName("input-filter")[3].firstElementChild.setAttribute("placeholder","Search Project");
+    let searchManagerHint = document.getElementsByTagName("input-filter")[4].firstElementChild.setAttribute("placeholder","Search Project Manager");
+    let searchOwnerHint = document.getElementsByTagName("input-filter")[5].firstElementChild.setAttribute("placeholder","Search Business Owner");
+    let searchIDHint = document.getElementsByTagName("input-filter")[6].firstElementChild.setAttribute("placeholder","Search Planview ID");
     
   }
   
