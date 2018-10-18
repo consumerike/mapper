@@ -443,6 +443,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
            })
            this.selectablePlanviewProjects = filteredAuthorizedPlanviewProjects;
            console.log(`this go around selectable planview projects equals ${this.selectablePlanviewProjects}`);
+           console.log("Melissa Denver", this.selectablePlanviewProjects);
            
            return this.selectablePlanviewProjects;
          })
@@ -463,6 +464,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("Do i have what I need?", perviewProj);
     this.selectedProject = perviewProj;
     this.modalService.selection = perviewProj.projUid;
+    this.modalService.selectionObject = perviewProj;
     console.log("so this will be set?",this.selectedProject);
     this.getSelectablePlanviewProjects();
   }
