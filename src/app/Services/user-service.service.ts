@@ -28,7 +28,6 @@ export class UserService {
 
   handleErrorQuietly(error): void {
     console.warn(error);
-    
   }
 
   getCurrentUserID(): Observable<string> {

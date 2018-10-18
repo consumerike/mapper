@@ -280,7 +280,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     try {
       console.log('ghello mappy relationship...', mappedRelationship);
       
-      let decision = confirm(`Warning! This will delete the association created by ${mappedRelationship.mappedByName} between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure?`);
+      let decision = confirm(`Warning! This will delete the mapping created by ${mappedRelationship.mappedByName} between ${mappedRelationship.projectName} and ${this.listOfSavedPerviewProjects[index].projName}. Are you sure you want to delete this association?`);
       if (decision == true) {return true}
     }
     catch(err) {
@@ -365,7 +365,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     else {console.log('canceled operation');
     }
   }
-
+  
 
   confirmDeletionOfPerviewProject(perviewProject: SavedProject, index) {
     console.log('cmon man:::::what is perviewProject, index and why??', perviewProject, index);
@@ -375,16 +375,13 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       return pair.projectName})
      console.log("what we need",listOfDeletedPlanviewProjects);
      let decision = confirm(
-    `Warning! This will delete ALL associations created  between ${perviewProject.projName}. Are you sure?`);
+    `Warning! This will delete ALL Planview project mappings created for ${perviewProject.projName}. Are you sure you want to delete this PerView project from the list?`);
      if (decision == true) {return true}
-     
     }
     catch {
       let decision = confirm(`Warning! This will delete any associations with ${perviewProject.projName} Are you sure?`);
       if (decision == true) {return true}
-     
     }
-   
   }
 
   getSelectablePerviewProjects() {
