@@ -227,9 +227,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit,AfterViewCheck
         })
         ,catchError(err => {
           console.log('in observable catchError()',err);
-          let errorMessage = new Error("Error: Did not successfully add perview project")
+          let errorMessage = new Error("Error: Did not successfully add PerView project(1).  Please contact your PerView administrator")
           this.handleError(errorMessage);
-       
           throw errorMessage;
         })
         ,finalize(()=>{this.signalModalClose();} )
@@ -242,7 +241,7 @@ export class AuthorizedPerviewProjectsComponent implements OnInit,AfterViewCheck
       this.getPerviewProjects();
     }
     catch (err) {
-      let errorMessage = new Error('Error: Did not successfully add PerView project')
+      let errorMessage = new Error('Error: Did not successfully add PerView project(2). Please contact your PerView administrator')
       this.handleError(errorMessage);
      }
         
@@ -353,8 +352,8 @@ export class AuthorizedPerviewProjectsComponent implements OnInit,AfterViewCheck
    
     }
     catch (err) {
-      let errorMessage = new Error('Error: Did not delete PerView project successfully')
-      this.handleError(errorMessage);
+      let errorMessage = new Error('Error: Did not signal modal close successfully')
+      this.handleErrorQuietly(errorMessage);
      }
   }
 

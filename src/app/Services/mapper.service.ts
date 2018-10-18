@@ -100,8 +100,8 @@ export class MapperService {
         return project.planviewProjects;
        }),
        catchError(err => {
-        let errorMessage = new Error("Error: Did not successfully get mapped PlanView projects from database")
-        this.handleErrorQuietly(errorMessage);
+        let errorMessage = new Error("Error: Did not successfully get mapped Planview projects from database. Please contact your PerView administrator")
+        this.handleError(errorMessage);
         return [];
        })
       ); 

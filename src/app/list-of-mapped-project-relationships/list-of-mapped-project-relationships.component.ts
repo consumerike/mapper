@@ -250,7 +250,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       let errorMessage = new Error('Error: Cannot display Planview Associations(2)')
       this.handleError(errorMessage);
     }
-
   }
   
 
@@ -270,7 +269,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       else console.log('cancelled operation');
     }
     catch(err) {
-      let errorMessage = new Error('Error: Did not succesfully delete Planview Association')
+      let errorMessage = new Error('Error: Did not succesfully delete Planview Association. Please contact your administrator')
       this.handleError(errorMessage);
       this.getSavedProjects(this.currentID);
     }
@@ -415,6 +414,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     catch(err) {
       let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
       this.handleError(errorMessage);
+      this.utilityService.hideSpinner();
      }
 
   }
@@ -434,7 +434,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
              
              if(this.selectedProject.planviewProjects.map(savedPlanviewProject => savedPlanviewProject.projectName.toLowerCase()).indexOf(planviewProject.name.toLowerCase()) < 0) {
                console.log('does this ever get in here??');
-               
                return planviewProject;
              }
            })
@@ -452,6 +451,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       console.log('we are inside the catch for get selectablePlanviewProjects:');
       let errorMessage = new Error('Error: Did not successfully display Planview projects for selection')
       this.handleError(errorMessage);
+      this.utilityService.hideSpinner();
       return this.authorizedPlanviewProjects;
      }   
   }

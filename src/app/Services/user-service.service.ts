@@ -158,8 +158,8 @@ export class UserService {
          return data["d"].results[0].__metadata.id;
         }),
         catchError(err => {
-          let errorMessage = new Error("Error: Could not successfully add or delete PerView project")
-          this.handleError(errorMessage);
+          let errorMessage = new Error("Error: Could not successfully get item by user ID. Please contact your PerView administrator")
+          this.handleErrorQuietly(errorMessage);
          throw err;
          })
       );

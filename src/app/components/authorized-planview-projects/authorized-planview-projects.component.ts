@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { MapperService } from '../../Services/mapper.service';
 
-import { takeUntil, map, tap, take } from 'rxjs/operators';
+import { takeUntil, map, tap, take, catchError, finalize } from 'rxjs/operators';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Directive, Renderer2, ElementRef } from '@angular/core';
 import { CustomErrorHandlerService } from '../../Services/custom-error-handler.service';
@@ -157,7 +157,16 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, AfterViewChe
         console.log("is this the projectUID?",this.perviewProject);
         console.log("is this the selection?",mappedProject);
         
-        this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject).subscribe(
+        this.mapperService.addSingleMappedPlanviewProject(this.modalService.selection,mappedProject)
+        .pipe(
+          catchError((err)=> {
+            let errorMessage = new Error('Error: Did not successfully add Planview project.  Please contact your PerView administrator')
+            this.handleError(errorMessage);
+            throw errorMessage;
+          })
+          ,finalize(()=>{this.signalModalClose();} )
+        )
+        .subscribe(
           () => {     this.clearSelections();
                       this.signalModalClose()}
         )
@@ -170,7 +179,7 @@ export class AuthorizedPlanviewProjectsComponent implements OnInit, AfterViewChe
  
     }
     catch(err) {
-      let errorMessage = new Error('Error: Could not display authorized PerView projects successfully')
+      let errorMessage = new Error('Error: Did not successfully add Planview project.  Please contact your PerView administrator')
       this.handleError(errorMessage);
     }       
   } 

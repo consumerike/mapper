@@ -163,7 +163,7 @@ export class MyProjectService {
         }),
         catchError(err => {
           console.log('in observable catchError()',err);
-          let errorMessage = new Error("Error: Did not successfully delete project in your user profile")
+          let errorMessage = new Error("Error: Did not successfully delete project in your user profile. Please contact your PerView administrator.")
           this.handleError(errorMessage);
           return err.statusText;
         })
