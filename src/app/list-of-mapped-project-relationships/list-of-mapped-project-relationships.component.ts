@@ -374,7 +374,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
       return pair.projectName})
      console.log("what we need",listOfDeletedPlanviewProjects);
      let decision = confirm(
-    `Warning! This will delete ALL Planview project mappings created for ${perviewProject.projName}.  Are you sure you want to delete the PerView project and all related Planview project mappings from the list?`);
+    `Warning! This will delete ALL Planview project mappings created for ${perviewProject.projName}.  Are you sure you want to delete this PerView project from the list?`);
      if (decision == true) {return true}
     }
     catch {
