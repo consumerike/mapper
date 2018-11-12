@@ -17,10 +17,10 @@ import { CustomErrorHandlerService } from './custom-error-handler.service';
 })
 export class PerviewService {
 
-  constructor(private http:HttpClient, private configService: ConfigService,private errorService: CustomErrorHandlerService) {
-    this.config = configService.config;
+  constructor(private http:HttpClient, private config: ConfigService,private errorService: CustomErrorHandlerService) {
+    
   }
-  config:Config;
+  
   authorizedPerviewProjects: IProject[];
   
   handleError(error) :void {
@@ -37,7 +37,7 @@ export class PerviewService {
   let headers = new HttpHeaders();
   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
 
-  let adapterPath = "https://perviewqa.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx"
+  let adapterPath = `${this.config.settings.adapterPath}`
   
 
   const body = `method=PwaGetProjectsForEditCommand&viewguid=8c57b14c-6c13-e811-8116-0050568f3b8a`

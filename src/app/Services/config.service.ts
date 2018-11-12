@@ -14,14 +14,14 @@ import 'rxjs/add/operator/mergeMap'
 export class ConfigService {
 
   constructor(private http: Http) { }
-  public config: Config;
+  settings: Config;
   
-  readConfig(){
+  loadConfigSettings() {
     return new Promise((resolve, reject) => {
-      return this.http.get("./assets/main-config.json").subscribe(t=>{
+      return this.http.get("./assets/qa-config.json").subscribe(t=>{
       // return this.http.get("../../../main-config.json").subscribe(t=>{
        console.log("configuration map= " + JSON.stringify(t.json()))
-         this.config = t.json() as Config
+         this.settings = t.json() as Config
          resolve(true);
        })
        

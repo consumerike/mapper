@@ -19,18 +19,18 @@ import { UserService } from './user-service.service';
 export class PlanviewService {
 
 
-  constructor(private http:HttpClient, private configService: ConfigService, private utilityService: UtilityService, private userService: UserService) { console.log('planview service accounted for');
+  constructor(private http:HttpClient, private config: ConfigService, private utilityService: UtilityService, private userService: UserService) { console.log('planview service accounted for');
   
-    this.config = configService.config;
+    
   }
-  config:Config;
+
   authorizedPlanviewProjects: any; //MappedProject[]
 
   getAuthorizedPlanviewProjects():Observable<PlanviewProject[]> {
     let modified34ID = this.utilityService.modifyCurrentUser(this.userService.currentUser);
     console.log("mod 34 ID equals",modified34ID);
     
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects/admin/AuthorizedPlanViewProjects/${modified34ID}`
+    let url = `${this.config.settings.apiRoot}/admin/AuthorizedPlanViewProjects/${modified34ID}`
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -47,17 +47,4 @@ export class PlanviewService {
   }
 
 
-  setupForGetPlanviewProjects(): object {
-    let headers = new HttpHeaders();
-    let adapterPath = `${this.config.adapterUrl} `
-    const BODY = `method=PwaGetProjectsForEditCommand&viewguid=${this.config.projectPickerViewGuid}` 
-    headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
-    let setupObject = {
-      options: headers,
-      adapterPath: adapterPath,
-      body: BODY
-
-    };
-    return setupObject; 
-  }
 }

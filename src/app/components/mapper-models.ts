@@ -46,11 +46,12 @@ export class SavedProject {
 
     
 export class Config {
-  projectServerUrl: string;
-  resPlanUserStateUrl: string;
-  adapterUrl: string;
-  projectPickerViewGuid: string;
-  resourcePickerViewGuid: string;
+  apiRoot: string;
+  projectServerRoot: string;
+  mapperUserStateRoot: string;
+  adapterPath: string;
+  userNamePath: string;
+
 }
 
 export class Result {

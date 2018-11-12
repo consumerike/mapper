@@ -3,6 +3,7 @@ import { IProject, Project, SavedProject } from '../components/mapper-models';
 import { HttpClient,  HttpResponse, HttpHeaders, HttpRequest  } from '@angular/common/http';
 import { Observable, Subscription, from } from 'rxjs';
 import { map, tap, catchError, switchMap, finalize, retryWhen, scan } from "rxjs/operators";
+import { ConfigService } from './config.service';
 import { UserService } from './user-service.service';
 import { UtilityService } from "./utility.service";
 import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
@@ -16,9 +17,9 @@ import { CustomErrorHandlerService } from './custom-error-handler.service';
 //purpose: manage user's saved projects/workspace
 export class MyProjectService {
 
-  constructor(private http: HttpClient, private errorService: CustomErrorHandlerService, private userService: UserService, private utilityService: UtilityService) {console.log('inside myProjectService is running');
+  constructor(private http: HttpClient, private config: ConfigService, private errorService: CustomErrorHandlerService, private userService: UserService, private utilityService: UtilityService) {console.log('inside myProjectService is running');
    }
-  apiRoot: string = "https://perviewqa.app.parallon.com/PWA"
+  
   public projectsSavedByUser: SavedProject[] = [];
 
   handleError(error) :void {
@@ -28,7 +29,7 @@ export class MyProjectService {
 
   getSavedPerviewProjects(currentUser: string): Observable<any> {
   
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${currentUser}%27&$select=ProjectUIDs` 
+    let url = `${this.config.settings.mapperUserStateRoot}/Items?$filter=AccountID%20eq%20%27${currentUser}%27&$select=ProjectUIDs` 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose');
     let options = {
@@ -86,7 +87,7 @@ export class MyProjectService {
     console.log('selections in addPervierwProject in @projectService::', selections);
  
     console.log("here we have the modUser should be lc:::",modUser);
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
+    let url = `${this.config.settings.projectServerRoot}/_api/${id}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('X-HTTP-Method','MERGE')
@@ -132,7 +133,7 @@ export class MyProjectService {
     console.log('selections in addPervierwProject in @projectService::', selections);
  
     console.log("here we have the modUser should be lc:::",modUser);
-    let url = `https://perviewqa.app.parallon.com/PWA/_api/${id}`
+    let url = `${this.config.settings.projectServerRoot}/_api/${id}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('X-HTTP-Method','MERGE')

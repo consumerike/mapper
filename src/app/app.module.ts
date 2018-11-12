@@ -1,4 +1,4 @@
-
+import { APP_INITIALIZER } from "@angular/core";
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
 import * as M from  'materialize-css'
@@ -31,8 +31,12 @@ import { MappedProjectRelationshipComponent } from './components/mapped-project-
 import { routes } from "./routes";
 import { ResolverService } from './Services/resolver.service';
 import { PlanviewResolverService } from './Services/planview-resolver.service';
+import { Config } from "protractor";
 
 
+export function initializeApp(config: ConfigService) {
+  return () => config.loadConfigSettings();
+}
 
 @NgModule({
   declarations: [
@@ -59,6 +63,10 @@ import { PlanviewResolverService } from './Services/planview-resolver.service';
 
   providers: [
     ConfigService,
+    {provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [ConfigService], multi: true
+    },
     {provide: ErrorHandler,
       useClass: CustomErrorHandlerService
     },

@@ -1,0 +1,7 @@
+{
+    "apiRoot": "https://xrdcwpdbsmsp03:40001/api/projects/",
+    "projectServerRoot": "https://perview.app.parallon.com/PWA",
+    "mapperUserStateRoot": "https://perview.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')",
+    "adapterPath": "https://perview.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx",
+    "userNamePath": "https://perview.app.parallon.com/pwa"
+}

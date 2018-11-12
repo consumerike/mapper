@@ -5,6 +5,7 @@ import { map, tap, filter, catchError } from 'rxjs/operators';
 import { Observable, Subscribable, Subscription, from, throwError } from 'rxjs';
 import { MyProjectService } from './project.service';
 import { CustomErrorHandlerService } from './custom-error-handler.service';
+import { ConfigService } from 'src/app/Services/config.service';
 
 
 @Injectable({
@@ -14,14 +15,13 @@ import { CustomErrorHandlerService } from './custom-error-handler.service';
 export class MapperService {
  
   
-  constructor(private http: HttpClient, private myProjectService: MyProjectService, private errorService: CustomErrorHandlerService) {
-    console.log('inside mapper service is running');
-    
+  constructor(private http: HttpClient,private config: ConfigService, private myProjectService: MyProjectService, private errorService: CustomErrorHandlerService) {
+    console.log('one engine: ', this.config.settings.apiRoot);
    }
    apiRoot: string = "https://perviewqa.app.parallon.com/PWA";
 
   
-  public planviewMappedProjects: any;
+   public planviewMappedProjects: any;
 
   handleError(error) :void {
     console.log('handle error is running');
@@ -52,7 +52,7 @@ export class MapperService {
   perviewMappedPlanviewAssociations(project: SavedProject): Observable<MappedProject[]> {
     console.log('what is the project here in perviewMappedPlanviewAssociations::', project);
     
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${project.projUid}/planViewProjects`
+    let url = `${this.config.settings.apiRoot}/${project.projUid}/planViewProjects`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
               // .set('Access-Control-Allow-Origin','http://localhost:4200')
@@ -115,7 +115,7 @@ export class MapperService {
   }
   
   checkPerviewProjectMapStatus(project:SavedProject): Observable<any> {
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${project.projUid}`
+    let url = `${this.config.settings.apiRoot}/${project.projUid}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/json');
@@ -143,7 +143,7 @@ export class MapperService {
     console.log("this is the inputted project uid in addPerviewProjectForMapping @MapperService::::", project.projUid);
     console.log("this is the inputted project name in addPerviewProjectForMapping @MapperService::::", project.projName);
     
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects`
+    let url = `${this.config.settings.apiRoot}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/json');
@@ -177,7 +177,7 @@ export class MapperService {
   addSingleMappedPlanviewProject(projectUID: string, selection: MappedProject): Observable<any> {
     console.log('is this correct for url:', projectUID);
     
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${projectUID}/planViewProjects`
+    let url = `${this.config.settings.apiRoot}/${projectUID}/planViewProjects`
     let headers = new HttpHeaders();
     headers =  headers.set('Content-Type', 'application/json')
                .set('accept', 'application/json')
@@ -211,7 +211,7 @@ export class MapperService {
   }
 
   deletePlanviewAssociation(mappedRelationship:any):Observable<any> {    
-    let url = `https://xrdcwpdbsmsp03:40001/api/projects/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
+    let url = `${this.config.settings.apiRoot}/${mappedRelationship.projectGuid}/planViewProjects/${mappedRelationship.ppl_Code}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json')
               .set('Content-Type', 'application/json');
