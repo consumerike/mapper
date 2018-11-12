@@ -40,8 +40,8 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/assets/qa-config.json",
-                  "with": "src/assets/prod-config.json"
+                  "replace": "src/assets/qa-config.txt",
+                  "with": "src/assets/prod-config.txt"
                 }
                 
               ],
