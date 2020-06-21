@@ -11,6 +11,7 @@ import { M } from "materialize-css";
 import { ModalService } from '../Services/modal.service';
 import { PerviewService } from '../Services/perview.service';
 import { PlanviewService } from '../Services/planview.service';
+import { debug } from 'util';
 
 declare const $: any
 declare const window: Window;
@@ -67,7 +68,7 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
   ngOnInit() {
     console.log('THE LIST OF MAPPED PROJECTS IS AT INIT....');
     
-    
+    debugger;
     // this.testSub.next([1,2,3])
     // this.testSub.subscribe( () => {
     //   // you will never see 1,2,3 
@@ -252,7 +253,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     }
   }
   
-
   deletePlanviewAssociation(mappedRelationship: MappedProject, index): any {
     console.log(mappedRelationship,"oh crap:", index);
     try {
@@ -419,7 +419,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
 
   }
      
-
   getSelectablePlanviewProjects() {
     try {
       console.log("getPlanViewProjects in authorized planview projects component is running...");
@@ -456,7 +455,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
      }   
   }
  
-
   handleModalClick(perviewProj: SavedProject): void {
     console.log("Do i have what I need?", perviewProj);
     this.selectedProject = perviewProj;
@@ -465,7 +463,6 @@ export class ListOfMappedProjectRelationshipsComponent implements OnInit, OnDest
     console.log("so this will be set?",this.selectedProject);
     this.getSelectablePlanviewProjects();
   }
-
 
   refreshProjectList(event): void {
     console.log("is the event the new list from modals??", event);

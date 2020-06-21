@@ -36,7 +36,6 @@ import { Config } from "protractor";
 
 export function initializeApp(config: ConfigService) {
   console.log('this is running initializeAPP');
-  
   return () => config.loadConfigSettings();
 }
 

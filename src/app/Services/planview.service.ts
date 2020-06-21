@@ -30,7 +30,7 @@ export class PlanviewService {
     let modified34ID = this.utilityService.modifyCurrentUser(this.userService.currentUser);
     console.log("mod 34 ID equals",modified34ID);
     
-    let url = `${this.config.settings.apiRoot}/admin/AuthorizedPlanViewProjects/${modified34ID}`
+    let url = `https://xrdcwpdbsmsp03:40001/api/projects/admin/AuthorizedPlanViewProjects/${modified34ID}`
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');

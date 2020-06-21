@@ -28,16 +28,17 @@ export class MyProjectService {
   }
 
   getSavedPerviewProjects(currentUser: string): Observable<any> {
-  
-    let url = `${this.config.settings.mapperUserStateRoot}/Items?$filter=AccountID%20eq%20%27${currentUser}%27&$select=ProjectUIDs` 
+    console.log('do we have current user is all that matters:', currentUser);
+    
+    let url = `https://perview.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${currentUser}%27&$select=ProjectUIDs` 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose');
     let options = {
       headers,
       withCredentials: true,
     };
-    console.log("have to have global Boulder here",this.userService.currentUser);
-    console.log("have to have local CSrpings here",currentUser);
+    // console.log("have to have global Boulder here",this.userService.currentUser);
+    // console.log("have to have local CSrpings here",currentUser);
     
        return this.http.get(url,options)
        .pipe(
@@ -69,7 +70,7 @@ export class MyProjectService {
            this.projectsSavedByUser = [];
            throw errorMessage;
          }),
-         finalize(()=>{console.log('kill yourself!! (projects saved by user, errors present boolean,error list',this.projectsSavedByUser,this.errorService.errorsPresent,this.errorService.getErrorList());return this.projectsSavedByUser;})  
+         finalize(()=>{console.log(' (projects saved by user, errors present boolean,error list',this.projectsSavedByUser,this.errorService.errorsPresent,this.errorService.getErrorList());return this.projectsSavedByUser;})  
        );
      }
      
@@ -87,7 +88,7 @@ export class MyProjectService {
     console.log('selections in addPervierwProject in @projectService::', selections);
  
     console.log("here we have the modUser should be lc:::",modUser);
-    let url = `${this.config.settings.projectServerRoot}/_api/${id}`
+    let url = `https://perview.app.parallon.com/PWA/_api/${id}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('X-HTTP-Method','MERGE')
@@ -133,7 +134,7 @@ export class MyProjectService {
     console.log('selections in addPervierwProject in @projectService::', selections);
  
     console.log("here we have the modUser should be lc:::",modUser);
-    let url = `${this.config.settings.projectServerRoot}/_api/${id}`
+    let url = `https://perview.app.parallon.com/PWA/_api/${id}`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('X-HTTP-Method','MERGE')

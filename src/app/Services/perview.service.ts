@@ -37,10 +37,9 @@ export class PerviewService {
   let headers = new HttpHeaders();
   headers = headers.set('Accept', 'application/json;odata=verbose').set('Content-Type', 'application/x-www-form-urlencoded')
 
-  let adapterPath = `${this.config.settings.adapterPath}`
+  let adapterPath = `https://perview.app.parallon.com/PWA/_layouts/15/PwaPSIWrapper2/PwaAdapter.aspx`
   
-
-  const body = `method=PwaGetProjectsForEditCommand&viewguid=8c57b14c-6c13-e811-8116-0050568f3b8a`
+  const body = `method=PwaGetProjectsForEditCommand&viewguid=31b8a527-55e7-e811-811c-0050568f1156`
   let options = {
       headers,
       withCredentials: true
@@ -56,15 +55,7 @@ export class PerviewService {
           var newProject = new Project(project[i]["projUid"], project[i]["projName"]);
           newProject.owner = project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Owner")
               && project[i]["CustomFields"].find(p => p.Name == "Owner").Value;
-          newProject.projectChargeBackCategory = project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Project Chargeback Category") && project[i]["CustomFields"] && project[i]["CustomFields"]
-              .find(p => p.Name == "Project Chargeback Category").Value
-          newProject.departments = project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Project Departments") && project[i]["CustomFields"] && project[i]["CustomFields"]
-              .find(p => p.Name == "Project Departments").Value
-        //   newProject.startDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Start") && project[i]["CustomFields"] && project[i]["CustomFields"]
-        //       .find(p => p.Name == "Start").Value).toDateString();
-        //   newProject.finishDate = new Date(project[i]["CustomFields"] && project[i]["CustomFields"].find(p => p.Name == "Finish") && project[i]["CustomFields"] && project[i]["CustomFields"]
-        //       .find(p => p.Name == "Finish").Value).toDateString();
-        //       //lets check for null first
+          debugger;
           newProject.businessOwner = project[i]["CustomFields"].find(p => p.Name == "Business Owner").Value
           projects.push(newProject);
       }

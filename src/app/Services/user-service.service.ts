@@ -32,7 +32,7 @@ export class UserService {
   }
 
   getCurrentUserID(): Observable<string> {
-    let url = `${this.config.settings.projectServerRoot}/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
+    let url = `https://perview.app.parallon.com/PWA/_api/SP.UserProfiles.PeopleManager/GetMyProperties/AccountName`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose');
     let options = {
@@ -74,7 +74,7 @@ export class UserService {
     let encodedUrlSegment = this.utilityService.modifyUrlSegmentForEncoding(modUserID);
     console.log("this is the encoded segment",encodedUrlSegment);
     
-    let url = `${this.config.settings.userNamePath}/_api/web/siteusers?$filter=LoginName%20eq%20%27i%3A0%23.w%7C${encodedUrlSegment}%27`
+    let url = `https://perview.app.parallon.com/pwa/_api/web/siteusers?$filter=LoginName%20eq%20%27i%3A0%23.w%7C${encodedUrlSegment}%27`
     console.log("this is the encoded url here:",url);
     
     let headers = new HttpHeaders();
@@ -110,7 +110,7 @@ export class UserService {
   getChangePermissionToken(): Observable<string> {
     console.log('made it to changetoken function in service');
     try {
-    let url = `${this.config.settings.projectServerRoot}/_api/contextinfo`
+    let url = `https://perview.app.parallon.com/PWA/_api/contextinfo`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -137,7 +137,7 @@ export class UserService {
   getItemByUserId(): Observable<any> {
     console.log('made it to getItemByUserId function in service and user is:', this.currentUser);
     try {
-    let url = `${this.config.settings.mapperUserStateRoot}/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
+    let url = `https://perview.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?$filter=AccountID%20eq%20%27${this.currentUser}%27&$select=AccountID`
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json;odata=verbose')
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -173,7 +173,7 @@ export class UserService {
   checkForSavedUser(currentUser: string): Observable<any> {
     console.log('running CHECK FOR SAVED USER....');
     
-    let url = `${this.config.settings.mapperUserStateRoot}/Items?&$select=AccountID`
+    let url = `https://perview.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items?&$select=AccountID`
    
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
@@ -238,7 +238,7 @@ export class UserService {
     console.log('running addUsertoSavedList to WorksPACE MANYNE');
     console.log(changeTokenHash, "did we get the hashb?");
     
-    let url = `${this.config.settings.mapperUserStateRoot}/Items`
+    let url = `https://perview.app.parallon.com/PWA/_api/web/lists/GetByTitle('MapperUserState')/Items`
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/json;odata=verbose')
       .set('Content-Type','application/json;odata=verbose')
